@@ -191,8 +191,8 @@ CREATE TABLE `Uprawnienia` (
 
 INSERT INTO `Uprawnienia` (`id_uprawnien`, `typ_uprawnienia`) VALUES
 (1, 'Administrator'),
-(3, 'Gracz'),
-(2, 'Kolekcjoner');
+(3, 'Użytkownik'),
+(2, 'Moderator');
 
 -- --------------------------------------------------------
 
@@ -210,16 +210,6 @@ CREATE TABLE `Uzytkownik` (
   `data_utworzenia` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `Uzytkownik`
---
-
-INSERT INTO `Uzytkownik` (`id_uzytkownika`, `nazwa_uzytkownika`, `adres_email`, `haslo`, `zdjecie`, `id_uprawnien`, `data_utworzenia`) VALUES
-(1, 'SweetSummerChild', 'sw33ts00merch1ld@gmail.com', '$2y$10$rdlHyJqfbqebUkiYJkFaYu1ka8CX6lmgaklhaRuh6zyPZ20zSCRYa', NULL, 3, '2025-11-29 17:07:14');
-
---
--- Indexes for dumped tables
---
 
 --
 -- Indexes for table `Arkusz_Punktacji`
@@ -512,8 +502,7 @@ DELIMITER //
 CREATE PROCEDURE `Archiwizuj_Stare_Rozgrywki`()
 BEGIN
     DECLARE data_graniczna DATETIME;
-    -- Przenoszenie rozgrywek starszych niż 5 lat
-    SET data_graniczna = DATE_SUB(NOW(), INTERVAL 5 YEAR);
+
 
     -- Obsługa błędów (rollback w razie awarii)
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -522,6 +511,9 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Błąd podczas archiwizacji rozgrywek.';
     END;
 
+    -- Przenoszenie rozgrywek starszych niż 5 lat
+    SET data_graniczna = DATE_SUB(NOW(), INTERVAL 5 YEAR);
+    
     START TRANSACTION;
 
     -- Kopiowanie uczestników rozgrywek, które zostaną zarchwizowane
