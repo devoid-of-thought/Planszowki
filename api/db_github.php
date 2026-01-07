@@ -18,5 +18,4 @@ try {
     // W produkcji nie wyświetlaj szczegółów błędu użytkownikowi!
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
-?>ż masz)
-│   ├── register.php   (utworzym
+?>
