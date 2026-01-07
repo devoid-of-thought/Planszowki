@@ -535,6 +535,7 @@ BEGIN
 
     COMMIT;
 END //
+
 DELIMITER ;
 
 -- Automatyczne uruchamianie archiwizacji raz na miesiąc

@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // 2. Sprawdzenie czy user już istnieje
-    $stmt = $pdo->prepare("SELECT id_uzytkownika FROM Użytkownik WHERE nazwa_uzytkownika = ? OR adres_email = ?");
+    $stmt = $pdo->prepare("SELECT id_uzytkownika FROM Uzytkownik WHERE nazwa_uzytkownika = ? OR adres_email = ?");
     $stmt->execute([$user, $email]);
     
     if ($stmt->rowCount() > 0) {
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 5. Zapis do bazy
     try {
-        $sql = "INSERT INTO Użytkownik (nazwa_uzytkownika, adres_email, haslo, id_uprawnien) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO Uzytkownik (nazwa_uzytkownika, adres_email, haslo, id_uprawnien) VALUES (?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$user, $email, $hashed_password, $role_id]);
         

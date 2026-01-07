@@ -1,10 +1,25 @@
 <?php
 session_start();
+require_once 'api/db.php';
 
-// Sprawdzamy, czy użytkownik jest zalogowany
+// 1. Sprawdzenie logowania
 if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
+}
+
+$userName = $_SESSION['username'];
+
+// 2. Pobranie danych
+try {
+    $sql = "SELECT tytul_planszowki, nazwa_statusu, ocena, komentarz 
+            FROM Widok_Kolekcji_Uzytkownika 
+            WHERE nazwa_uzytkownika = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$userName]);
+    $kolekcja = $stmt->fetchAll();
+} catch (PDOException $e) {
+    die("Błąd pobierania kolekcji: " . $e->getMessage());
 }
 ?>
 
@@ -12,21 +27,88 @@ if (!isset($_SESSION['user_id'])) {
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Moja Kolekcja</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; }
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
-    </style>
+    <title>Moja Kolekcja - Planszówki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Tilt+Neon&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header>
-        <h1>Witaj, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
-        <a href="api/logout.php" style="color: red;">Wyloguj się</a>
-    </header>
 
-    <main>
-        <h3>Tu będzie Twoja kolekcja gier (Etap 3)</h3>
-        <p>Jesteś zalogowany. Twoje ID to: <?php echo $_SESSION['user_id']; ?></p>
-    </main>
+    <div class="dashboard-wrapper">
+        
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                Planszówki 
+            </div>
+
+            <a href="dashboard.php" style="background-color: #1a1a1a; color: white;">Moja Kolekcja</a>
+            <a href="profil.php">Mój Profil</a>
+            <a href="rozgrywki.php">Rozgrywki</a>
+            
+            <a href="logout.php" class="logout-link"> Wyloguj się</a>
+        </nav>
+
+        <div class="main-content">
+            
+            <div class="top-header">
+                <button type="button" id="sidebarCollapse" class="toggle-btn">
+                    ☰ Menu
+                </button>
+                <h2>Witaj, <?php echo htmlspecialchars($userName); ?>!</h2>
+            </div>
+
+            <div class="actions">
+                <a href="dodaj_gre.php" class="btn-small">Dodaj nową grę do bazy</a>
+                <a href="dodaj_do_kolekcji.php" class="btn-small">Dodaj grę do kolekcji</a>
+            </div>
+
+            <main>
+                <?php if (count($kolekcja) > 0): ?>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tytuł gry</th>
+                                <th>Status</th>
+                                <th>Twoja Ocena</th>
+                                <th>Komentarz</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($kolekcja as $gra): ?>
+                            <tr>
+                                <td><strong><?php echo htmlspecialchars($gra['tytul_planszowki']); ?></strong></td>
+                                
+                                <td>
+                                    <?php echo htmlspecialchars($gra['nazwa_statusu']); ?>
+                                </td>
+
+                                <td>
+                                    <?php 
+                                    if ($gra['ocena']) {
+                                        echo htmlspecialchars($gra['ocena']) . "/10"; 
+                                    } else {
+                                        echo "-";
+                                    }
+                                    ?>
+                                </td>
+                                <td><?php echo htmlspecialchars($gra['komentarz'] ?? ''); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <div class="empty-msg">
+                        <h3>Twoja kolekcja jest pusta! 🎲</h3>
+                        <p>Skorzystaj z przycisków powyżej, aby dodać pierwsze gry.</p>
+                    </div>
+                <?php endif; ?>
+            </main>
+
+        </div> </div> <script>
+        document.getElementById('sidebarCollapse').addEventListener('click', function () {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        });
+    </script>
 </body>
 </html>

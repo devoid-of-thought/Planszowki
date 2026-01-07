@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pass = $_POST['password'];
 
     // Szukamy użytkownika po nazwie LUB emailu
-    $sql = "SELECT id_uzytkownika, nazwa_uzytkownika, haslo, id_uprawnien FROM Użytkownik WHERE nazwa_uzytkownika = ? OR adres_email = ?";
+    $sql = "SELECT id_uzytkownika, nazwa_uzytkownika, haslo, id_uprawnien FROM Uzytkownik WHERE nazwa_uzytkownika = ? OR adres_email = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$login, $login]);
     $user = $stmt->fetch();
