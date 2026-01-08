@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="main-content">
         <div class="top-header">
             <h2>Dodaj grę do kolekcji</h2>
-            <button class="btn-small" href="dashboard.php">← Wróć do Panelu</a>
+            <button class="btn-small" onclick="window.location.href='dashboard.php'">← Wróć do Panelu</button>
         </div>
             <div class="form-container dodaj-do-kolekcji">
             <?= $message ?>
@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </select>
                 <div class="info-note">
                     <p>Nie ma Twojej gry? </p>
-                    <button class="btn-small" onclick="window.location.href='dodaj_gre.php'">Dodaj ją do bazy globalnej</button>
+                    <button class="btn-small" onclick="window.location.href='dodaj_gre.php'">Dodaj własną grę</button>
                 </div>
                 <label>Twój status:</label>
                 <select name="id_statusu" required>
@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label>Komentarz:</label>
                 <textarea name="komentarz" rows="3" placeholder="Twój komentarz do gry..."></textarea>
 
-                <button class="btn-save" type="submit">Dodaj do kolekcji</button>
+                <button class="btn-small save" type="submit">Dodaj do kolekcji</button>
             </form>
         
         </div>

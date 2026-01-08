@@ -134,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <input type="number" name="wiek" placeholder="Rekomendowany wiek (np. 12)">
 
-                    <button class="btn-save" type="submit">Zapisz i dodaj do kolekcji</button>
+                    <button class="btn-small save" type="submit">Zapisz i dodaj do kolekcji</button>
                 </form>
             </div>
         </div>
