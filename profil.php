@@ -152,7 +152,7 @@ try {
                         <label>Potwierdź nowe hasło</label>
                         <input type="password" name="confirm_password" required>
 
-                        <button type="submit" class="btn-small" style="width: 100%;">Zmień hasło</button>
+                        <button type="submit" class="btn-small" >Zmień hasło</button>
                     </form>
                 </div>
 
@@ -167,7 +167,7 @@ try {
                         <label>Adres email</label>
                         <input type="email" name="new_email" value="<?= htmlspecialchars($userData['adres_email'] ?? '') ?>" required>
 
-                        <button type="submit" class="btn-small" style="width: 100%;">Zapisz zmiany</button>
+                        <button type="submit" class="btn-small">Zapisz zmiany</button>
                     </form>
                 </div>
 

@@ -46,7 +46,7 @@ try {
             <a href="profil.php">Mój Profil</a>
             <a href="rozgrywki.php">Rozgrywki</a>
             
-            <a href="logout.php" class="logout-link"> Wyloguj się</a>
+            <a href="logout.php" class="logout-link"> Wyloguj się</a> <!-- Dodać ekran główny i przekierowanie tam po wylogowaniu -->
         </nav>
 
         <div class="main-content">
@@ -99,7 +99,7 @@ try {
                     </table>
                 <?php else: ?>
                     <div class="empty-msg">
-                        <h3>Twoja kolekcja jest pusta! 🎲</h3>
+                        <h3>Twoja kolekcja jest pusta!</h3>
                         <p>Skorzystaj z przycisków powyżej, aby dodać pierwsze gry.</p>
                     </div>
                 <?php endif; ?>

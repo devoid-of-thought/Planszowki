@@ -1,31 +1,57 @@
 <?php
-session_start();
+// api/login.php
 require_once 'db.php';
+
+// 1. Sprawdzamy, czy użytkownik zaznaczył "Zapamiętaj mnie"
+// Robimy to PRZED session_start()
+if (isset($_POST['remember'])) {
+    // Ustawiamy czas życia ciasteczka na 30 dni (w sekundach)
+    $lifetime = 30 * 24 * 60 * 60; // 2 592 000 sekund
+} else {
+    // Domyślnie: 0 (ciasteczko wygasa po zamknięciu przeglądarki)
+    $lifetime = 0;
+}
+
+// 2. Konfiguracja parametrów ciasteczka sesyjnego
+session_set_cookie_params([
+    'lifetime' => $lifetime,
+    'path' => '/',           // Dostępne w całej domenie
+    'domain' => '',          // Domyślna domena
+    'secure' => false,       // Ustaw na true, jeśli masz HTTPS
+    'httponly' => true,      // Ważne dla bezpieczeństwa (JS nie ma dostępu)
+    'samesite' => 'Strict'   // Ochrona przed CSRF
+]);
+
+// 3. Dopiero teraz startujemy sesję
+session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $login = trim($_POST['login']);
-    $pass = $_POST['password'];
+    $password = trim($_POST['password']);
 
-    // Szukamy użytkownika po nazwie LUB emailu
-    $sql = "SELECT id_uzytkownika, nazwa_uzytkownika, haslo, id_uprawnien FROM Uzytkownik WHERE nazwa_uzytkownika = ? OR adres_email = ?";
-    $stmt = $pdo->prepare($sql);
+    // Pobranie użytkownika z bazy (logowanie po nazwie LUB emailu)
+    $stmt = $pdo->prepare("SELECT id_uzytkownika, nazwa_uzytkownika, haslo FROM Uzytkownik WHERE nazwa_uzytkownika = ? OR adres_email = ?");
     $stmt->execute([$login, $login]);
     $user = $stmt->fetch();
 
-    // Weryfikacja hasła
-    if ($user && password_verify($pass, $user['haslo'])) {
-        // SUKCES - Ustawiamy zmienne sesyjne
+    if ($user && password_verify($password, $user['haslo'])) {
+        // Logowanie poprawne
+        
+        // Regeneracja ID sesji dla bezpieczeństwa (chroni przed session fixation)
+        session_regenerate_id(true);
+
         $_SESSION['user_id'] = $user['id_uzytkownika'];
         $_SESSION['username'] = $user['nazwa_uzytkownika'];
-        $_SESSION['role'] = $user['id_uprawnien'];
 
-        // Przekierowanie do Panelu Głównego (który zaraz stworzymy)
         header("Location: ../dashboard.php");
         exit();
     } else {
-        // BŁĄD
+        // Błąd logowania
         header("Location: ../index.php?error=1");
         exit();
     }
+} else {
+    header("Location: ../index.php");
+    exit();
 }
 ?>

@@ -275,23 +275,44 @@ form textarea:focus {
     border-top: 5px solid var(--color-magenta);
 }
 
-/* Kontener dla formularzy obok siebie */
+/* --- SEKCJE PROFILU (Aktualizacja) --- */
+
+/* Kontener trzymający oba formularze */
 .profile-section.forms-section {
     display: flex;
-    flex-wrap: wrap; /* Pozwala spaść elementom niżej na małym ekranie */
+    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 40px; /* Odstęp między formularzami */
+    gap: 40px;
+    align-items: stretch; /* Ważne: sprawia, że obie kolumny mają tę samą wysokość */
 }
 
-.profile-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+/* Pojedyncza kolumna z formularzem */
+.form-profile {
+    flex: 1;
+    min-width: 300px;
+    display: flex;        /* Ustawiamy flexbox */
+    flex-direction: column; /* Układ pionowy */
+}
+
+/* Tytuł h3 */
+.form-profile h3 {
+    margin-top: 0;
     margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 20px;
+    color: var(--color-black);
 }
 
+/* Sam znacznik <form> */
+.form-profile form {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* KLUCZOWE: Formularz rozciąga się, by wypełnić całą wysokość kolumny */
+}
+
+/* Przycisk wewnątrz formularza profilu */
+.form-profile .btn-small {
+    width: 100%;       /* Pełna szerokość zgodnie z prośbą */
+    margin-top: auto;  /* MAGICZNA LINIA: Dopycha przycisk na sam dół kontenera */
+}
 .avatar-placeholder {
     width: 80px;
     height: 80px;
@@ -338,4 +359,9 @@ form textarea:focus {
 .info-note{
     display: flex;
     justify-content: space-between;
+}
+
+form .form-profile .btn-small {
+    width: 100%; /* Pełna szerokość formularza */
+
 }

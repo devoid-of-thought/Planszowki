@@ -20,15 +20,20 @@
                 // Wyświetlanie błędów logowania, jeśli przekazano w URL
                 if (isset($_GET['error'])) echo "<p class='error'>Błędny login lub hasło!</p>";
                 ?>
+<form action="api/login.php" method="POST" style="width: 100%;">
+    <input type="text" name="login" placeholder="Login lub Email" required>
+    <input type="password" name="password" placeholder="Hasło" required>
+    
+    <div style="display: flex; align-items: center; margin-bottom: 15px; gap: 10px;">
+        <input type="checkbox" name="remember" id="remember" style="width: auto; margin: 0;">
+        <label for="remember" style="margin: 0; font-weight: normal; font-size: 0.9em;">Zapamiętaj mnie</label>
+    </div>
 
-                <form action="api/login.php" method="POST">
-                    <input type="text" name="login" placeholder="Login lub Email" required>
-                    <input type="password" name="password" placeholder="Hasło" required>
-                    <button class="btn-small" type="submit">Zaloguj</button>
-                </form>
-                <button class="btn-small corner" onclick="window.location.href='register.html'">Nie masz konta? Zarejestruj się</button>
-
+    <button class="btn-small" type="submit" style="width: 100%;">Zaloguj</button>
+</form>
             </div>
+
+        
         </div>
     </div>
     </div>
