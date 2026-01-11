@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1deb5ubuntu1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Nov 30, 2025 at 12:59 AM
--- Server version: 8.0.44-0ubuntu0.22.04.1
--- PHP Version: 8.1.2-1ubuntu2.22
+-- Host: 127.0.0.1
+-- Generation Time: Sty 11, 2026 at 05:22 PM
+-- Wersja serwera: 10.4.32-MariaDB
+-- Wersja PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -21,486 +21,11 @@ SET time_zone = "+00:00";
 -- Database: `baza_planszowek`
 --
 
--- --------------------------------------------------------
-
+DELIMITER $$
 --
--- Table structure for table `Arkusz_Punktacji`
+-- Procedury
 --
-
-CREATE TABLE `Arkusz_Punktacji` (
-  `id_arkusza` int NOT NULL,
-  `id_planszowki` int NOT NULL,
-  `id_pluginu` int NOT NULL,
-  `nazwa_arkusza` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Gatunek`
---
-
-CREATE TABLE `Gatunek` (
-  `id_gatunku` int NOT NULL,
-  `nazwa_gatunku` varchar(255) NOT NULL,
-  `url` varchar(255) DEFAULT NULL,
-  `opis` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Komentarz`
---
-
-CREATE TABLE `Komentarz` (
-  `id_komentarza` int NOT NULL,
-  `id_rozgrywki` int DEFAULT NULL,
-  `id_autora` int DEFAULT NULL,
-  `zawartosc` text,
-  `data_dodania` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Planszowka_Gatunek`
---
-
-CREATE TABLE `Planszowka_Gatunek` (
-  `id_planszowki` int NOT NULL,
-  `id_gatunku` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Planszowka_w_kolekcji`
---
-
-CREATE TABLE `Planszowka_w_kolekcji` (
-  `id_planszowki_w_kolekcji` int NOT NULL,
-  `id_uzytkownika` int NOT NULL,
-  `id_planszowki` int NOT NULL,
-  `ocena` int DEFAULT NULL,
-  `komentarz` text,
-  `id_statusu` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Planszowka`
---
-
-CREATE TABLE `Planszowka` (
-  `id_planszowki` int NOT NULL,
-  `tytul_planszowki` varchar(255) DEFAULT NULL,
-  `data_wydania` int DEFAULT NULL,
-  `wydawca` varchar(255) DEFAULT NULL,
-  `designer` varchar(255) DEFAULT NULL,
-  `min_graczy` int DEFAULT NULL,
-  `max_graczy` int DEFAULT NULL,
-  `min_dlugosc_rozgrywki` int DEFAULT NULL,
-  `max_dlugosc_rozgrywki` int DEFAULT NULL,
-  `waga` float DEFAULT NULL,
-  `rekomendowany_wiek` int DEFAULT NULL,
-  `bgg_id` varchar(255) DEFAULT NULL,
-  `stworzone_przez_id_uzytkownika` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Plugin`
---
-
-CREATE TABLE `Plugin` (
-  `id_pluginu` int NOT NULL,
-  `nazwa_pluginu` varchar(255) NOT NULL,
-  `struktura_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `stworzone_przez_id_uzytkownika` int DEFAULT NULL
-) ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Rozgrywka`
---
-
-CREATE TABLE `Rozgrywka` (
-  `id_rozgrywki` int NOT NULL,
-  `id_planszowki` int DEFAULT NULL,
-  `id_organizatora` int DEFAULT NULL,
-  `data_rozgrywki` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `czas_trwania` int DEFAULT NULL,
-  `notatka_do_gry` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Status`
---
-
-CREATE TABLE `Status` (
-  `id_statusu` int NOT NULL,
-  `nazwa_statusu` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `Status`
---
-
-INSERT INTO `Status` (`id_statusu`, `nazwa_statusu`) VALUES
-(2, 'Chcę zagrać'),
-(1, 'Posiadam'),
-(4, 'Pożyczone'),
-(3, 'Sprzedane');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Uczestnicy_Rozgrywki`
---
-
-CREATE TABLE `Uczestnicy_Rozgrywki` (
-  `id_uczestnictwa` int NOT NULL,
-  `id_rozgrywki` int NOT NULL,
-  `id_uzytkownika` int DEFAULT NULL,
-  `nazwa_tymczasowa_gracza` varchar(255) DEFAULT NULL,
-  `wynik_koncowy` int NOT NULL,
-  `id_arkusza_uzytego` int DEFAULT NULL,
-  `dane_arkusza` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin
-) ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Uprawnienia`
---
-
-CREATE TABLE `Uprawnienia` (
-  `id_uprawnien` int NOT NULL,
-  `typ_uprawnienia` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `Uprawnienia`
---
-
-INSERT INTO `Uprawnienia` (`id_uprawnien`, `typ_uprawnienia`) VALUES
-(1, 'Administrator'),
-(3, 'Użytkownik'),
-(2, 'Moderator');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Uzytkownik`
---
-
-CREATE TABLE `Uzytkownik` (
-  `id_uzytkownika` int NOT NULL,
-  `nazwa_uzytkownika` varchar(255) NOT NULL,
-  `adres_email` varchar(255) DEFAULT NULL,
-  `haslo` varchar(255) DEFAULT NULL,
-  `zdjecie` blob,
-  `id_uprawnien` int NOT NULL,
-  `data_utworzenia` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
---
--- Indexes for table `Arkusz_Punktacji`
---
-ALTER TABLE `Arkusz_Punktacji`
-  ADD PRIMARY KEY (`id_arkusza`),
-  ADD KEY `idx_arkusz_gra` (`id_planszowki`),
-  ADD KEY `idx_arkusz_plugin` (`id_pluginu`);
-
---
--- Indexes for table `Gatunek`
---
-ALTER TABLE `Gatunek`
-  ADD PRIMARY KEY (`id_gatunku`),
-  ADD UNIQUE KEY `nazwa_gatunku` (`nazwa_gatunku`);
-
---
--- Indexes for table `Komentarz`
---
-ALTER TABLE `Komentarz`
-  ADD PRIMARY KEY (`id_komentarza`),
-  ADD KEY `idx_kom_rozgrywka` (`id_rozgrywki`),
-  ADD KEY `idx_kom_autor` (`id_autora`);
-
---
--- Indexes for table `Planszowka_Gatunek`
---
-ALTER TABLE `Planszowka_Gatunek`
-  ADD PRIMARY KEY (`id_planszowki`,`id_gatunku`),
-  ADD KEY `idx_pg_gatunek` (`id_gatunku`);
-
---
--- Indexes for table `Planszowka_w_kolekcji`
---
-ALTER TABLE `Planszowka_w_kolekcji`
-  ADD PRIMARY KEY (`id_planszowki_w_kolekcji`),
-  ADD UNIQUE KEY `unique_user_game` (`id_uzytkownika`,`id_planszowki`),
-  ADD KEY `idx_pk_status` (`id_statusu`),
-  ADD KEY `fk_pk_game` (`id_planszowki`);
-
---
--- Indexes for table `Planszowka`
---
-ALTER TABLE `Planszowka`
-  ADD PRIMARY KEY (`id_planszowki`),
-  ADD KEY `idx_planszowka_tworca` (`stworzone_przez_id_uzytkownika`);
-
---
--- Indexes for table `Plugin`
---
-ALTER TABLE `Plugin`
-  ADD PRIMARY KEY (`id_pluginu`),
-  ADD KEY `idx_plugin_tworca` (`stworzone_przez_id_uzytkownika`);
-
---
--- Indexes for table `Rozgrywka`
---
-ALTER TABLE `Rozgrywka`
-  ADD PRIMARY KEY (`id_rozgrywki`),
-  ADD KEY `idx_rozgrywka_gra` (`id_planszowki`),
-  ADD KEY `idx_rozgrywka_org` (`id_organizatora`);
-
---
--- Indexes for table `Status`
---
-ALTER TABLE `Status`
-  ADD PRIMARY KEY (`id_statusu`),
-  ADD UNIQUE KEY `nazwa_statusu` (`nazwa_statusu`);
-
---
--- Indexes for table `Uczestnicy_Rozgrywki`
---
-ALTER TABLE `Uczestnicy_Rozgrywki`
-  ADD PRIMARY KEY (`id_uczestnictwa`),
-  ADD KEY `idx_uczestnik_rozgrywka` (`id_rozgrywki`),
-  ADD KEY `idx_uczestnik_user` (`id_uzytkownika`),
-  ADD KEY `idx_uczestnik_arkusz` (`id_arkusza_uzytego`);
-
---
--- Indexes for table `Uprawnienia`
---
-ALTER TABLE `Uprawnienia`
-  ADD PRIMARY KEY (`id_uprawnien`),
-  ADD UNIQUE KEY `typ_uprawnienia` (`typ_uprawnienia`);
-
---
--- Indexes for table `Uzytkownik`
---
-ALTER TABLE `Uzytkownik`
-  ADD PRIMARY KEY (`id_uzytkownika`),
-  ADD UNIQUE KEY `nazwa_uzytkownika` (`nazwa_uzytkownika`),
-  ADD KEY `idx_uzytkownik_uprawnienia` (`id_uprawnien`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `Arkusz_Punktacji`
---
-ALTER TABLE `Arkusz_Punktacji`
-  MODIFY `id_arkusza` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Gatunek`
---
-ALTER TABLE `Gatunek`
-  MODIFY `id_gatunku` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Komentarz`
---
-ALTER TABLE `Komentarz`
-  MODIFY `id_komentarza` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Planszowka_w_kolekcji`
---
-ALTER TABLE `Planszowka_w_kolekcji`
-  MODIFY `id_planszowki_w_kolekcji` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Planszowka`
---
-ALTER TABLE `Planszowka`
-  MODIFY `id_planszowki` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Plugin`
---
-ALTER TABLE `Plugin`
-  MODIFY `id_pluginu` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Rozgrywka`
---
-ALTER TABLE `Rozgrywka`
-  MODIFY `id_rozgrywki` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Status`
---
-ALTER TABLE `Status`
-  MODIFY `id_statusu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `Uczestnicy_Rozgrywki`
---
-ALTER TABLE `Uczestnicy_Rozgrywki`
-  MODIFY `id_uczestnictwa` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `Uprawnienia`
---
-ALTER TABLE `Uprawnienia`
-  MODIFY `id_uprawnien` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `Uzytkownik`
---
-ALTER TABLE `Uzytkownik`
-  MODIFY `id_uzytkownika` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `Arkusz_Punktacji`
---
-ALTER TABLE `Arkusz_Punktacji`
-  ADD CONSTRAINT `fk_arkusz_gra` FOREIGN KEY (`id_planszowki`) REFERENCES `Planszowka` (`id_planszowki`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_arkusz_plugin` FOREIGN KEY (`id_pluginu`) REFERENCES `Plugin` (`id_pluginu`) ON DELETE CASCADE;
-
---
--- Constraints for table `Komentarz`
---
-ALTER TABLE `Komentarz`
-  ADD CONSTRAINT `fk_kom_autor` FOREIGN KEY (`id_autora`) REFERENCES `Uzytkownik` (`id_uzytkownika`),
-  ADD CONSTRAINT `fk_kom_rozgrywka` FOREIGN KEY (`id_rozgrywki`) REFERENCES `Rozgrywka` (`id_rozgrywki`) ON DELETE CASCADE;
-
---
--- Constraints for table `Planszowka_Gatunek`
---
-ALTER TABLE `Planszowka_Gatunek`
-  ADD CONSTRAINT `fk_pg_gatunek` FOREIGN KEY (`id_gatunku`) REFERENCES `Gatunek` (`id_gatunku`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_pg_planszowka` FOREIGN KEY (`id_planszowki`) REFERENCES `Planszowka` (`id_planszowki`) ON DELETE CASCADE;
-
---
--- Constraints for table `Planszowka_w_kolekcji`
---
-ALTER TABLE `Planszowka_w_kolekcji`
-  ADD CONSTRAINT `fk_pk_game` FOREIGN KEY (`id_planszowki`) REFERENCES `Planszowka` (`id_planszowki`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_pk_status` FOREIGN KEY (`id_statusu`) REFERENCES `Status` (`id_statusu`),
-  ADD CONSTRAINT `fk_pk_user` FOREIGN KEY (`id_uzytkownika`) REFERENCES `Uzytkownik` (`id_uzytkownika`) ON DELETE CASCADE;
-
---
--- Constraints for table `Planszowka`
---
-ALTER TABLE `Planszowka`
-  ADD CONSTRAINT `fk_planszowka_tworca` FOREIGN KEY (`stworzone_przez_id_uzytkownika`) REFERENCES `Uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
-
---
--- Constraints for table `Plugin`
---
-ALTER TABLE `Plugin`
-  ADD CONSTRAINT `fk_plugin_tworca` FOREIGN KEY (`stworzone_przez_id_uzytkownika`) REFERENCES `Uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
-
---
--- Constraints for table `Rozgrywka`
---
-ALTER TABLE `Rozgrywka`
-  ADD CONSTRAINT `fk_rozgrywka_gra` FOREIGN KEY (`id_planszowki`) REFERENCES `Planszowka` (`id_planszowki`) ON DELETE SET NULL,
-  ADD CONSTRAINT `fk_rozgrywka_org` FOREIGN KEY (`id_organizatora`) REFERENCES `Uzytkownik` (`id_uzytkownika`);
-
---
--- Constraints for table `Uczestnicy_Rozgrywki`
---
-ALTER TABLE `Uczestnicy_Rozgrywki`
-  ADD CONSTRAINT `fk_uczestnik_arkusz` FOREIGN KEY (`id_arkusza_uzytego`) REFERENCES `Arkusz_Punktacji` (`id_arkusza`) ON DELETE SET NULL,
-  ADD CONSTRAINT `fk_uczestnik_rozgrywka` FOREIGN KEY (`id_rozgrywki`) REFERENCES `Rozgrywka` (`id_rozgrywki`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_uczestnik_user` FOREIGN KEY (`id_uzytkownika`) REFERENCES `Uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
-
---
--- Constraints for table `Uzytkownik`
---
-ALTER TABLE `Uzytkownik`
-  ADD CONSTRAINT `fk_uzytkownik_uprawnienia` FOREIGN KEY (`id_uprawnien`) REFERENCES `Uprawnienia` (`id_uprawnien`);
-COMMIT;
-
---
--- Widok - lista kolekcji
---
-CREATE VIEW `Widok_Kolekcji_Uzytkownika` AS
-SELECT
-    u.nazwa_uzytkownika,
-    p.tytul_planszowki,
-    s.nazwa_statusu,
-    pwk.ocena,
-    pwk.komentarz
-FROM Planszowka_w_kolekcji pwk
-JOIN Uzytkownik u ON pwk.id_uzytkownika = u.id_uzytkownika
-JOIN Planszowka p ON pwk.id_planszowki = p.id_planszowki
-JOIN Status s ON pwk.id_statusu = s.id_statusu;
-
---
--- Funkcja - Formatowanie czasu gry
---
-DELIMITER //
-CREATE FUNCTION `Formatuj_Czas_Gry`(min_czas INT, max_czas INT)
-RETURNS VARCHAR(50) DETERMINISTIC
-BEGIN
-    IF min_czas IS NULL OR max_czas IS NULL THEN RETURN 'Brak danych'; END IF;
-    IF min_czas = max_czas THEN
-        RETURN CONCAT(min_czas, ' min');
-    ELSE
-        RETURN CONCAT(min_czas, '-', max_czas, ' min');
-    END IF;
-END //
-DELIMITER ;
---
--- Trigger - Walidacja oceny (1-10)
---
-DELIMITER //
-CREATE TRIGGER `Walidacja_Oceny_Insert`
-BEFORE INSERT ON `Planszowka_w_kolekcji`
-FOR EACH ROW
-BEGIN
-    IF NEW.ocena IS NOT NULL AND (NEW.ocena < 1 OR NEW.ocena > 10) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Błąd: Ocena musi być w przedziale od 1 do 10.';
-    END IF;
-END //
-DELIMITER ;
-
---
---  Archwiwizacja danych
---
-
--- Utworzenie tabel archiwalnych
-CREATE TABLE `Rozgrywka_Historyczna` AS SELECT * FROM `Rozgrywka` WHERE 1=0;
-ALTER TABLE `Rozgrywka_Historyczna` ADD COLUMN `data_archiwizacji` DATETIME DEFAULT CURRENT_TIMESTAMP;
-
-CREATE TABLE `Uczestnicy_Historyczni` AS SELECT * FROM `Uczestnicy_Rozgrywki` WHERE 1=0;
-ALTER TABLE `Uczestnicy_Historyczni` ADD COLUMN `data_archiwizacji` DATETIME DEFAULT CURRENT_TIMESTAMP;
-
--- Procedura migracji
-DELIMITER //
-
-CREATE PROCEDURE `Archiwizuj_Stare_Rozgrywki`()
-BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Archiwizuj_Stare_Rozgrywki` ()   BEGIN
     DECLARE data_graniczna DATETIME;
 
 
@@ -513,7 +38,7 @@ BEGIN
 
     -- Przenoszenie rozgrywek starszych niż 5 lat
     SET data_graniczna = DATE_SUB(NOW(), INTERVAL 5 YEAR);
-    
+
     START TRANSACTION;
 
     -- Kopiowanie uczestników rozgrywek, które zostaną zarchwizowane
@@ -534,18 +59,560 @@ BEGIN
     WHERE data_rozgrywki < data_graniczna;
 
     COMMIT;
-END //
+END$$
+
+--
+-- Functions
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `Formatuj_Czas_Gry` (`min_czas` INT, `max_czas` INT) RETURNS VARCHAR(50) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci DETERMINISTIC BEGIN
+    IF min_czas IS NULL OR max_czas IS NULL THEN RETURN 'Brak danych'; END IF;
+    IF min_czas = max_czas THEN
+        RETURN CONCAT(min_czas, ' min');
+    ELSE
+        RETURN CONCAT(min_czas, '-', max_czas, ' min');
+    END IF;
+END$$
 
 DELIMITER ;
 
--- Automatyczne uruchamianie archiwizacji raz na miesiąc
-SET GLOBAL event_scheduler = ON;
-CREATE EVENT `Auto_Archiwizacja_Co_Miesiac`
-ON SCHEDULE EVERY 1 MONTH
-STARTS CURRENT_TIMESTAMP
-DO
-    CALL Archiwizuj_Stare_Rozgrywki();
+-- --------------------------------------------------------
 
+--
+-- Struktura tabeli dla tabeli `arkusz_punktacji`
+--
+
+CREATE TABLE `arkusz_punktacji` (
+  `id_arkusza` int(11) NOT NULL,
+  `id_planszowki` int(11) NOT NULL,
+  `id_pluginu` int(11) NOT NULL,
+  `nazwa_arkusza` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `gatunek`
+--
+
+CREATE TABLE `gatunek` (
+  `id_gatunku` int(11) NOT NULL,
+  `nazwa_gatunku` varchar(255) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `opis` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `komentarz`
+--
+
+CREATE TABLE `komentarz` (
+  `id_komentarza` int(11) NOT NULL,
+  `id_rozgrywki` int(11) DEFAULT NULL,
+  `id_autora` int(11) DEFAULT NULL,
+  `zawartosc` text DEFAULT NULL,
+  `data_dodania` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `planszowka`
+--
+
+CREATE TABLE `planszowka` (
+  `id_planszowki` int(11) NOT NULL,
+  `tytul_planszowki` varchar(255) DEFAULT NULL,
+  `data_wydania` int(11) DEFAULT NULL,
+  `wydawca` varchar(255) DEFAULT NULL,
+  `designer` varchar(255) DEFAULT NULL,
+  `min_graczy` int(11) DEFAULT NULL,
+  `max_graczy` int(11) DEFAULT NULL,
+  `min_dlugosc_rozgrywki` int(11) DEFAULT NULL,
+  `max_dlugosc_rozgrywki` int(11) DEFAULT NULL,
+  `waga` float DEFAULT NULL,
+  `rekomendowany_wiek` int(11) DEFAULT NULL,
+  `bgg_id` varchar(255) DEFAULT NULL,
+  `stworzone_przez_id_uzytkownika` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `planszowka`
+--
+
+INSERT INTO `planszowka` (`id_planszowki`, `tytul_planszowki`, `data_wydania`, `wydawca`, `designer`, `min_graczy`, `max_graczy`, `min_dlugosc_rozgrywki`, `max_dlugosc_rozgrywki`, `waga`, `rekomendowany_wiek`, `bgg_id`, `stworzone_przez_id_uzytkownika`) VALUES
+(2, 'hentai haven', 3050, 'korea', 'japonia', 2, 4, 5, 20, 10, 6, NULL, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `planszowka_gatunek`
+--
+
+CREATE TABLE `planszowka_gatunek` (
+  `id_planszowki` int(11) NOT NULL,
+  `id_gatunku` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `planszowka_w_kolekcji`
+--
+
+CREATE TABLE `planszowka_w_kolekcji` (
+  `id_planszowki_w_kolekcji` int(11) NOT NULL,
+  `id_uzytkownika` int(11) NOT NULL,
+  `id_planszowki` int(11) NOT NULL,
+  `ocena` int(11) DEFAULT NULL,
+  `komentarz` text DEFAULT NULL,
+  `id_statusu` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `planszowka_w_kolekcji`
+--
+
+INSERT INTO `planszowka_w_kolekcji` (`id_planszowki_w_kolekcji`, `id_uzytkownika`, `id_planszowki`, `ocena`, `komentarz`, `id_statusu`) VALUES
+(2, 4, 2, NULL, 'Dodano automatycznie przy tworzeniu gry', 1);
+
+--
+-- Wyzwalacze `planszowka_w_kolekcji`
+--
+DELIMITER $$
+CREATE TRIGGER `Walidacja_Oceny_Insert` BEFORE INSERT ON `planszowka_w_kolekcji` FOR EACH ROW BEGIN
+    IF NEW.ocena IS NOT NULL AND (NEW.ocena < 1 OR NEW.ocena > 10) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Błąd: Ocena musi być w przedziale od 1 do 10.';
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `plugin`
+--
+
+CREATE TABLE `plugin` (
+  `id_pluginu` int(11) NOT NULL,
+  `nazwa_pluginu` varchar(255) NOT NULL,
+  `struktura_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `stworzone_przez_id_uzytkownika` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `relacje_uzytkownikow`
+--
+
+CREATE TABLE `relacje_uzytkownikow` (
+  `id_uzytkownika1` int(11) NOT NULL,
+  `id_uzytkownika2` int(11) NOT NULL,
+  `data_rozpoczecia` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `relacje_uzytkownikow`
+--
+
+INSERT INTO `relacje_uzytkownikow` (`id_uzytkownika1`, `id_uzytkownika2`, `data_rozpoczecia`) VALUES
+(4, 5, '2026-01-11');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `rozgrywka`
+--
+
+CREATE TABLE `rozgrywka` (
+  `id_rozgrywki` int(11) NOT NULL,
+  `id_planszowki` int(11) DEFAULT NULL,
+  `id_organizatora` int(11) DEFAULT NULL,
+  `data_rozgrywki` timestamp NOT NULL DEFAULT current_timestamp(),
+  `czas_trwania` int(11) DEFAULT NULL,
+  `notatka_do_gry` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `rozgrywka_historyczna`
+--
+
+CREATE TABLE `rozgrywka_historyczna` (
+  `id_rozgrywki` int(11) NOT NULL DEFAULT 0,
+  `id_planszowki` int(11) DEFAULT NULL,
+  `id_organizatora` int(11) DEFAULT NULL,
+  `data_rozgrywki` timestamp NOT NULL DEFAULT current_timestamp(),
+  `czas_trwania` int(11) DEFAULT NULL,
+  `notatka_do_gry` text DEFAULT NULL,
+  `data_archiwizacji` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `status`
+--
+
+CREATE TABLE `status` (
+  `id_statusu` int(11) NOT NULL,
+  `nazwa_statusu` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `status`
+--
+
+INSERT INTO `status` (`id_statusu`, `nazwa_statusu`) VALUES
+(2, 'Chcę zagrać'),
+(1, 'Posiadam'),
+(4, 'Pożyczone'),
+(3, 'Sprzedane');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `uczestnicy_historyczni`
+--
+
+CREATE TABLE `uczestnicy_historyczni` (
+  `id_uczestnictwa` int(11) NOT NULL DEFAULT 0,
+  `id_rozgrywki` int(11) NOT NULL,
+  `id_uzytkownika` int(11) DEFAULT NULL,
+  `nazwa_tymczasowa_gracza` varchar(255) DEFAULT NULL,
+  `wynik_koncowy` int(11) NOT NULL,
+  `id_arkusza_uzytego` int(11) DEFAULT NULL,
+  `dane_arkusza` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `data_archiwizacji` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `uczestnicy_rozgrywki`
+--
+
+CREATE TABLE `uczestnicy_rozgrywki` (
+  `id_uczestnictwa` int(11) NOT NULL,
+  `id_rozgrywki` int(11) NOT NULL,
+  `id_uzytkownika` int(11) DEFAULT NULL,
+  `nazwa_tymczasowa_gracza` varchar(255) DEFAULT NULL,
+  `wynik_koncowy` int(11) NOT NULL,
+  `id_arkusza_uzytego` int(11) DEFAULT NULL,
+  `dane_arkusza` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `uprawnienia`
+--
+
+CREATE TABLE `uprawnienia` (
+  `id_uprawnien` int(11) NOT NULL,
+  `typ_uprawnienia` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `uprawnienia`
+--
+
+INSERT INTO `uprawnienia` (`id_uprawnien`, `typ_uprawnienia`) VALUES
+(1, 'Administrator'),
+(2, 'Moderator'),
+(3, 'Użytkownik');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `uzytkownik`
+--
+
+CREATE TABLE `uzytkownik` (
+  `id_uzytkownika` int(11) NOT NULL,
+  `nazwa_uzytkownika` varchar(255) NOT NULL,
+  `adres_email` varchar(255) DEFAULT NULL,
+  `haslo` varchar(255) DEFAULT NULL,
+  `zdjecie` blob DEFAULT NULL,
+  `id_uprawnien` int(11) NOT NULL,
+  `data_utworzenia` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `uzytkownik`
+--
+
+INSERT INTO `uzytkownik` (`id_uzytkownika`, `nazwa_uzytkownika`, `adres_email`, `haslo`, `zdjecie`, `id_uprawnien`, `data_utworzenia`) VALUES
+(4, 'foo', 'foo@bar.com', '$2y$10$3IUKAgdk8VBUI4mnyavP0Oz5bXht3z3PMhS3LWXtLYbbYMvuJzic2', NULL, 3, '2026-01-11 14:05:57'),
+(5, 'bar', 'bar@foo.com', '$2y$10$2s7zyGlE2gGLoBXdyaTZ3eEWw2Qo6LZCFf26BE0/3kc27l.egLmQa', NULL, 3, '2026-01-11 16:10:44');
+
+-- --------------------------------------------------------
+
+--
+-- Zastąpiona struktura widoku `widok_kolekcji_uzytkownika`
+-- (See below for the actual view)
+--
+CREATE TABLE `widok_kolekcji_uzytkownika` (
+`nazwa_uzytkownika` varchar(255)
+,`tytul_planszowki` varchar(255)
+,`nazwa_statusu` varchar(255)
+,`ocena` int(11)
+,`komentarz` text
+);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura widoku `widok_kolekcji_uzytkownika`
+--
+DROP TABLE IF EXISTS `widok_kolekcji_uzytkownika`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `widok_kolekcji_uzytkownika`  AS SELECT `u`.`nazwa_uzytkownika` AS `nazwa_uzytkownika`, `p`.`tytul_planszowki` AS `tytul_planszowki`, `s`.`nazwa_statusu` AS `nazwa_statusu`, `pwk`.`ocena` AS `ocena`, `pwk`.`komentarz` AS `komentarz` FROM (((`planszowka_w_kolekcji` `pwk` join `uzytkownik` `u` on(`pwk`.`id_uzytkownika` = `u`.`id_uzytkownika`)) join `planszowka` `p` on(`pwk`.`id_planszowki` = `p`.`id_planszowki`)) join `status` `s` on(`pwk`.`id_statusu` = `s`.`id_statusu`)) ;
+
+--
+-- Indeksy dla zrzutów tabel
+--
+
+--
+-- Indeksy dla tabeli `arkusz_punktacji`
+--
+ALTER TABLE `arkusz_punktacji`
+  ADD PRIMARY KEY (`id_arkusza`),
+  ADD KEY `idx_arkusz_gra` (`id_planszowki`),
+  ADD KEY `idx_arkusz_plugin` (`id_pluginu`);
+
+--
+-- Indeksy dla tabeli `gatunek`
+--
+ALTER TABLE `gatunek`
+  ADD PRIMARY KEY (`id_gatunku`),
+  ADD UNIQUE KEY `nazwa_gatunku` (`nazwa_gatunku`);
+
+--
+-- Indeksy dla tabeli `komentarz`
+--
+ALTER TABLE `komentarz`
+  ADD PRIMARY KEY (`id_komentarza`),
+  ADD KEY `idx_kom_rozgrywka` (`id_rozgrywki`),
+  ADD KEY `idx_kom_autor` (`id_autora`);
+
+--
+-- Indeksy dla tabeli `planszowka`
+--
+ALTER TABLE `planszowka`
+  ADD PRIMARY KEY (`id_planszowki`),
+  ADD KEY `idx_planszowka_tworca` (`stworzone_przez_id_uzytkownika`);
+
+--
+-- Indeksy dla tabeli `planszowka_gatunek`
+--
+ALTER TABLE `planszowka_gatunek`
+  ADD PRIMARY KEY (`id_planszowki`,`id_gatunku`),
+  ADD KEY `idx_pg_gatunek` (`id_gatunku`);
+
+--
+-- Indeksy dla tabeli `planszowka_w_kolekcji`
+--
+ALTER TABLE `planszowka_w_kolekcji`
+  ADD PRIMARY KEY (`id_planszowki_w_kolekcji`),
+  ADD UNIQUE KEY `unique_user_game` (`id_uzytkownika`,`id_planszowki`),
+  ADD KEY `idx_pk_status` (`id_statusu`),
+  ADD KEY `fk_pk_game` (`id_planszowki`);
+
+--
+-- Indeksy dla tabeli `plugin`
+--
+ALTER TABLE `plugin`
+  ADD PRIMARY KEY (`id_pluginu`),
+  ADD KEY `idx_plugin_tworca` (`stworzone_przez_id_uzytkownika`);
+
+--
+-- Indeksy dla tabeli `rozgrywka`
+--
+ALTER TABLE `rozgrywka`
+  ADD PRIMARY KEY (`id_rozgrywki`),
+  ADD KEY `idx_rozgrywka_gra` (`id_planszowki`),
+  ADD KEY `idx_rozgrywka_org` (`id_organizatora`);
+
+--
+-- Indeksy dla tabeli `status`
+--
+ALTER TABLE `status`
+  ADD PRIMARY KEY (`id_statusu`),
+  ADD UNIQUE KEY `nazwa_statusu` (`nazwa_statusu`);
+
+--
+-- Indeksy dla tabeli `uczestnicy_rozgrywki`
+--
+ALTER TABLE `uczestnicy_rozgrywki`
+  ADD PRIMARY KEY (`id_uczestnictwa`),
+  ADD KEY `idx_uczestnik_rozgrywka` (`id_rozgrywki`),
+  ADD KEY `idx_uczestnik_user` (`id_uzytkownika`),
+  ADD KEY `idx_uczestnik_arkusz` (`id_arkusza_uzytego`);
+
+--
+-- Indeksy dla tabeli `uprawnienia`
+--
+ALTER TABLE `uprawnienia`
+  ADD PRIMARY KEY (`id_uprawnien`),
+  ADD UNIQUE KEY `typ_uprawnienia` (`typ_uprawnienia`);
+
+--
+-- Indeksy dla tabeli `uzytkownik`
+--
+ALTER TABLE `uzytkownik`
+  ADD PRIMARY KEY (`id_uzytkownika`),
+  ADD UNIQUE KEY `nazwa_uzytkownika` (`nazwa_uzytkownika`),
+  ADD KEY `idx_uzytkownik_uprawnienia` (`id_uprawnien`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `arkusz_punktacji`
+--
+ALTER TABLE `arkusz_punktacji`
+  MODIFY `id_arkusza` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `gatunek`
+--
+ALTER TABLE `gatunek`
+  MODIFY `id_gatunku` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `komentarz`
+--
+ALTER TABLE `komentarz`
+  MODIFY `id_komentarza` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `planszowka`
+--
+ALTER TABLE `planszowka`
+  MODIFY `id_planszowki` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `planszowka_w_kolekcji`
+--
+ALTER TABLE `planszowka_w_kolekcji`
+  MODIFY `id_planszowki_w_kolekcji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `plugin`
+--
+ALTER TABLE `plugin`
+  MODIFY `id_pluginu` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `rozgrywka`
+--
+ALTER TABLE `rozgrywka`
+  MODIFY `id_rozgrywki` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `status`
+--
+ALTER TABLE `status`
+  MODIFY `id_statusu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `uczestnicy_rozgrywki`
+--
+ALTER TABLE `uczestnicy_rozgrywki`
+  MODIFY `id_uczestnictwa` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `uprawnienia`
+--
+ALTER TABLE `uprawnienia`
+  MODIFY `id_uprawnien` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `uzytkownik`
+--
+ALTER TABLE `uzytkownik`
+  MODIFY `id_uzytkownika` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `arkusz_punktacji`
+--
+ALTER TABLE `arkusz_punktacji`
+  ADD CONSTRAINT `fk_arkusz_gra` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_arkusz_plugin` FOREIGN KEY (`id_pluginu`) REFERENCES `plugin` (`id_pluginu`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `komentarz`
+--
+ALTER TABLE `komentarz`
+  ADD CONSTRAINT `fk_kom_autor` FOREIGN KEY (`id_autora`) REFERENCES `uzytkownik` (`id_uzytkownika`),
+  ADD CONSTRAINT `fk_kom_rozgrywka` FOREIGN KEY (`id_rozgrywki`) REFERENCES `rozgrywka` (`id_rozgrywki`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `planszowka`
+--
+ALTER TABLE `planszowka`
+  ADD CONSTRAINT `fk_planszowka_tworca` FOREIGN KEY (`stworzone_przez_id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `planszowka_gatunek`
+--
+ALTER TABLE `planszowka_gatunek`
+  ADD CONSTRAINT `fk_pg_gatunek` FOREIGN KEY (`id_gatunku`) REFERENCES `gatunek` (`id_gatunku`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_pg_planszowka` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `planszowka_w_kolekcji`
+--
+ALTER TABLE `planszowka_w_kolekcji`
+  ADD CONSTRAINT `fk_pk_game` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_pk_status` FOREIGN KEY (`id_statusu`) REFERENCES `status` (`id_statusu`),
+  ADD CONSTRAINT `fk_pk_user` FOREIGN KEY (`id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `plugin`
+--
+ALTER TABLE `plugin`
+  ADD CONSTRAINT `fk_plugin_tworca` FOREIGN KEY (`stworzone_przez_id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `rozgrywka`
+--
+ALTER TABLE `rozgrywka`
+  ADD CONSTRAINT `fk_rozgrywka_gra` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_rozgrywka_org` FOREIGN KEY (`id_organizatora`) REFERENCES `uzytkownik` (`id_uzytkownika`);
+
+--
+-- Constraints for table `uczestnicy_rozgrywki`
+--
+ALTER TABLE `uczestnicy_rozgrywki`
+  ADD CONSTRAINT `fk_uczestnik_arkusz` FOREIGN KEY (`id_arkusza_uzytego`) REFERENCES `arkusz_punktacji` (`id_arkusza`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_uczestnik_rozgrywka` FOREIGN KEY (`id_rozgrywki`) REFERENCES `rozgrywka` (`id_rozgrywki`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_uczestnik_user` FOREIGN KEY (`id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `uzytkownik`
+--
+ALTER TABLE `uzytkownik`
+  ADD CONSTRAINT `fk_uzytkownik_uprawnienia` FOREIGN KEY (`id_uprawnien`) REFERENCES `uprawnienia` (`id_uprawnien`);
+
+DELIMITER $$
+--
+-- Events
+--
+CREATE DEFINER=`root`@`localhost` EVENT `Auto_Archiwizacja_Co_Miesiac` ON SCHEDULE EVERY 1 MONTH STARTS '2026-01-11 13:46:13' ON COMPLETION NOT PRESERVE ENABLE DO CALL Archiwizuj_Stare_Rozgrywki()$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

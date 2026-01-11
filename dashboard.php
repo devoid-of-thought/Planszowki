@@ -12,8 +12,8 @@ $userName = $_SESSION['username'];
 
 // 2. Pobranie danych
 try {
-    $sql = "SELECT tytul_planszowki, nazwa_statusu, ocena, komentarz 
-            FROM Widok_Kolekcji_Uzytkownika 
+    $sql = "SELECT tytul_planszowki, nazwa_statusu, ocena, komentarz
+            FROM Widok_Kolekcji_Uzytkownika
             WHERE nazwa_uzytkownika = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$userName]);
@@ -36,21 +36,21 @@ try {
 <body>
 
     <div class="dashboard-wrapper">
-        
+
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
-                Planszówki 
+                Planszówki
             </div>
 
             <a href="dashboard.php" style="background-color: #1a1a1a; color: white;">Moja Kolekcja</a>
             <a href="profil.php">Mój Profil</a>
             <a href="rozgrywki.php">Rozgrywki</a>
-            
+            <a href="znajomi.php">Znajomi</a>
             <a href="logout.php" class="logout-link"> Wyloguj się</a> <!-- Dodać ekran główny i przekierowanie tam po wylogowaniu -->
         </nav>
 
         <div class="main-content">
-            
+
             <div class="top-header">
                 <button type="button" id="sidebarCollapse" class="toggle-btn">
                     ☰ Menu
@@ -76,24 +76,24 @@ try {
                         </thead>
                         <tbody>
                             <?php foreach ($kolekcja as $gra): ?>
-                            <tr>
-                                <td><strong><?php echo htmlspecialchars($gra['tytul_planszowki']); ?></strong></td>
-                                
-                                <td>
-                                    <?php echo htmlspecialchars($gra['nazwa_statusu']); ?>
-                                </td>
+                                <tr>
+                                    <td><strong><?php echo htmlspecialchars($gra['tytul_planszowki']); ?></strong></td>
 
-                                <td>
-                                    <?php 
-                                    if ($gra['ocena']) {
-                                        echo htmlspecialchars($gra['ocena']) . "/10"; 
-                                    } else {
-                                        echo "-";
-                                    }
-                                    ?>
-                                </td>
-                                <td><?php echo htmlspecialchars($gra['komentarz'] ?? ''); ?></td>
-                            </tr>
+                                    <td>
+                                        <?php echo htmlspecialchars($gra['nazwa_statusu']); ?>
+                                    </td>
+
+                                    <td>
+                                        <?php
+                                        if ($gra['ocena']) {
+                                            echo htmlspecialchars($gra['ocena']) . "/10";
+                                        } else {
+                                            echo "-";
+                                        }
+                                        ?>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($gra['komentarz'] ?? ''); ?></td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -105,10 +105,13 @@ try {
                 <?php endif; ?>
             </main>
 
-        </div> </div> <script>
-        document.getElementById('sidebarCollapse').addEventListener('click', function () {
+        </div>
+    </div>
+    <script>
+        document.getElementById('sidebarCollapse').addEventListener('click', function() {
             document.getElementById('sidebar').classList.toggle('collapsed');
         });
     </script>
 </body>
+
 </html>

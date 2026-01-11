@@ -102,6 +102,7 @@ try {
             <a href="dashboard.php">Moja Kolekcja</a>
             <a href="profil.php" style="background-color: var(--color-magenta); color: var(--color-white); border-left: 4px solid var(--color-mauve);">Mój Profil</a>
             <a href="rozgrywki.php">Rozgrywki</a>
+            <a href="znajomi.php">Znajomi</a>
             <a href="logout.php" class="logout-link">Wyloguj się</a>
         </nav>
 
@@ -134,10 +135,10 @@ try {
                 </div>
             </div>
 
-            <?php if(!empty($message)) echo $message; ?>
+            <?php if (!empty($message)) echo $message; ?>
 
             <div class="profile-section forms-section">
-                
+
                 <div class="form-profile">
                     <h3>Zmiana hasła</h3>
                     <form action="profil.php" method="POST">
@@ -152,7 +153,7 @@ try {
                         <label>Potwierdź nowe hasło</label>
                         <input type="password" name="confirm_password" required>
 
-                        <button type="submit" class="btn-small" >Zmień hasło</button>
+                        <button type="submit" class="btn-small">Zmień hasło</button>
                     </form>
                 </div>
 
@@ -181,4 +182,5 @@ try {
         });
     </script>
 </body>
+
 </html>

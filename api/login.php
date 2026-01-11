@@ -31,19 +31,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Pobranie użytkownika z bazy (logowanie po nazwie LUB emailu)
     $stmt = $pdo->prepare("SELECT id_uzytkownika, nazwa_uzytkownika, haslo FROM Uzytkownik WHERE nazwa_uzytkownika = ? OR adres_email = ?");
-    $stmt->execute([$login, $login]);
+    $stmt->execute(params: [$login, $login]);
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['haslo'])) {
         // Logowanie poprawne
-        
+
         // Regeneracja ID sesji dla bezpieczeństwa (chroni przed session fixation)
-        session_regenerate_id(true);
+        session_regenerate_id(delete_old_session: true);
 
         $_SESSION['user_id'] = $user['id_uzytkownika'];
         $_SESSION['username'] = $user['nazwa_uzytkownika'];
 
-        header("Location: ../dashboard.php");
+        header(header: "Location: ../dashboard.php");
         exit();
     } else {
         // Błąd logowania
