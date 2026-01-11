@@ -1,5 +1,4 @@
 <?php
-// dodaj_gre.php
 session_start();
 require_once 'api/db.php';
 
@@ -8,78 +7,81 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$currentUserId = $_SESSION['user_id'];
 $message = "";
 
+// 1. Pobranie listy gier
+try {
+    $stmtGry = $pdo->query("SELECT id_planszowki, tytul_planszowki FROM Planszowka ORDER BY tytul_planszowki ASC");
+    $listaGier = $stmtGry->fetchAll();
+
+    // 2. Pobranie listy znajomych (Uproszczona i bezpieczna kwerenda)
+    $sqlZnajomi = "SELECT u.id_uzytkownika, u.nazwa_uzytkownika
+                   FROM uzytkownik u
+                   JOIN relacje_uzytkownikow r ON
+                   (u.id_uzytkownika = r.id_uzytkownika2 AND r.id_uzytkownika1 = :uid1) OR
+                   (u.id_uzytkownika = r.id_uzytkownika1 AND r.id_uzytkownika2 = :uid2)";
+    $stmtZnajomi = $pdo->prepare($sqlZnajomi);
+    $stmtZnajomi->execute(['uid1' => $currentUserId, 'uid2' => $currentUserId]);
+    $listaZnajomych = $stmtZnajomi->fetchAll();
+} catch (PDOException $e) {
+    die("Błąd bazy danych: " . $e->getMessage());
+}
+
+// 3. Obsługa formularza
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $tytul = trim($_POST['tytul']);
-    // Pobieranie danych opcjonalnych
-    $rok = !empty($_POST['rok']) ? (int)$_POST['rok'] : null;
-    $wydawca = !empty($_POST['wydawca']) ? trim($_POST['wydawca']) : null;
-    $designer = !empty($_POST['designer']) ? trim($_POST['designer']) : null;
-    $min_graczy = !empty($_POST['min_graczy']) ? (int)$_POST['min_graczy'] : null;
-    $max_graczy = !empty($_POST['max_graczy']) ? (int)$_POST['max_graczy'] : null;
-    $min_czas = !empty($_POST['min_czas']) ? (int)$_POST['min_czas'] : null;
-    $max_czas = !empty($_POST['max_czas']) ? (int)$_POST['max_czas'] : null;
-    $waga = !empty($_POST['waga']) ? (float)$_POST['waga'] : null;
-    $wiek = !empty($_POST['wiek']) ? (int)$_POST['wiek'] : null;
+    $id_planszowki = (int)$_POST['id_planszowki'];
+    $data_rozgrywki = $_POST['data_rozgrywki'];
+    $czas_trwania = (int)$_POST['czas_trwania'];
+    $notatka = trim($_POST['notatka_do_gry']);
+    $wybrani_gracze = $_POST['gracze'] ?? []; // Tablica ID wybranych znajomych
 
-    // Domyślny status dla twórcy wpisu (np. 1 = "Posiadam")
-    // Możesz to zmienić na pobieranie z formularza, jeśli chcesz dać wybór
-    $domyslny_status_id = 1;
+    try {
+        // 1. Walidacja czasu (pobranie danych o grze)
+        $stmtCheck = $pdo->prepare("SELECT min_dlugosc_rozgrywki, max_dlugosc_rozgrywki, tytul_planszowki FROM Planszowka WHERE id_planszowki = ?");
+        $stmtCheck->execute([$id_planszowki]);
+        $graInfo = $stmtCheck->fetch();
 
-    if (empty($tytul)) {
-        $message = "<p class='error'>Tytuł gry jest wymagany!</p>";
-    } else {
-        try {
-            // 1. Rozpoczęcie transakcji
-            $pdo->beginTransaction();
+        if ($graInfo) {
+            $min = $graInfo['min_dlugosc_rozgrywki'] ?? 0;
+            $max = $graInfo['max_dlugosc_rozgrywki'] ?? 9999;
 
-            // 2. Dodanie gry do bazy GLOBALNEJ (Tabela Planszowka)
-            $sqlGlobal = "INSERT INTO Planszowka (
-                        tytul_planszowki, data_wydania, wydawca, designer,
-                        min_graczy, max_graczy, min_dlugosc_rozgrywki, max_dlugosc_rozgrywki,
-                        waga, rekomendowany_wiek, stworzone_przez_id_uzytkownika
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            if ($czas_trwania < $min || $czas_trwania > $max) {
+                $message = "<p class='error'>Błąd: Czas ($czas_trwania min) poza zakresem gry " . htmlspecialchars($graInfo['tytul_planszowki']) . " ($min-$max).</p>";
+            } else {
+                // 2. Rozpoczęcie transakcji
+                $pdo->beginTransaction();
 
-            $stmt = $pdo->prepare($sqlGlobal);
-            $stmt->execute([
-                $tytul,
-                $rok,
-                $wydawca,
-                $designer,
-                $min_graczy,
-                $max_graczy,
-                $min_czas,
-                $max_czas,
-                $waga,
-                $wiek,
-                $_SESSION['user_id']
-            ]);
+                // 3. Wstawienie rekord do tabeli Rozgrywka
+                $sqlInsertRozgrywka = "INSERT INTO Rozgrywka (id_planszowki, id_organizatora, data_rozgrywki, czas_trwania, notatka_do_gry)
+                                       VALUES (?, ?, ?, ?, ?)";
+                $stmtRozgrywka = $pdo->prepare($sqlInsertRozgrywka);
+                $stmtRozgrywka->execute([$id_planszowki, $currentUserId, $data_rozgrywki, $czas_trwania, $notatka]);
 
-            // 3. Pobranie ID nowej gry
-            $nowe_id_gry = $pdo->lastInsertId();
+                $id_nowej_rozgrywki = $pdo->lastInsertId();
 
-            // 4. Automatyczne dodanie do KOLEKCJI użytkownika (Tabela Planszowka_w_kolekcji)
-            $sqlKolekcja = "INSERT INTO Planszowka_w_kolekcji
-                            (id_uzytkownika, id_planszowki, id_statusu, ocena, komentarz)
-                            VALUES (?, ?, ?, NULL, 'Dodano automatycznie przy tworzeniu gry')";
+                // 4. Przygotowanie zapytania dla uczestników
+                $sqlInsertUczestnik = "INSERT INTO uczestnicy_rozgrywki (id_rozgrywki, id_uzytkownika) VALUES (?, ?)";
+                $stmtUczestnik = $pdo->prepare($sqlInsertUczestnik);
 
-            $stmtKolekcja = $pdo->prepare($sqlKolekcja);
-            $stmtKolekcja->execute([
-                $_SESSION['user_id'],
-                $nowe_id_gry,
-                $domyslny_status_id
-            ]);
+                // Dodaj Ciebie (organizatora) jako pierwszego uczestnika
+                $stmtUczestnik->execute([$id_nowej_rozgrywki, $currentUserId]);
 
-            // 5. Zatwierdzenie transakcji (Commit)
-            $pdo->commit();
+                // Dodaj wszystkich wybranych znajomych
+                foreach ($wybrani_gracze as $id_znajomego) {
+                    $stmtUczestnik->execute([$id_nowej_rozgrywki, (int)$id_znajomego]);
+                }
 
-            $message = "<p class='success'>Sukces! Gra <strong>" . htmlspecialchars($tytul) . "</strong> została dodana do bazy i Twojej kolekcji.</p>";
-        } catch (PDOException $e) {
-            // Wycofanie zmian w razie błędu (Rollback)
-            $pdo->rollBack();
-            $message = "<p class='error'>Błąd bazy danych: " . $e->getMessage() . "</p>";
+                // 5. Zatwierdzenie transakcji
+                $pdo->commit();
+
+                header("Location: rozgrywki.php?success=1");
+                exit();
+            }
         }
+    } catch (PDOException $e) {
+        if($pdo->inTransaction()) $pdo->rollBack();
+        $message = "<p class='error'>Błąd bazy danych: " . $e->getMessage() . "</p>";
     }
 }
 ?>
@@ -90,55 +92,107 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Dodaj rozgrywkę</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .search-box {
+            margin-bottom: 5px;
+            padding: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .friends-list {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .friend-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            color: #1a1a1a;
+        }
+
+
+
+        .friend-item input[type="checkbox"] {
+            display: none;
+        }
+
+        .friend-item:hover {
+            background: #f0f0f0;
+        }
+
+        .friend-item:has(input:checked) {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            color: #1d4ed8;
+        }
+    </style>
 </head>
 
 <body>
     <div class="dashboard-wrapper">
         <div class="main-content">
             <div class="top-header">
-                <div>
-                    <h2>Dodaj nową rozgrywkę</h2>
-                    <p>Gra zostanie automatycznie dodana do Twojej kolekcji jako "Posiadam".</p>
-                </div>
-                <button class="btn-small" onclick="window.location.href='dashboard.php'">← Wróć do Panelu</button>
+                <h2>Dodaj nową rozgrywkę</h2>
+                <button class="btn-small" onclick="window.location.href='rozgrywki.php'">← Wróć</button>
             </div>
+
             <div class="form-container dodaj-gre">
                 <?= $message ?>
+                <form method="POST">
+                    <label>Gra:</label>
+                    <select name="id_planszowki" required>
+                        <option value="">-- Wybierz grę --</option>
+                        <?php foreach ($listaGier as $gra): ?>
+                            <option value="<?= $gra['id_planszowki'] ?>"><?= htmlspecialchars($gra['tytul_planszowki']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
 
-                <form action="dodaj_gre.php" method="POST">
-                    <input type="text" name="tytul" placeholder="Tytuł gry (wymagane)" required>
-
-                    <div>
-                        <input type="number" name="rok" placeholder="Rok wydania">
-                        <input type="number" step="0.01" name="waga" placeholder="Waga (np. 2.5)">
+                    <label>Data i czas:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="date" name="data_rozgrywki" required value="<?= date('Y-m-d') ?>">
+                        <input type="number" name="czas_trwania" placeholder="Czas (min)" required>
                     </div>
 
-                    <input type="text" name="wydawca" placeholder="Wydawca">
-                    <input type="text" name="designer" placeholder="Projektant">
-
-                    <label>Liczba graczy (min - max):</label>
-                    <div>
-                        <input type="number" name="min_graczy" placeholder="Od">
-                        <input type="number" name="max_graczy" placeholder="Do">
+                    <label>Dodaj graczy (znajomi):</label>
+                    <input type="text" id="friendSearch" class="search-box" placeholder="Szukaj znajomego..." onkeyup="filterFriends()">
+                    <div class="friends-list" id="friendsList">
+                        <?php foreach ($listaZnajomych as $znajomy): ?>
+                            <label class="friend-item">
+                                <input type="checkbox" name="gracze[]" value="<?= $znajomy['id_uzytkownika'] ?>" style="width: 15px; height: 15px; margin: 5px">
+                                <span><?= htmlspecialchars($znajomy['nazwa_uzytkownika']) ?></span>
+                            </label>
+                        <?php endforeach; ?>
                     </div>
 
-                    <label>Czas gry w minutach (min - max):</label>
-                    <div>
-                        <input type="number" name="min_czas" placeholder="Od">
-                        <input type="number" name="max_czas" placeholder="Do">
-                    </div>
+                    <label>Notatka:</label>
+                    <textarea name="notatka_do_gry"></textarea>
 
-                    <input type="number" name="wiek" placeholder="Rekomendowany wiek (np. 12)">
-
-                    <button class="btn-small save" type="submit">Zapisz i dodaj do kolekcji</button>
+                    <button class="btn-small save" type="submit">Zapisz rozgrywkę</button>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        function filterFriends() {
+            let input = document.getElementById('friendSearch').value.toLowerCase();
+            let items = document.querySelectorAll('.friend-item');
+
+            items.forEach(item => {
+                let text = item.innerText.toLowerCase();
+                item.style.display = text.includes(input) ? "flex" : "none";
+            });
+        }
+    </script>
 </body>
 
 </html>

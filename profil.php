@@ -110,7 +110,7 @@ try {
 
             <div class="top-header">
                 <button type="button" id="sidebarCollapse" class="toggle-btn">
-                    Menu
+                    ☰ Menu
                 </button>
                 <h2>Twój Profil</h2>
             </div>

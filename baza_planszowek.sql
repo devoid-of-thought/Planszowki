@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sty 11, 2026 at 05:22 PM
+-- Generation Time: Sty 11, 2026 at 10:30 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -137,13 +137,6 @@ CREATE TABLE `planszowka` (
   `stworzone_przez_id_uzytkownika` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `planszowka`
---
-
-INSERT INTO `planszowka` (`id_planszowki`, `tytul_planszowki`, `data_wydania`, `wydawca`, `designer`, `min_graczy`, `max_graczy`, `min_dlugosc_rozgrywki`, `max_dlugosc_rozgrywki`, `waga`, `rekomendowany_wiek`, `bgg_id`, `stworzone_przez_id_uzytkownika`) VALUES
-(2, 'hentai haven', 3050, 'korea', 'japonia', 2, 4, 5, 20, 10, 6, NULL, 4);
-
 -- --------------------------------------------------------
 
 --
@@ -169,13 +162,6 @@ CREATE TABLE `planszowka_w_kolekcji` (
   `komentarz` text DEFAULT NULL,
   `id_statusu` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `planszowka_w_kolekcji`
---
-
-INSERT INTO `planszowka_w_kolekcji` (`id_planszowki_w_kolekcji`, `id_uzytkownika`, `id_planszowki`, `ocena`, `komentarz`, `id_statusu`) VALUES
-(2, 4, 2, NULL, 'Dodano automatycznie przy tworzeniu gry', 1);
 
 --
 -- Wyzwalacze `planszowka_w_kolekcji`
@@ -214,13 +200,6 @@ CREATE TABLE `relacje_uzytkownikow` (
   `id_uzytkownika2` int(11) NOT NULL,
   `data_rozpoczecia` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `relacje_uzytkownikow`
---
-
-INSERT INTO `relacje_uzytkownikow` (`id_uzytkownika1`, `id_uzytkownika2`, `data_rozpoczecia`) VALUES
-(4, 5, '2026-01-11');
 
 -- --------------------------------------------------------
 
@@ -342,14 +321,6 @@ CREATE TABLE `uzytkownik` (
   `id_uprawnien` int(11) NOT NULL,
   `data_utworzenia` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `uzytkownik`
---
-
-INSERT INTO `uzytkownik` (`id_uzytkownika`, `nazwa_uzytkownika`, `adres_email`, `haslo`, `zdjecie`, `id_uprawnien`, `data_utworzenia`) VALUES
-(4, 'foo', 'foo@bar.com', '$2y$10$3IUKAgdk8VBUI4mnyavP0Oz5bXht3z3PMhS3LWXtLYbbYMvuJzic2', NULL, 3, '2026-01-11 14:05:57'),
-(5, 'bar', 'bar@foo.com', '$2y$10$2s7zyGlE2gGLoBXdyaTZ3eEWw2Qo6LZCFf26BE0/3kc27l.egLmQa', NULL, 3, '2026-01-11 16:10:44');
 
 -- --------------------------------------------------------
 
@@ -496,13 +467,13 @@ ALTER TABLE `komentarz`
 -- AUTO_INCREMENT for table `planszowka`
 --
 ALTER TABLE `planszowka`
-  MODIFY `id_planszowki` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_planszowki` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `planszowka_w_kolekcji`
 --
 ALTER TABLE `planszowka_w_kolekcji`
-  MODIFY `id_planszowki_w_kolekcji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_planszowki_w_kolekcji` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `plugin`
@@ -538,7 +509,7 @@ ALTER TABLE `uprawnienia`
 -- AUTO_INCREMENT for table `uzytkownik`
 --
 ALTER TABLE `uzytkownik`
-  MODIFY `id_uzytkownika` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_uzytkownika` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

@@ -19,9 +19,9 @@
                 Planszówki
             </div>
 
-            <a href="dashboard.php" style="background-color: #1a1a1a; color: white;">Moja Kolekcja</a>
+            <a href="dashboard.php">Moja Kolekcja</a>
             <a href="profil.php">Mój Profil</a>
-            <a href="rozgrywki.php">Rozgrywki</a>
+            <a href="rozgrywki.php" style="background-color: #1a1a1a; color: white;">Rozgrywki</a>
             <a href="znajomi.php">Znajomi</a>
 
             <a href="logout.php" class="logout-link"> Wyloguj się</a> <!-- Dodać ekran główny i przekierowanie tam po wylogowaniu -->
@@ -33,6 +33,7 @@
                 <button type="button" id="sidebarCollapse" class="toggle-btn">
                     ☰ Menu
                 </button>
+                <h2>Twoje Rozgrywki</h2>
             </div>
 
             <div class="actions">
