@@ -34,8 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // 1. Rozpoczęcie transakcji
             $pdo->beginTransaction();
 
-            // 2. Dodanie gry do bazy GLOBALNEJ (Tabela Planszowka)
-            $sqlGlobal = "INSERT INTO Planszowka (
+            // 2. Dodanie gry do bazy GLOBALNEJ (Tabela planszowka)
+            $sqlGlobal = "INSERT INTO planszowka (
                         tytul_planszowki, data_wydania, wydawca, designer,
                         min_graczy, max_graczy, min_dlugosc_rozgrywki, max_dlugosc_rozgrywki,
                         waga, rekomendowany_wiek, stworzone_przez_id_uzytkownika
@@ -59,8 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // 3. Pobranie ID nowej gry
             $nowe_id_gry = $pdo->lastInsertId();
 
-            // 4. Automatyczne dodanie do KOLEKCJI użytkownika (Tabela Planszowka_w_kolekcji)
-            $sqlKolekcja = "INSERT INTO Planszowka_w_kolekcji
+            // 4. Automatyczne dodanie do KOLEKCJI użytkownika (Tabela planszowka_w_kolekcji)
+            $sqlKolekcja = "INSERT INTO planszowka_w_kolekcji
                             (id_uzytkownika, id_planszowki, id_statusu, ocena, komentarz)
                             VALUES (?, ?, ?, NULL, 'Dodano automatycznie przy tworzeniu gry')";
 

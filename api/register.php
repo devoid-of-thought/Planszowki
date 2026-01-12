@@ -28,11 +28,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 5. Zapis do bazy
     try {
-        $sql = "INSERT INTO Uzytkownik (nazwa_uzytkownika, adres_email, haslo, id_uprawnien) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO uzytkownik (nazwa_uzytkownika, adres_email, haslo, id_uprawnien) VALUES (?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$user, $email, $hashed_password, $role_id]);
         
-        echo "Rejestracja udana! <a href='../index.php'>Zaloguj się teraz</a>";
+        // --- ZMIANA: Automatyczne logowanie po rejestracji ---
+
+        // 1. Uruchom sesję (jeśli nie działa)
+        session_start();
+
+        // 2. Pobierz ID nowego użytkownika (funkcja PDO)
+        $newUserId = $pdo->lastInsertId();
+
+        // 3. Ustaw zmienne sesyjne (to sprawia, że jest "zalogowany")
+        $_SESSION['user_id'] = $newUserId;
+        $_SESSION['username'] = $user;
+
+        // 4. Przekieruj do dashboardu
+        header("Location: ../dashboard.php");
+        exit(); // Ważne: zatrzymaj dalsze wykonywanie skryptu
+
     } catch (PDOException $e) {
         echo "Błąd bazy danych: " . $e->getMessage();
     }

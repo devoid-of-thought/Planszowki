@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = trim($_POST['password']);
 
     // Pobranie użytkownika z bazy (logowanie po nazwie LUB emailu)
-    $stmt = $pdo->prepare("SELECT id_uzytkownika, nazwa_uzytkownika, haslo FROM Uzytkownik WHERE nazwa_uzytkownika = ? OR adres_email = ?");
+    $stmt = $pdo->prepare("SELECT id_uzytkownika, nazwa_uzytkownika, haslo FROM uzytkownik WHERE nazwa_uzytkownika = ? OR adres_email = ?");
     $stmt->execute(params: [$login, $login]);
     $user = $stmt->fetch();
 

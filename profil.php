@@ -23,13 +23,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['change_password'])) {
     } elseif ($newPass !== $confirmPass) {
         $message = "<p class='error' style='color: red;'>Nowe hasła nie są identyczne.</p>";
     } else {
-        $stmt = $pdo->prepare("SELECT haslo FROM Uzytkownik WHERE id_uzytkownika = ?");
+        $stmt = $pdo->prepare("SELECT haslo FROM uzytkownik WHERE id_uzytkownika = ?");
         $stmt->execute([$userId]);
         $user = $stmt->fetch();
 
         if ($user && password_verify($oldPass, $user['haslo'])) {
             $newHash = password_hash($newPass, PASSWORD_DEFAULT);
-            $updateStmt = $pdo->prepare("UPDATE Uzytkownik SET haslo = ? WHERE id_uzytkownika = ?");
+            $updateStmt = $pdo->prepare("UPDATE uzytkownik SET haslo = ? WHERE id_uzytkownika = ?");
             if ($updateStmt->execute([$newHash, $userId])) {
                 $message = "<p class='success' style='color: green; font-weight: bold;'>Hasło zostało zmienione.</p>";
             } else {
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
         $message = "<p class='error' style='color: red;'>Nazwa użytkownika i email są wymagane.</p>";
     } else {
         try {
-            $updateStmt = $pdo->prepare("UPDATE Uzytkownik SET nazwa_uzytkownika = ?, adres_email = ? WHERE id_uzytkownika = ?");
+            $updateStmt = $pdo->prepare("UPDATE uzytkownik SET nazwa_uzytkownika = ?, adres_email = ? WHERE id_uzytkownika = ?");
             if ($updateStmt->execute([$newUsername, $newEmail, $userId])) {
                 $_SESSION['username'] = $newUsername; // Aktualizacja sesji
                 $message = "<p class='success' style='color: green; font-weight: bold;'>Dane zostały zaktualizowane.</p>";
@@ -64,12 +64,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
 // 3. Pobranie aktualnych danych użytkownika
 try {
     // Upewnij się, że w bazie masz kolumnę 'adres_email'. Jeśli nazywa się 'email', zmień to poniżej.
-    $sqlUser = "SELECT nazwa_uzytkownika, adres_email FROM Uzytkownik WHERE id_uzytkownika = ?";
+    $sqlUser = "SELECT nazwa_uzytkownika, adres_email FROM uzytkownik WHERE id_uzytkownika = ?";
     $stmtUser = $pdo->prepare($sqlUser);
     $stmtUser->execute([$userId]);
     $userData = $stmtUser->fetch();
 
-    $sqlCount = "SELECT COUNT(*) as total FROM Planszowka_w_kolekcji WHERE id_uzytkownika = ?";
+    $sqlCount = "SELECT COUNT(*) as total FROM planszowka_w_kolekcji WHERE id_uzytkownika = ?";
     $stmtCount = $pdo->prepare($sqlCount);
     $stmtCount->execute([$userId]);
     $stats = $stmtCount->fetch();

@@ -45,17 +45,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `Archiwizuj_Stare_Rozgrywki` ()   BE
     INSERT INTO `Uczestnicy_Historyczni` (id_uczestnictwa, id_rozgrywki, id_uzytkownika, nazwa_tymczasowa_gracza, wynik_koncowy, id_arkusza_uzytego, dane_arkusza)
     SELECT u.id_uczestnictwa, u.id_rozgrywki, u.id_uzytkownika, u.nazwa_tymczasowa_gracza, u.wynik_koncowy, u.id_arkusza_uzytego, u.dane_arkusza
     FROM `Uczestnicy_Rozgrywki` u
-    JOIN `Rozgrywka` r ON u.id_rozgrywki = r.id_rozgrywki
+    JOIN `rozgrywka` r ON u.id_rozgrywki = r.id_rozgrywki
     WHERE r.data_rozgrywki < data_graniczna;
 
     --  Kopiowanie rozgrywek
     INSERT INTO `Rozgrywka_Historyczna` (id_rozgrywki, id_planszowki, id_organizatora, data_rozgrywki, czas_trwania, notatka_do_gry)
     SELECT id_rozgrywki, id_planszowki, id_organizatora, data_rozgrywki, czas_trwania, notatka_do_gry
-    FROM `Rozgrywka`
+    FROM `rozgrywka`
     WHERE data_rozgrywki < data_graniczna;
 
     -- Usuwanie z tabel głównych
-    DELETE FROM `Rozgrywka`
+    DELETE FROM `rozgrywka`
     WHERE data_rozgrywki < data_graniczna;
 
     COMMIT;
@@ -198,7 +198,7 @@ CREATE TABLE `plugin` (
 CREATE TABLE `relacje_uzytkownikow` (
   `id_uzytkownika1` int(11) NOT NULL,
   `id_uzytkownika2` int(11) NOT NULL,
-  `data_rozpoczecia` date NOT NULL DEFAULT current_timestamp()
+  `data_rozpoczecia` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------

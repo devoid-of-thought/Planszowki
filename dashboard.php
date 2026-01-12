@@ -69,7 +69,7 @@ try {
                         <thead>
                             <tr>
                                 <th>Tytuł gry</th>
-                                <th>Status</th>
+                                <th>status</th>
                                 <th>Twoja Ocena</th>
                                 <th>Komentarz</th>
                             </tr>

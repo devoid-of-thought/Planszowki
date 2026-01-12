@@ -12,11 +12,11 @@ $message = "";
 
 // 1. Pobranie listy gier
 try {
-    $stmtGry = $pdo->query("SELECT id_planszowki, tytul_planszowki FROM Planszowka ORDER BY tytul_planszowki ASC");
+    $stmtGry = $pdo->query("SELECT id_planszowki, tytul_planszowki FROM planszowka ORDER BY tytul_planszowki ASC");
     $listaGier = $stmtGry->fetchAll();
 
     // 2. Pobranie listy znajomych (Uproszczona i bezpieczna kwerenda)
-    $sqlZnajomi = "SELECT u.id_uzytkownika, u.nazwa_uzytkownika
+ $sqlZnajomi = "SELECT u.id_uzytkownika, u.nazwa_uzytkownika
                    FROM uzytkownik u
                    JOIN relacje_uzytkownikow r ON
                    (u.id_uzytkownika = r.id_uzytkownika2 AND r.id_uzytkownika1 = :uid1) OR
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     try {
         // 1. Walidacja czasu (pobranie danych o grze)
-        $stmtCheck = $pdo->prepare("SELECT min_dlugosc_rozgrywki, max_dlugosc_rozgrywki, tytul_planszowki FROM Planszowka WHERE id_planszowki = ?");
+        $stmtCheck = $pdo->prepare("SELECT min_dlugosc_rozgrywki, max_dlugosc_rozgrywki, tytul_planszowki FROM planszowka WHERE id_planszowki = ?");
         $stmtCheck->execute([$id_planszowki]);
         $graInfo = $stmtCheck->fetch();
 
@@ -46,14 +46,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $min = $graInfo['min_dlugosc_rozgrywki'] ?? 0;
             $max = $graInfo['max_dlugosc_rozgrywki'] ?? 9999;
 
-            if ($czas_trwania < $min || $czas_trwania > $max) {
-                $message = "<p class='error'>Błąd: Czas ($czas_trwania min) poza zakresem gry " . htmlspecialchars($graInfo['tytul_planszowki']) . " ($min-$max).</p>";
+            if ($czas_trwania < 0 ) {
+                $message = "<p class='error'>Błąd: Czas trwania rozgrywki nie może być poniżej 0 min " . htmlspecialchars($graInfo['tytul_planszowki']) . " ($min-$max).</p>";
             } else {
                 // 2. Rozpoczęcie transakcji
                 $pdo->beginTransaction();
 
-                // 3. Wstawienie rekord do tabeli Rozgrywka
-                $sqlInsertRozgrywka = "INSERT INTO Rozgrywka (id_planszowki, id_organizatora, data_rozgrywki, czas_trwania, notatka_do_gry)
+                // 3. Wstawienie rekord do tabeli rozgrywka
+                $sqlInsertRozgrywka = "INSERT INTO rozgrywka (id_planszowki, id_organizatora, data_rozgrywki, czas_trwania, notatka_do_gry)
                                        VALUES (?, ?, ?, ?, ?)";
                 $stmtRozgrywka = $pdo->prepare($sqlInsertRozgrywka);
                 $stmtRozgrywka->execute([$id_planszowki, $currentUserId, $data_rozgrywki, $czas_trwania, $notatka]);

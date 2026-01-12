@@ -11,11 +11,11 @@ if (!isset($_SESSION['user_id'])) {
 $message = "";
 
 // 1. Pobranie listy gier do formularza (dropdown)
-$stmt = $pdo->query("SELECT id_planszowki, tytul_planszowki FROM Planszowka ORDER BY tytul_planszowki ASC");
+$stmt = $pdo->query("SELECT id_planszowki, tytul_planszowki FROM planszowka ORDER BY tytul_planszowki ASC");
 $gry = $stmt->fetchAll();
 
 // 2. Pobranie listy statusów do formularza
-$stmt = $pdo->query("SELECT id_statusu, nazwa_statusu FROM Status");
+$stmt = $pdo->query("SELECT id_statusu, nazwa_statusu FROM status");
 $statusy = $stmt->fetchAll();
 
 // 3. Obsługa wysłania formularza
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $komentarz = trim($_POST['komentarz']);
 
     try {
-        $sql = "INSERT INTO Planszowka_w_kolekcji (id_uzytkownika, id_planszowki, ocena, komentarz, id_statusu) 
+        $sql = "INSERT INTO planszowka_w_kolekcji (id_uzytkownika, id_planszowki, ocena, komentarz, id_statusu) 
                 VALUES (?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$_SESSION['user_id'], $id_gry, $ocena, $komentarz, $id_statusu]);
