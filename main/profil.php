@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // 2B. Obsługa zmiany danych (Login / Email)
+    // 2B. Obsługa zmiany danych (Login / Email) - POPRAWIONA
     if (isset($_POST['update_profile'])) {
         $newUsername = trim($_POST['new_username']);
         $newEmail = trim($_POST['new_email']);
@@ -63,13 +63,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $message = "<p class='error' style='color: red;'>Nazwa użytkownika i email są wymagane.</p>";
         } else {
             try {
-                $updateStmt = $pdo->prepare("UPDATE uzytkownik SET nazwa_uzytkownika = ?, adres_email = ? WHERE id_uzytkownika = ?");
-                if ($updateStmt->execute([$newUsername, $newEmail, $userId])) {
-                    $_SESSION['username'] = $newUsername; // Aktualizacja sesji
-                    $message = "<p class='success' style='color: green; font-weight: bold;'>Dane zostały zaktualizowane.</p>";
+                // KROK 1: Sprawdzenie czy nazwa lub email są już zajęte przez KOGOŚ INNEGO
+                // Wykluczamy ID obecnego użytkownika (id_uzytkownika != $userId),
+                // żeby nie blokować zapisu, jeśli użytkownik zmienia np. tylko email, a nazwę zostawia starą.
+                $checkStmt = $pdo->prepare("SELECT id_uzytkownika FROM uzytkownik WHERE (nazwa_uzytkownika = ? OR adres_email = ?) AND id_uzytkownika != ?");
+                $checkStmt->execute([$newUsername, $newEmail, $userId]);
+
+                if ($checkStmt->rowCount() > 0) {
+                    $message = "<p class='error' style='color: red;'>Ta nazwa użytkownika lub adres email są już zajęte przez inną osobę.</p>";
+                } else {
+                    // KROK 2: Aktualizacja danych
+                    $updateStmt = $pdo->prepare("UPDATE uzytkownik SET nazwa_uzytkownika = ?, adres_email = ? WHERE id_uzytkownika = ?");
+                    if ($updateStmt->execute([$newUsername, $newEmail, $userId])) {
+                        $_SESSION['username'] = $newUsername; // Aktualizacja sesji
+                        $message = "<p class='success' style='color: green; font-weight: bold;'>Dane zostały zaktualizowane.</p>";
+                    }
                 }
             } catch (PDOException $e) {
-                $message = "<p class='error' style='color: red;'>Błąd: " . $e->getMessage() . "</p>";
+                // Dodatkowe zabezpieczenie na wypadek błędu bazy
+                if ($e->getCode() == '23000') {
+                    $message = "<p class='error' style='color: red;'>Nazwa lub email są już zajęte.</p>";
+                } else {
+                    $message = "<p class='error' style='color: red;'>Błąd: " . $e->getMessage() . "</p>";
+                }
             }
         }
     }

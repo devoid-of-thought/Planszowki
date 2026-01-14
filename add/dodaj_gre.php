@@ -38,7 +38,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $wiek = !empty($_POST['wiek']) ? (int)$_POST['wiek'] : null;
 
     // Pobranie zaznaczonych gatunków (tablica ID)
-    // Jeśli nic nie zaznaczono, będzie to pusta tablica
     $wybraneGatunki = $_POST['gatunki'] ?? [];
 
     $domyslny_status_id = 1; // Posiadam
@@ -50,53 +49,86 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Rozpoczęcie transakcji
             $pdo->beginTransaction();
 
-            // A. Dodanie gry do bazy GLOBALNEJ (Tabela planszowka)
-            $sqlGlobal = "INSERT INTO planszowka (
-                        tytul_planszowki, data_wydania, wydawca, designer, 
-                        min_graczy, max_graczy, min_dlugosc_rozgrywki, max_dlugosc_rozgrywki, 
-                        waga, rekomendowany_wiek, stworzone_przez_id_uzytkownika
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $was_created = false;
+            $added_to_collection = false;
 
-            $stmt = $pdo->prepare($sqlGlobal);
-            $stmt->execute([
-                $tytul, $rok, $wydawca, $designer, 
-                $min_graczy, $max_graczy, $min_czas, $max_czas, 
-                $waga, $wiek, $_SESSION['user_id']
-            ]);
+            // 0. Sprawdzenie czy gra istnieje (Rozwiązanie problemu dublowania)
+            $stmtCheck = $pdo->prepare("SELECT id_planszowki FROM planszowka WHERE tytul_planszowki = ?");
+            $stmtCheck->execute([$tytul]);
+            $existingGame = $stmtCheck->fetch();
 
-            // Pobranie ID nowej gry
-            $nowe_id_gry = $pdo->lastInsertId();
+            if ($existingGame) {
+                // Gra istnieje - używamy jej ID
+                $nowe_id_gry = $existingGame['id_planszowki'];
+            } else {
+                // A. Gra nie istnieje - Dodanie gry do bazy GLOBALNEJ
+                $sqlGlobal = "INSERT INTO planszowka (
+                            tytul_planszowki, data_wydania, wydawca, designer, 
+                            min_graczy, max_graczy, min_dlugosc_rozgrywki, max_dlugosc_rozgrywki, 
+                            waga, rekomendowany_wiek, stworzone_przez_id_uzytkownika
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            // B. Automatyczne dodanie do KOLEKCJI użytkownika
-            $sqlKolekcja = "INSERT INTO planszowka_w_kolekcji 
-                            (id_uzytkownika, id_planszowki, id_statusu, ocena, komentarz) 
-                            VALUES (?, ?, ?, NULL, 'Dodano automatycznie przy tworzeniu gry')";
+                $stmt = $pdo->prepare($sqlGlobal);
+                $stmt->execute([
+                    $tytul, $rok, $wydawca, $designer, 
+                    $min_graczy, $max_graczy, $min_czas, $max_czas, 
+                    $waga, $wiek, $_SESSION['user_id']
+                ]);
 
-            $stmtKolekcja = $pdo->prepare($sqlKolekcja);
-            $stmtKolekcja->execute([
-                $_SESSION['user_id'],
-                $nowe_id_gry,
-                $domyslny_status_id
-            ]);
+                $nowe_id_gry = $pdo->lastInsertId();
+                $was_created = true;
 
-            // C. Dodanie GATUNKÓW (Relacja wiele-do-wielu)
-            if (!empty($wybraneGatunki)) {
-                $sqlGatunek = "INSERT INTO planszowka_gatunek (id_planszowki, id_gatunku) VALUES (?, ?)";
-                $stmtGatunek = $pdo->prepare($sqlGatunek);
+                // C. Dodanie GATUNKÓW (Tylko dla nowej gry)
+                if (!empty($wybraneGatunki)) {
+                    $sqlGatunek = "INSERT INTO planszowka_gatunek (id_planszowki, id_gatunku) VALUES (?, ?)";
+                    $stmtGatunek = $pdo->prepare($sqlGatunek);
 
-                foreach ($wybraneGatunki as $idGatunku) {
-                    // Wykonujemy INSERT dla każdego zaznaczonego gatunku
-                    $stmtGatunek->execute([$nowe_id_gry, (int)$idGatunku]);
+                    foreach ($wybraneGatunki as $idGatunku) {
+                        $stmtGatunek->execute([$nowe_id_gry, (int)$idGatunku]);
+                    }
+                }
+            }
+
+            // B. Dodanie do KOLEKCJI użytkownika (Osobny try-catch na duplikat w kolekcji)
+            try {
+                $sqlKolekcja = "INSERT INTO planszowka_w_kolekcji 
+                                (id_uzytkownika, id_planszowki, id_statusu, ocena, komentarz) 
+                                VALUES (?, ?, ?, NULL, 'Dodano automatycznie przy tworzeniu gry')";
+
+                $stmtKolekcja = $pdo->prepare($sqlKolekcja);
+                $stmtKolekcja->execute([
+                    $_SESSION['user_id'],
+                    $nowe_id_gry,
+                    $domyslny_status_id
+                ]);
+                $added_to_collection = true;
+            } catch (PDOException $e) {
+                if ($e->getCode() == '23000') {
+                    // Kod 23000 to naruszenie unikalności (gra już jest w kolekcji)
+                    $added_to_collection = false;
+                } else {
+                    // Inny błąd - rzucamy dalej, aby cofnąć transakcję
+                    throw $e;
                 }
             }
 
             // Zatwierdzenie transakcji (Commit)
             $pdo->commit();
 
-            $message = "<p class='success'>Sukces! Gra <strong>" . htmlspecialchars($tytul) . "</strong> została dodana do bazy (wraz z gatunkami) i Twojej kolekcji.</p>";
+            // Komunikaty dla użytkownika
+            if ($was_created) {
+                $message = "<p class='success'>Sukces! Nowa gra <strong>" . htmlspecialchars($tytul) . "</strong> została dodana do bazy i Twojej kolekcji.</p>";
+            } elseif ($added_to_collection) {
+                $message = "<p class='success'>Gra <strong>" . htmlspecialchars($tytul) . "</strong> już istniała w bazie globalnej, ale pomyślnie dodano ją do Twojej kolekcji.</p>";
+            } else {
+                $message = "<p class='error'>Gra <strong>" . htmlspecialchars($tytul) . "</strong> istnieje w bazie i masz ją już w swojej kolekcji!</p>";
+            }
+
         } catch (PDOException $e) {
-            // Wycofanie zmian w razie błędu (Rollback)
-            $pdo->rollBack();
+            // Wycofanie zmian w razie błędu krytycznego (Rollback)
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             $message = "<p class='error'>Błąd bazy danych: " . $e->getMessage() . "</p>";
         }
     }
@@ -114,7 +146,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* Prosty styl CSS dla listy gatunków, żeby wyświetlały się schludnie */
         .genres-wrapper {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -193,5 +224,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </body>
-
-</html>
+</html> 
