@@ -27,7 +27,6 @@ try {
     $rozgrywki = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
-    // W razie błędu można go zalogować lub wyświetlić komunikat
     $error = "Błąd pobierania danych: " . $e->getMessage();
 }
 ?>
@@ -42,13 +41,35 @@ try {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Tilt+Neon&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Style dla paska akcji i sortowania */
+        .actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .sort-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sort-group select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+    </style>
 </head>
 
 <body>
 
     <div class="dashboard-wrapper">
 
-        <?php include '../templates/sidebar.php'; ?>
+        <?php include 'sidebar.php'; ?>
 
         <div class="main-content">
 
@@ -59,8 +80,20 @@ try {
                 <h2>Twoje Rozgrywki</h2>
             </div>
 
-            <div class="actions">
+            <div class="actions-bar">
                 <button class="btn-small" onclick="window.location.href='../add/dodaj_rozgrywke.php'">Dodaj nową rozgrywkę</button>
+                
+                <div class="sort-group">
+                    <label for="sortOrder">Sortuj według:</label>
+                    <select id="sortOrder" onchange="applySort()">
+                        <option value="date_desc">Data (od najnowszych)</option>
+                        <option value="date_asc">Data (od najstarszych)</option>
+                        <option value="game_asc">Gra (A-Z)</option>
+                        <option value="game_desc">Gra (Z-A)</option>
+                        <option value="time_desc">Czas (najdłuższe)</option>
+                        <option value="time_asc">Czas (najkrótsze)</option>
+                    </select>
+                </div>
             </div>
 
             <main>
@@ -74,9 +107,19 @@ try {
                                 <th>Notatka</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tableBody">
                             <?php foreach ($rozgrywki as $gra): ?>
-                                <tr>
+                                <?php 
+                                    // Przygotowanie danych do sortowania
+                                    $sortDate = strtotime($gra['data_rozgrywki']); // Timestamp
+                                    $sortGame = strtolower($gra['tytul_planszowki']); // Małe litery
+                                    $sortTime = (int)$gra['czas_trwania'];
+                                ?>
+                                <tr class="game-row"
+                                    data-date="<?= $sortDate ?>"
+                                    data-game="<?= htmlspecialchars($sortGame) ?>"
+                                    data-time="<?= $sortTime ?>">
+                                    
                                     <td><?= htmlspecialchars(date("d.m.Y", strtotime($gra['data_rozgrywki']))) ?></td>
                                     <td><strong><?= htmlspecialchars($gra['tytul_planszowki']) ?></strong></td>
                                     <td><?= htmlspecialchars($gra['czas_trwania']) ?> min</td>
@@ -97,10 +140,42 @@ try {
 
         </div>
     </div>
+
     <script>
         document.getElementById('sidebarCollapse').addEventListener('click', function() {
             document.getElementById('sidebar').classList.toggle('collapsed');
         });
+
+        function applySort() {
+            let sortBy = document.getElementById('sortOrder').value;
+            let tableBody = document.getElementById('tableBody');
+            let rows = Array.from(tableBody.querySelectorAll('.game-row'));
+
+            rows.sort((a, b) => {
+                switch (sortBy) {
+                    case 'date_desc': // Od najnowszych
+                        return parseInt(b.dataset.date) - parseInt(a.dataset.date);
+                    case 'date_asc': // Od najstarszych
+                        return parseInt(a.dataset.date) - parseInt(b.dataset.date);
+                    
+                    case 'game_asc': // A-Z
+                        return a.dataset.game.localeCompare(b.dataset.game);
+                    case 'game_desc': // Z-A
+                        return b.dataset.game.localeCompare(a.dataset.game);
+                    
+                    case 'time_desc': // Najdłuższe
+                        return parseInt(b.dataset.time) - parseInt(a.dataset.time);
+                    case 'time_asc': // Najkrótsze
+                        return parseInt(a.dataset.time) - parseInt(b.dataset.time);
+                    
+                    default:
+                        return 0;
+                }
+            });
+
+            // Ponowne wstawienie posortowanych wierszy
+            rows.forEach(row => tableBody.appendChild(row));
+        }
     </script>
 </body>
 

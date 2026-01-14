@@ -117,7 +117,7 @@ try {
 
     <div class="dashboard-wrapper">
 
-        <?php include '../templates/sidebar.php'; ?>
+        <?php include 'sidebar.php'; ?>
 
         <div class="main-content">
 

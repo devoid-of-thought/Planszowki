@@ -1,4 +1,5 @@
 <?php
+// add/dodaj_rozgrywke.php
 session_start();
 require_once '../api/db.php';
 
@@ -6,20 +7,29 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: ../login/index.php");
     exit();
 }
+
+// Generowanie CSRF
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
+
 $currentUserId = $_SESSION['user_id'];
 $message = "";
 
-// 1. Pobranie listy gier
-try {   
-    // Tabela: planszowka
-    $stmtGry = $pdo->query("SELECT id_planszowki, tytul_planszowki FROM planszowka ORDER BY tytul_planszowki ASC");
+// 1. Pobranie danych (Gry z KOLEKCJI i Znajomi)
+try {
+    // Pobieramy tylko gry z kolekcji użytkownika
+    $sqlGry = "SELECT p.id_planszowki, p.tytul_planszowki 
+               FROM planszowka p
+               JOIN planszowka_w_kolekcji k ON p.id_planszowki = k.id_planszowki
+               WHERE k.id_uzytkownika = :uid
+               ORDER BY p.tytul_planszowki ASC";
+               
+    $stmtGry = $pdo->prepare($sqlGry);
+    $stmtGry->execute(['uid' => $currentUserId]);
     $listaGier = $stmtGry->fetchAll();
 
-    // 2. Pobranie listy znajomych
-    // Tabela: uzytkownik
+    // Pobranie listy znajomych
     $sqlZnajomi = "SELECT u.id_uzytkownika, u.nazwa_uzytkownika
                    FROM uzytkownik u
                    JOIN relacje_uzytkownikow r ON
@@ -32,11 +42,13 @@ try {
     die("Błąd bazy danych: " . $e->getMessage());
 }
 
-// 3. Obsługa formularza
+// 2. Obsługa formularza
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
-    die("Błąd CSRF");
-}
+    
+    // Weryfikacja CSRF
+    if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        die("Błąd bezpieczeństwa (CSRF).");
+    }
 
     $id_planszowki = (int)$_POST['id_planszowki'];
     $data_rozgrywki = $_POST['data_rozgrywki'];
@@ -45,7 +57,6 @@ if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST
     $wybrani_gracze = $_POST['gracze'] ?? [];
 
     try {
-        // Tabela: planszowka
         $stmtCheck = $pdo->prepare("SELECT min_dlugosc_rozgrywki, max_dlugosc_rozgrywki, tytul_planszowki FROM planszowka WHERE id_planszowki = ?");
         $stmtCheck->execute([$id_planszowki]);
         $graInfo = $stmtCheck->fetch();
@@ -59,7 +70,7 @@ if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST
             } else {
                 $pdo->beginTransaction();
 
-                // Tabela: rozgrywka
+                // Dodanie rozgrywki
                 $sqlInsertRozgrywka = "INSERT INTO rozgrywka (id_planszowki, id_organizatora, data_rozgrywki, czas_trwania, notatka_do_gry)
                                        VALUES (?, ?, ?, ?, ?)";
                 $stmtRozgrywka = $pdo->prepare($sqlInsertRozgrywka);
@@ -67,15 +78,14 @@ if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST
 
                 $id_nowej_rozgrywki = $pdo->lastInsertId();
 
-                // --- NAPRAWA BŁĘDU 1364 ---
-                // Dodajemy 'wynik_koncowy' do zapytania i ustawiamy wartość 0
+                // Dodanie uczestników
                 $sqlInsertUczestnik = "INSERT INTO uczestnicy_rozgrywki (id_rozgrywki, id_uzytkownika, wynik_koncowy) VALUES (?, ?, 0)";
                 $stmtUczestnik = $pdo->prepare($sqlInsertUczestnik);
 
-                // Dodajemy organizatora
+                // Organizator
                 $stmtUczestnik->execute([$id_nowej_rozgrywki, $currentUserId]);
 
-                // Dodajemy wybranych znajomych
+                // Znajomi
                 foreach ($wybrani_gracze as $id_znajomego) {
                     $stmtUczestnik->execute([$id_nowej_rozgrywki, (int)$id_znajomego]);
                 }
@@ -109,6 +119,7 @@ if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST
 </head>
 <body>
     <div class="dashboard-wrapper">
+        
         <div class="main-content">
             <div class="top-header">
                 <h2>Dodaj nową rozgrywkę</h2>
@@ -118,13 +129,20 @@ if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST
             <div class="form-container dodaj-gre">
                 <?= $message ?>
                 <form method="POST">
-                    <label>Gra:</label>
-                    <select name="id_planszowki" required>
+                    
+                    <label>Gra (z Twojej kolekcji):</label>
+                    <input type="text" id="gameSearchInput" class="search-box" placeholder="Wpisz aby filtrować listę gier..." onkeyup="filterGameSelect()">
+                    
+                    <select name="id_planszowki" id="gameSelect" required>
                         <option value="">-- Wybierz grę --</option>
                         <?php foreach ($listaGier as $gra): ?>
                             <option value="<?= $gra['id_planszowki'] ?>"><?= htmlspecialchars($gra['tytul_planszowki']) ?></option>
                         <?php endforeach; ?>
                     </select>
+                    
+                    <?php if (empty($listaGier)): ?>
+                        <p style="font-size: 0.8em; color: red;">Nie masz żadnych gier w kolekcji. <a href="dodaj_do_kolekcji.php">Dodaj grę</a> najpierw.</p>
+                    <?php endif; ?>
 
                     <label>Data i czas:</label>
                     <div style="display: flex; gap: 10px;">
@@ -147,14 +165,13 @@ if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST
                     <textarea name="notatka_do_gry"></textarea>
 
                     <button class="btn-small save" type="submit">Zapisz rozgrywkę</button>
-                
-                
-                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 </form>
             </div>
         </div>
     </div>
     <script>
+        // Filtrowanie znajomych (checkboxy)
         function filterFriends() {
             let input = document.getElementById('friendSearch').value.toLowerCase();
             let items = document.querySelectorAll('.friend-item');
@@ -162,6 +179,25 @@ if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST
                 let text = item.innerText.toLowerCase();
                 item.style.display = text.includes(input) ? "flex" : "none";
             });
+        }
+
+        // Filtrowanie listy rozwijanej (select) gier
+        function filterGameSelect() {
+            let input = document.getElementById('gameSearchInput').value.toLowerCase();
+            let select = document.getElementById('gameSelect');
+            let options = select.getElementsByTagName('option');
+
+            for (let i = 0; i < options.length; i++) {
+                // Pomijamy opcję "-- Wybierz grę --" (index 0) lub pustą wartość
+                if (options[i].value === "") continue;
+
+                let txtValue = options[i].textContent || options[i].innerText;
+                if (txtValue.toLowerCase().indexOf(input) > -1) {
+                    options[i].style.display = "";
+                } else {
+                    options[i].style.display = "none";
+                }
+            }
         }
     </script>
 </body>

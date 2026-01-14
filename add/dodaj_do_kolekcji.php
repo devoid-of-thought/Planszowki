@@ -1,5 +1,5 @@
 <?php
-// dodaj_do_kolekcji.php
+// add/dodaj_do_kolekcji.php
 session_start();
 require_once '../api/db.php';
 
@@ -7,24 +7,31 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: ../login/index.php");
     exit();
 }
+
+// Zabezpieczenie: Generowanie tokena CSRF
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
+
 $message = "";
 
-// 1. Pobranie listy gier do formularza (dropdown)
-$stmt = $pdo->query("SELECT id_planszowki, tytul_planszowki FROM planszowka ORDER BY tytul_planszowki ASC");
-$gry = $stmt->fetchAll();
+// 1. Pobranie listy gier i statusów
+try {
+    $stmt = $pdo->query("SELECT id_planszowki, tytul_planszowki FROM planszowka ORDER BY tytul_planszowki ASC");
+    $gry = $stmt->fetchAll();
 
-// 2. Pobranie listy statusów do formularza
-$stmt = $pdo->query("SELECT id_statusu, nazwa_statusu FROM status");
-$statusy = $stmt->fetchAll();
+    $stmt = $pdo->query("SELECT id_statusu, nazwa_statusu FROM status");
+    $statusy = $stmt->fetchAll();
+} catch (PDOException $e) {
+    die("Błąd bazy danych: " . $e->getMessage());
+}
 
-// 3. Obsługa wysłania formularza
+// 2. Obsługa wysłania formularza
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
         die("Błąd bezpieczeństwa (CSRF).");
     }
+
     $id_gry = $_POST['id_planszowki'];
     $id_statusu = $_POST['id_statusu'];
     $ocena = !empty($_POST['ocena']) ? (int)$_POST['ocena'] : null;
@@ -38,12 +45,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $message = "<p class='success'>Dodano grę do Twojej kolekcji!</p>";
     } catch (PDOException $e) {
-        // Obsługa błędów SQL
         if ($e->getCode() == '23000') {
-            // Błąd unikalności (Duplicate entry) - zdefiniowany w indeksie unique_user_game
             $message = "<p class='error'>Masz już tę grę w swojej kolekcji!</p>";
         } elseif ($e->getCode() == '45000') {
-            // Błąd z Triggera (Walidacja_Oceny_Insert)
             $message = "<p class='error'>Błąd walidacji: Ocena musi być w zakresie 1-10.</p>";
         } else {
             $message = "<p class='error'>Wystąpił błąd: " . $e->getMessage() . "</p>";
@@ -62,55 +66,87 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
+    <style>
+        .search-box { 
+            margin-bottom: 5px; 
+            padding: 8px; 
+            width: 100%; 
+            box-sizing: border-box; 
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 
 <body>
     <div class="dashboard-wrapper">
-                <div class="main-content">
-        <div class="top-header">
-            <h2>Dodaj grę do kolekcji</h2>
-            <button class="btn-small" onclick="window.location.href='../main/dashboard.php'">← Wróć do Panelu</button>
-        </div>
+        <div class="main-content">
+            <div class="top-header">
+                <h2>Dodaj grę do kolekcji</h2>
+                <button class="btn-small" onclick="window.location.href='../main/dashboard.php'">← Wróć do Panelu</button>
+            </div>
+            
             <div class="form-container dodaj-do-kolekcji">
-            <?= $message ?>
+                <?= $message ?>
 
-            <form action="dodaj_do_kolekcji.php" method="POST">
+                <form action="dodaj_do_kolekcji.php" method="POST">
 
-                <label>Wybierz grę z bazy:</label>
-                <select name="id_planszowki" required>
-                    <option value="">-- Wybierz grę --</option>
-                    <?php foreach ($gry as $gra): ?>
-                        <option value="<?= $gra['id_planszowki'] ?>">
-                            <?= htmlspecialchars($gra['tytul_planszowki']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <div class="info-note">
-                    <p>Nie ma Twojej gry? </p>
-                    <button class="btn-small" onclick="window.location.href='dodaj_gre.php'">Dodaj własną grę</button>
-                </div>
-                <label>Twój status:</label>
-                <select name="id_statusu" required>
-                    <?php foreach ($statusy as $status): ?>
-                        <option value="<?= $status['id_statusu'] ?>">
-                            <?= htmlspecialchars($status['nazwa_statusu']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+                    <label>Wybierz grę z bazy:</label>
+                    <input type="text" id="gameSearchInput" class="search-box" placeholder="Wpisz nazwę gry, aby znaleźć..." onkeyup="filterGameSelect()">
+                    
+                    <select name="id_planszowki" id="gameSelect" required>
+                        <option value="">-- Wybierz grę --</option>
+                        <?php foreach ($gry as $gra): ?>
+                            <option value="<?= $gra['id_planszowki'] ?>">
+                                <?= htmlspecialchars($gra['tytul_planszowki']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    
+                    <div class="info-note">
+                        <p>Nie ma Twojej gry? </p>
+                        <button type="button" class="btn-small" onclick="window.location.href='dodaj_gre.php'">Dodaj własną grę</button>
+                    </div>
+                    
+                    <label>Twój status:</label>
+                    <select name="id_statusu" required>
+                        <?php foreach ($statusy as $status): ?>
+                            <option value="<?= $status['id_statusu'] ?>">
+                                <?= htmlspecialchars($status['nazwa_statusu']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
 
-                <label>Twoja ocena (1-10):</label>
-                <input type="number" name="ocena" min="1" max="10" placeholder="Opcjonalnie">
+                    <label>Twoja ocena (1-10):</label>
+                    <input type="number" name="ocena" min="1" max="10" placeholder="Opcjonalnie">
 
-                <label>Komentarz:</label>
-                <textarea name="komentarz" rows="3" placeholder="Twój komentarz do gry..."></textarea>
+                    <label>Komentarz:</label>
+                    <textarea name="komentarz" rows="3" placeholder="Twój komentarz do gry..."></textarea>
 
-                <button class="btn-small save" type="submit">Dodaj do kolekcji</button>
-                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-            </form>
-        
+                    <button class="btn-small save" type="submit">Dodaj do kolekcji</button>
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                </form>
+            </div>
         </div>
-
     </div>
-</body>
 
+    <script>
+        function filterGameSelect() {
+            let input = document.getElementById('gameSearchInput').value.toLowerCase();
+            let select = document.getElementById('gameSelect');
+            let options = select.getElementsByTagName('option');
+
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].value === "") continue; // Pomijamy pierwszą pustą opcję
+
+                let txtValue = options[i].textContent || options[i].innerText;
+                if (txtValue.toLowerCase().indexOf(input) > -1) {
+                    options[i].style.display = "";
+                } else {
+                    options[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
 </html>
