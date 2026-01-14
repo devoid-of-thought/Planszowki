@@ -114,7 +114,7 @@ try {
             <a href="dashboard.php">Moja Kolekcja</a>
             <a href="profil.php">Mój Profil</a>
             <a href="rozgrywki.php">Rozgrywki</a>
-            <a href="znajomi.php" style="background-color: #1a1a1a; color: white;">Znajomi</a>
+            <a href="znajomi.php" class="current">Znajomi</a>
             <a href="logout.php" class="logout-link"> Wyloguj się</a>
         </nav>
 

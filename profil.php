@@ -100,7 +100,7 @@ try {
             </div>
 
             <a href="dashboard.php">Moja Kolekcja</a>
-            <a href="profil.php" style="background-color: var(--color-magenta); color: var(--color-white); border-left: 4px solid var(--color-mauve);">Mój Profil</a>
+            <a href="profil.php" class="current">Mój Profil</a>
             <a href="rozgrywki.php">Rozgrywki</a>
             <a href="znajomi.php">Znajomi</a>
             <a href="logout.php" class="logout-link">Wyloguj się</a>

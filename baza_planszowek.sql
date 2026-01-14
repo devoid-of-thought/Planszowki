@@ -342,7 +342,6 @@ CREATE TABLE `widok_kolekcji_uzytkownika` (
 -- Struktura widoku `widok_kolekcji_uzytkownika`
 --
 DROP TABLE IF EXISTS `widok_kolekcji_uzytkownika`;
-
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `widok_kolekcji_uzytkownika`  AS SELECT `u`.`nazwa_uzytkownika` AS `nazwa_uzytkownika`, `p`.`tytul_planszowki` AS `tytul_planszowki`, `s`.`nazwa_statusu` AS `nazwa_statusu`, `pwk`.`ocena` AS `ocena`, `pwk`.`komentarz` AS `komentarz` FROM (((`planszowka_w_kolekcji` `pwk` join `uzytkownik` `u` on(`pwk`.`id_uzytkownika` = `u`.`id_uzytkownika`)) join `planszowka` `p` on(`pwk`.`id_planszowki` = `p`.`id_planszowki`)) join `status` `s` on(`pwk`.`id_statusu` = `s`.`id_statusu`)) ;
 
 --

@@ -13,7 +13,7 @@ $userName = $_SESSION['username'];
 // 2. Pobranie danych
 try {
     $sql = "SELECT tytul_planszowki, nazwa_statusu, ocena, komentarz
-            FROM Widok_Kolekcji_Uzytkownika
+            FROM widok_kolekcji_uzytkownika
             WHERE nazwa_uzytkownika = ?";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$userName]);
@@ -42,7 +42,7 @@ try {
                 Planszówki
             </div>
 
-            <a href="dashboard.php" style="background-color: #1a1a1a; color: white;">Moja Kolekcja</a>
+            <a href="dashboard.php" class="current">Moja Kolekcja</a>
             <a href="profil.php">Mój Profil</a>
             <a href="rozgrywki.php">Rozgrywki</a>
             <a href="znajomi.php">Znajomi</a>
