@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $nowe_id_gry = $pdo->lastInsertId();
 
             // 4. Automatyczne dodanie do KOLEKCJI użytkownika (Tabela planszowka_w_kolekcji)
-            $sqlKolekcja = "INSERT INTO Planszowka_w_kolekcji 
+            $sqlKolekcja = "INSERT INTO planszowka_w_kolekcji 
                             (id_uzytkownika, id_planszowki, id_statusu, ocena, komentarz) 
                             VALUES (?, ?, ?, NULL, 'Dodano automatycznie przy tworzeniu gry')";
 
@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
@@ -145,7 +145,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
     </div>
-    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 </body>
 
 </html>

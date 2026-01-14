@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // 2. Sprawdzenie czy user już istnieje
-    $stmt = $pdo->prepare("SELECT id_uzytkownika FROM Uzytkownik WHERE nazwa_uzytkownika = ? OR adres_email = ?");
+    $stmt = $pdo->prepare("SELECT id_uzytkownika FROM uzytkownik WHERE nazwa_uzytkownika = ? OR adres_email = ?");
     $stmt->execute([$user, $email]);
     
     if ($stmt->rowCount() > 0) {

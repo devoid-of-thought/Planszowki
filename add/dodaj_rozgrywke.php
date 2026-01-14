@@ -97,7 +97,7 @@ if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST
 <head>
     <meta charset="UTF-8">
     <title>Dodaj rozgrywkę</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <style>
         .search-box { margin-bottom: 5px; padding: 5px; width: 100%; box-sizing: border-box; }
         .friends-list { max-height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; border-radius: 5px; background: #fff; text-align: center; }
