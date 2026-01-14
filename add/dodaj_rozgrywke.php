@@ -32,6 +32,9 @@ try {
 
 // 3. Obsługa formularza
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
     $id_planszowki = (int)$_POST['id_planszowki'];
     $data_rozgrywki = $_POST['data_rozgrywki'];
     $czas_trwania = (int)$_POST['czas_trwania'];
@@ -106,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="main-content">
             <div class="top-header">
                 <h2>Dodaj nową rozgrywkę</h2>
-                <button class="btn-small" onclick="window.location.href='rozgrywki.php'">← Wróć</button>
+                <button class="btn-small" onclick="window.location.href='../main/rozgrywki.php'">← Wróć</button>
             </div>
 
             <div class="form-container dodaj-gre">
@@ -141,11 +144,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <textarea name="notatka_do_gry"></textarea>
 
                     <button class="btn-small save" type="submit">Zapisz rozgrywkę</button>
+                
+                
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 </form>
             </div>
         </div>
     </div>
-
     <script>
         function filterFriends() {
             let input = document.getElementById('friendSearch').value.toLowerCase();

@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
 $db   = 'baza_planszowek';
-$user = 'UŻYTKOWNIK'; // Zmień na swojego użytkownika bazy danych
-$pass = 'HASŁO'; // Zmień na swoje hasło
+$user = 'UŻYTKOWNIK';
+$pass = 'HASŁO';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

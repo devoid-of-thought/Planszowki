@@ -1,66 +1,80 @@
 <?php
+// main/znajomi.php
 session_start();
-require_once 'api/db.php';
+require_once '../api/db.php';
 
 // 1. Sprawdzenie logowania
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    header("Location: ../login/index.php");
     exit();
+}
+
+// Zabezpieczenie: Generowanie tokena CSRF
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 $currentUserId = $_SESSION['user_id'];
 $userName = $_SESSION['username'];
 $message = "";
-                // --- LOGIKA DODAWANIA ZNAJOMEGO ---
-                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_name'])) {
-                    $searchName = trim($_POST['search_name']);
 
-                    try {
-                        // 1. Znajdź ID osoby po nazwie (tutaj ? jest bezpieczne i proste)
-                        $stmt = $pdo->prepare("SELECT id_uzytkownika FROM uzytkownik WHERE nazwa_uzytkownika = ?");
-                        $stmt->execute([$searchName]);
-                        $targetUser = $stmt->fetch();
+// --- LOGIKA DODAWANIA ZNAJOMEGO ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_name'])) {
+    
+    // --- WERYFIKACJA CSRF ---
+    if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        die("Błąd bezpieczeństwa (CSRF). Odśwież stronę i spróbuj ponownie.");
+    }
 
-                        if (!$targetUser) {
-                            $message = "Użytkownik o takiej nazwie nie istnieje.";
-                        } elseif ($targetUser['id_uzytkownika'] == $currentUserId) {
-                            $message = "Nie możesz dodać samego siebie!";
-                        } else {
-                            $targetId = $targetUser['id_uzytkownika'];
+    $searchName = trim($_POST['search_name']);
 
-                            // 2. Sprawdź czy relacja już istnieje - UŻYWAMY UNIKALNYCH NAZW PARAMETRÓW
-                            $check = $pdo->prepare("SELECT 1 FROM relacje_uzytkownikow WHERE
+    try {
+        // 1. Znajdź ID osoby po nazwie
+        $stmt = $pdo->prepare("SELECT id_uzytkownika FROM uzytkownik WHERE nazwa_uzytkownika = ?");
+        $stmt->execute([$searchName]);
+        $targetUser = $stmt->fetch();
+
+        if (!$targetUser) {
+            $message = "Użytkownik o takiej nazwie nie istnieje.";
+        } elseif ($targetUser['id_uzytkownika'] == $currentUserId) {
+            $message = "Nie możesz dodać samego siebie!";
+        } else {
+            $targetId = $targetUser['id_uzytkownika'];
+
+            // 2. Sprawdź czy relacja już istnieje
+            $check = $pdo->prepare("SELECT 1 FROM relacje_uzytkownikow WHERE
                 (id_uzytkownika1 = :u1 AND id_uzytkownika2 = :t1) OR
                 (id_uzytkownika1 = :t2 AND id_uzytkownika2 = :u2)");
 
-                            $check->execute([
-                                'u1' => $currentUserId,
-                                't1' => $targetId,
-                                't2' => $targetId,
-                                'u2' => $currentUserId
-                            ]);
+            $check->execute([
+                'u1' => $currentUserId,
+                't1' => $targetId,
+                't2' => $targetId,
+                'u2' => $currentUserId
+            ]);
 
-                            if ($check->fetch()) {
-                                $message = "Jesteście już znajomymi!";
-                            } else {
-                                // 3. Dodaj relację
-                                $ins = $pdo->prepare("INSERT INTO relacje_uzytkownikow (id_uzytkownika1, id_uzytkownika2) VALUES (?, ?)");
-                                $ins->execute([$currentUserId, $targetId]);
+            if ($check->fetch()) {
+                $message = "Jesteście już znajomymi!";
+            } else {
+                // 3. Dodaj relację
+                $ins = $pdo->prepare("INSERT INTO relacje_uzytkownikow (id_uzytkownika1, id_uzytkownika2) VALUES (?, ?)");
+                $ins->execute([$currentUserId, $targetId]);
 
-                                // Odświeżamy stronę, aby nowy znajomy pojawił się na liście
-                                header("Location: znajomi.php?added=1");
-                                exit();
-                            }
-                        }
-                    } catch (PDOException $e) {
-                        $message = "Błąd bazy danych: " . $e->getMessage();
-                    }
-                }
+                // Odświeżamy stronę, aby nowy znajomy pojawił się na liście
+                header("Location: znajomi.php?added=1");
+                exit();
+            }
+        }
+    } catch (PDOException $e) {
+        $message = "Błąd bazy danych: " . $e->getMessage();
+    }
+}
 
-                // Dodatkowa informacja o sukcesie po przeładowaniu
-                if (isset($_GET['added'])) {
-                    $message = "Pomyślnie dodano znajomego!";
-                }
+// Dodatkowa informacja o sukcesie po przeładowaniu
+if (isset($_GET['added'])) {
+    $message = "Pomyślnie dodano znajomego!";
+}
+
 // 2. Pobranie listy znajomych
 try {
     $sql = "SELECT
@@ -74,8 +88,6 @@ try {
             ORDER BY r.data_rozpoczecia DESC";
 
     $stmt = $pdo->prepare($sql);
-
-    // Przekazujemy to samo ID pod dwiema nazwami
     $stmt->execute([
         'uid1' => $currentUserId,
         'uid2' => $currentUserId
@@ -83,7 +95,6 @@ try {
 
     $znajomi = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    // Zamiast die(), logujemy błąd i ustawiamy pustą tablicę, by strona "żyła"
     error_log("Błąd bazy: " . $e->getMessage());
     $znajomi = [];
     $message = "Wystąpił problem z ładowaniem listy znajomych.";
@@ -99,24 +110,14 @@ try {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Tilt+Neon&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
 
     <div class="dashboard-wrapper">
 
-        <nav id="sidebar" class="sidebar">
-            <div class="sidebar-header">
-                Planszówki
-            </div>
-
-            <a href="dashboard.php">Moja Kolekcja</a>
-            <a href="profil.php">Mój Profil</a>
-            <a href="rozgrywki.php">Rozgrywki</a>
-            <a href="znajomi.php" class="current">Znajomi</a>
-            <a href="logout.php" class="logout-link"> Wyloguj się</a>
-        </nav>
+        <?php include '../templates/sidebar.php'; ?>
 
         <div class="main-content">
 
@@ -131,12 +132,16 @@ try {
                 <form method="POST" style="display: flex; gap: 10px; align-items: center;">
                     <input type="text" name="search_name" placeholder="Wpisz nick znajomego..." required
                         style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                    
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
                     <button type="submit" class="btn-small">Dodaj znajomego</button>
                 </form>
                 <?php if ($message): ?>
                     <p style="margin-top: 10px; color: 1a1a1a; font-weight: bold;"><?php echo htmlspecialchars($message); ?></p>
                 <?php endif; ?>
             </div>
+            
             <main>
                 <?php if (!empty($znajomi)): ?>
                     <table>
@@ -165,8 +170,6 @@ try {
                                         echo $znajomy['data_rozpoczecia'] ? date("d.m.Y", strtotime($znajomy['data_rozpoczecia'])) : '-';
                                         ?>
                                     </td>
-
-
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

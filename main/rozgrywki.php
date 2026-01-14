@@ -1,14 +1,17 @@
 <?php
+// main/rozgrywki.php
 session_start();
-require_once 'api/db.php';
+require_once '../api/db.php';
 
+// 1. Sprawdzenie logowania
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    header("Location: ../login/index.php");
     exit();
 }
 
 $userId = $_SESSION['user_id'];
 $rozgrywki = [];
+$error = "";
 
 try {
     // Pobieramy rozgrywki, w których użytkownik brał udział
@@ -38,25 +41,14 @@ try {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Tilt+Neon&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
 
     <div class="dashboard-wrapper">
 
-        <nav id="sidebar" class="sidebar">
-            <div class="sidebar-header">
-                Planszówki
-            </div>
-
-            <a href="dashboard.php">Moja Kolekcja</a>
-            <a href="profil.php">Mój Profil</a>
-            <a href="rozgrywki.php" class="current">Rozgrywki</a>
-            <a href="znajomi.php">Znajomi</a>
-
-            <a href="logout.php" class="logout-link"> Wyloguj się</a>
-        </nav>
+        <?php include '../templates/sidebar.php'; ?>
 
         <div class="main-content">
 
@@ -68,7 +60,7 @@ try {
             </div>
 
             <div class="actions">
-                <button class="btn-small" onclick="window.location.href='dodaj_rozgrywke.php'">Dodaj nową rozgrywkę</button>
+                <button class="btn-small" onclick="window.location.href='../add/dodaj_rozgrywke.php'">Dodaj nową rozgrywkę</button>
             </div>
 
             <main>
@@ -100,7 +92,7 @@ try {
                     </div>
                 <?php endif; ?>
                 
-                <?php if (isset($error)) echo "<p class='error'>$error</p>"; ?>
+                <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
             </main>
 
         </div>

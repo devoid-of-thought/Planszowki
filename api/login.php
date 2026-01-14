@@ -1,6 +1,6 @@
 <?php
 // api/login.php
-require_once 'db.php';
+require_once 'db.php'; // db.php znajduje się w tym samym folderze (api)
 
 // 1. Sprawdzamy, czy użytkownik zaznaczył "Zapamiętaj mnie"
 // Robimy to PRZED session_start()
@@ -26,32 +26,40 @@ session_set_cookie_params([
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+    // --- WERYFIKACJA CSRF ---
+    // Sprawdzamy, czy token został wysłany i czy zgadza się z tym w sesji
+    if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        die("Błąd bezpieczeństwa (CSRF). Formularz wygasł lub próba ataku. Wróć do strony logowania.");
+    }
+
     $login = trim($_POST['login']);
     $password = trim($_POST['password']);
 
     // Pobranie użytkownika z bazy (logowanie po nazwie LUB emailu)
     $stmt = $pdo->prepare("SELECT id_uzytkownika, nazwa_uzytkownika, haslo FROM uzytkownik WHERE nazwa_uzytkownika = ? OR adres_email = ?");
-    $stmt->execute(params: [$login, $login]);
+    $stmt->execute([$login, $login]);
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['haslo'])) {
         // Logowanie poprawne
 
         // Regeneracja ID sesji dla bezpieczeństwa (chroni przed session fixation)
-        session_regenerate_id(delete_old_session: true);
+        session_regenerate_id(true);
 
         $_SESSION['user_id'] = $user['id_uzytkownika'];
         $_SESSION['username'] = $user['nazwa_uzytkownika'];
 
-        header(header: "Location: ../dashboard.php");
+        // Przekierowanie do folderu main
+        header("Location: ../main/dashboard.php");
         exit();
     } else {
-        // Błąd logowania
-        header("Location: ../index.php?error=1");
+        // Błąd logowania - powrót do folderu login
+        header("Location: ../login/index.php?error=1");
         exit();
     }
 } else {
-    header("Location: ../index.php");
+    header("Location: ../login/index.php");
     exit();
 }
 ?>

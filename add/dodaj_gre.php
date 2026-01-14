@@ -7,7 +7,9 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
-
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -104,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h2>Dodaj nową grę</h2>
                 <p>Gra zostanie automatycznie dodana do Twojej kolekcji jako "Posiadam".</p>
                 </div>
-                <button class="btn-small" onclick="window.location.href='dashboard.php'">← Wróć do Panelu</button>
+                <button class="btn-small" onclick="window.location.href='../main/dashboard.php'">← Wróć do Panelu</button>
             </div>
             <div class="form-container dodaj-gre">
                 <?= $message ?>
@@ -135,10 +137,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="number" name="wiek" placeholder="Rekomendowany wiek (np. 12)">
 
                     <button class="btn-small save" type="submit">Zapisz i dodaj do kolekcji</button>
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 </form>
             </div>
         </div>
     </div>
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 </body>
 
 </html>

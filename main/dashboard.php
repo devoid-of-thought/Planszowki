@@ -1,10 +1,12 @@
 <?php
 session_start();
-require_once 'api/db.php';
+// Zmiana ścieżki do API (wychodzimy z 'main' do roota, potem do 'api')
+require_once '../api/db.php';
 
 // 1. Sprawdzenie logowania
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    // Przekierowanie do logowania (wychodzimy z 'main', wchodzimy do 'login')
+    header("Location: ../login/index.php");
     exit();
 }
 
@@ -31,23 +33,13 @@ try {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Tilt+Neon&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
     <div class="dashboard-wrapper">
 
-        <nav id="sidebar" class="sidebar">
-            <div class="sidebar-header">
-                Planszówki
-            </div>
-
-            <a href="dashboard.php" class="current">Moja Kolekcja</a>
-            <a href="profil.php">Mój Profil</a>
-            <a href="rozgrywki.php">Rozgrywki</a>
-            <a href="znajomi.php">Znajomi</a>
-            <a href="logout.php" class="logout-link"> Wyloguj się</a> <!-- Dodać ekran główny i przekierowanie tam po wylogowaniu -->
-        </nav>
+        <?php include '../templates/sidebar.php'; ?>
 
         <div class="main-content">
 
@@ -59,8 +51,8 @@ try {
             </div>
 
             <div class="actions">
-                <a href="dodaj_gre.php" class="btn-small">Dodaj nową grę do bazy</a>
-                <a href="dodaj_do_kolekcji.php" class="btn-small">Dodaj grę do kolekcji</a>
+                <a href="../add/dodaj_gre.php" class="btn-small">Dodaj nową grę do bazy</a>
+                <a href="../add/dodaj_do_kolekcji.php" class="btn-small">Dodaj grę do kolekcji</a>
             </div>
 
             <main>
@@ -69,7 +61,7 @@ try {
                         <thead>
                             <tr>
                                 <th>Tytuł gry</th>
-                                <th>status</th>
+                                <th>Status</th>
                                 <th>Twoja Ocena</th>
                                 <th>Komentarz</th>
                             </tr>

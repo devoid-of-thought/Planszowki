@@ -7,7 +7,9 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
-
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 $message = "";
 
 // 1. Pobranie listy gier do formularza (dropdown)
@@ -64,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="main-content">
         <div class="top-header">
             <h2>Dodaj grę do kolekcji</h2>
-            <button class="btn-small" onclick="window.location.href='dashboard.php'">← Wróć do Panelu</button>
+            <button class="btn-small" onclick="window.location.href='../main/dashboard.php'">← Wróć do Panelu</button>
         </div>
             <div class="form-container dodaj-do-kolekcji">
             <?= $message ?>
@@ -100,6 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <textarea name="komentarz" rows="3" placeholder="Twój komentarz do gry..."></textarea>
 
                 <button class="btn-small save" type="submit">Dodaj do kolekcji</button>
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             </form>
         
         </div>
