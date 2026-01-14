@@ -101,6 +101,54 @@ CREATE TABLE `gatunek` (
   `opis` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+INSERT INTO `gatunek` (`id_gatunku`, `nazwa_gatunku`, `url`, `opis`) VALUES
+(1, 'Kooperacja', 'https://boardgamegeek.com/boardgamemechanic/2023/cooperative-game', 'Gracze współpracują przeciwko grze'),
+(2, 'Strategia', 'https://boardgamegeek.com/boardgamesubdomain/5497/strategy-games', 'Gry wymagające planowania i taktyki'),
+(3, 'Przygoda', 'https://boardgamegeek.com/boardgamecategory/1022/adventure', 'Eksploracja, fabuła i rozwój postaci'),
+(4, 'Ekonomia', 'https://boardgamegeek.com/boardgamecategory/1021/economic', 'Zarządzanie zasobami i finansami'),
+(5, 'Rodzinna', 'https://boardgamegeek.com/boardgamesubdomain/5499/family-games', 'Przystępne gry dla całych rodzin'),
+(6, 'Karty', 'https://boardgamegeek.com/boardgamecategory/1002/card-game', 'Głównym elementem są karty'),
+(7, 'Fantasy', 'https://boardgamegeek.com/boardgamecategory/1010/fantasy', 'Magia i fikcyjne światy'),
+(8, 'Sci-Fi', 'https://boardgamegeek.com/boardgamecategory/1016/science-fiction', 'Kosmos i technologia'),
+(9, 'Horror', 'https://boardgamegeek.com/boardgamecategory/1024/horror', 'Groza i mroczny klimat'),
+(10, 'Logika', 'https://boardgamegeek.com/boardgamecategory/1028/puzzle', 'Zagadki logiczne i łamigłówki'),
+(11, 'Kości', 'https://boardgamegeek.com/boardgamecategory/1017/dice', 'Gry oparte na rzutach kośćmi'),
+(12, 'Abstrakcja', 'https://boardgamegeek.com/boardgamecategory/1009/abstract-strategy', 'Brak tematu, czysta taktyka'),
+(13, 'Wojna', 'https://boardgamegeek.com/boardgamecategory/1019/wargame', 'Symulacja konfliktów militarnych'),
+(14, 'RPG', 'https://boardgamegeek.com/boardgamemechanic/2028/role-playing', 'Elementy gier fabularnych'),
+(15, 'Eurogra', 'https://boardgamegeek.com/wiki/page/Eurogame', 'Strategiczne gry w stylu europejskim'),
+(16, 'Impreza', 'https://boardgamegeek.com/boardgamecategory/1030/party-game', 'Szybkie gry dla dużych grup'),
+(17, 'Dorośli', 'https://boardgamegeek.com/boardgamecategory/1118/mature-adult', 'Tematyka 18+'),
+(18, 'Dzieci', 'https://boardgamegeek.com/boardgamecategory/1041/childrens-game', 'Gry dla najmłodszych'),
+(19, 'Tematyczna', 'https://boardgamegeek.com/boardgamesubdomain/5496/thematic-games', 'Gry z silnym klimatem i narracją'),
+(20, 'Rozwój i budowa obszru', 'https://boardgamegeek.com/boardgamecategory/1086/territory-building', 'Rozwój obszaru i budowa obszaru np. miasta '),
+(21, 'Figurki', 'https://boardgamegeek.com/boardgamecategory/1047/miniat  ures', 'Gry z modelami'),
+(22, 'Kontrola Terytorium', 'https://boardgamegeek.com/boardgamemechanic/2080/area-majority-influence', 'Kontrola obszarów (Area Control)'),
+(23, 'Słowa', 'https://boardgamegeek.com/boardgamecategory/1025/word', 'Gry słowne'),
+(24, 'Zręczność', 'https://boardgamegeek.com/boardgamecategory/1032/action-dexterity', 'Wymagające sprawności manualnej'),
+(25, 'Przemysł', 'https://boardgamegeek.com/boardgamecategory/1088/industry-manufacturing', 'Produkcja i fabryki'),
+(26, 'Historia', 'https://boardgamegeek.com/boardgamecategory/1035/medieval', 'Gry historyczne (np. średniowiecze)'),
+(27, 'Mitologia', 'https://boardgamegeek.com/boardgamecategory/1082/mythology', 'Mity i legendy'),
+(28, 'Ekologia', 'https://boardgamegeek.com/boardgamecategory/1084/environmental', 'Natura i środowisko'),
+(29, 'Zarządzanie Ręką', 'https://boardgamegeek.com/boardgamemechanic/2040/hand-management', 'Optymalizacja kart na ręce'),
+(30, 'Klasyk', 'https://boardgamegeek.com/browse/boardgame?sort=numvoters&sortdir=desc', 'Klasyki'),
+(31, 'Kafelki', 'https://boardgamegeek.com/boardgamemechanic/2002/tile-placement', 'Układanie planszy z kafelków'),
+(32, 'Negocjacje', 'https://boardgamegeek.com/boardgamecategory/1026/negotiation', 'Gry skupiające się na negocjacjach między graczami'),
+(33, 'Tworzenie Zestawów', 'https://boardgamegeek.com/boardgamemechanic/2004/set-collection', 'Zbieranie zestawów elementów'),
+(34, 'Dobieranie Wzorów', 'https://boardgamegeek.com/boardgamemechanic/2048/pattern-building', 'Układanie wzorów'),
+(35, 'Budowanie Talii', 'https://boardgamegeek.com/boardgamemechanic/2664/deck-bag-and-pool-building', 'Tworzenie talii w trakcie gry'),
+(36, 'Blef', 'https://boardgamegeek.com/boardgamecategory/1023/bluffing', 'Blefowanie przeciwników'),
+(37, 'Dedukcja', 'https://boardgamegeek.com/boardgamecategory/1039/deduction', 'Wyciąganie logicznych wniosków'),
+(38, 'Quiz', 'https://boardgamegeek.com/boardgamecategory/1027/trivia', 'Gry wiedzowe'),
+(39, 'Pojedynek', 'https://boardgamegeek.com/boardgamefamily/61979/players-two-player-only-games', 'Gry jedynie dla dwóch graczy'),
+(40, 'Eksploracja', 'https://boardgamegeek.com/boardgamecategory/1020/exploration', 'Odkrywanie mapy'),
+(41, 'Edukacja', 'https://boardgamegeek.com/boardgamecategory/1094/educational', 'Gry edukacyjne'),
+(42, 'Draft', 'https://boardgamegeek.com/boardgamemechanic/2041/card-drafting', 'Wybieranie kart z puli'),
+(43, 'Wyścig', 'https://boardgamegeek.com/boardgamemechanic/2876/race', 'Wyścig do mety'),
+(44, 'Ustawianie Robotników', 'https://boardgamegeek.com/boardgamemechanic/2082/worker-placement', 'Wysyłanie pracowników na pola akcji'),
+(45, 'Wysokie Ryzyko', 'https://boardgamegeek.com/boardgamemechanic/2661/push-your-luck', 'Igranie z losem'),
+(46, 'Licytacja', 'https://boardgamegeek.com/boardgamemechanic/2012/auction-bidding', 'Licytowanie dóbr'),
+(47, 'Asymetria', 'https://boardgamegeek.com/boardgamemechanic/2015/variable-player-powers', 'Różne umiejętności graczy');
 -- --------------------------------------------------------
 
 --
@@ -575,6 +623,8 @@ ALTER TABLE `uczestnicy_rozgrywki`
 --
 ALTER TABLE `uzytkownik`
   ADD CONSTRAINT `fk_uzytkownik_uprawnienia` FOREIGN KEY (`id_uprawnien`) REFERENCES `uprawnienia` (`id_uprawnien`);
+
+
 
 DELIMITER $$
 --
