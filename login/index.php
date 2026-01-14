@@ -37,7 +37,7 @@ if (empty($_SESSION['csrf_token'])) {
                     <div style="display: flex; align-items: center; margin-bottom: 15px; gap: 10px;">
                         <input type="checkbox" name="remember" id="remember" style="width: auto; margin: 0;">
                         <label for="remember" style="margin: 0; font-weight: normal; font-size: 0.9em;">Zapamiętaj mnie</label>
-                        <a href="register.html" style="margin-left: auto; font-size: 0.9em; text-decoration: none; color: var(--color-magenta);">Nie masz konta? Zarejestruj się</a>
+                        <a href="register.php" style="margin-left: auto; font-size: 0.9em; text-decoration: none; color: var(--color-magenta);">Nie masz konta? Zarejestruj się</a>
                     </div>
 
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
