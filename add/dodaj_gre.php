@@ -1,10 +1,10 @@
 <?php
 // dodaj_gre.php
 session_start();
-require_once 'api/db.php';
+require_once '../api/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    header("Location: ../login/index.php");
     exit();
 }
 if (empty($_SESSION['csrf_token'])) {
@@ -13,6 +13,9 @@ if (empty($_SESSION['csrf_token'])) {
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        die("Błąd bezpieczeństwa (CSRF).");
+    }
     $tytul = trim($_POST['tytul']);
     // Pobieranie danych opcjonalnych
     $rok = !empty($_POST['rok']) ? (int)$_POST['rok'] : null;

@@ -1,17 +1,19 @@
 <?php
 session_start();
-require_once 'api/db.php';
+require_once '../api/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    header("Location: ../login/index.php");
     exit();
 }
-
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 $currentUserId = $_SESSION['user_id'];
 $message = "";
 
 // 1. Pobranie listy gier
-try {
+try {   
     // Tabela: planszowka
     $stmtGry = $pdo->query("SELECT id_planszowki, tytul_planszowki FROM planszowka ORDER BY tytul_planszowki ASC");
     $listaGier = $stmtGry->fetchAll();
@@ -32,9 +34,10 @@ try {
 
 // 3. Obsługa formularza
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+    die("Błąd CSRF");
 }
+
     $id_planszowki = (int)$_POST['id_planszowki'];
     $data_rozgrywki = $_POST['data_rozgrywki'];
     $czas_trwania = (int)$_POST['czas_trwania'];
@@ -78,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
 
                 $pdo->commit();
-                header("Location: rozgrywki.php?success=1");
+                header("Location: ../main/rozgrywki.php?success=1");
                 exit();
             }
         }

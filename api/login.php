@@ -11,7 +11,9 @@ if (isset($_POST['remember'])) {
     // Domyślnie: 0 (ciasteczko wygasa po zamknięciu przeglądarki)
     $lifetime = 0;
 }
-
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 // 2. Konfiguracja parametrów ciasteczka sesyjnego
 session_set_cookie_params([
     'lifetime' => $lifetime,

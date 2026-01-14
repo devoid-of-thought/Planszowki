@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute([$user, $email]);
     
     if ($stmt->rowCount() > 0) {
-        die("Taki użytkownik lub email już istnieje! <a href='../register.html'>Wróć</a>");
+        die("Taki użytkownik lub email już istnieje! <a href='../login/register.html'>Wróć</a>");
     }
 
     // 3. Haszowanie hasła (BEZPIECZEŃSTWO)
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['username'] = $user;
 
         // 4. Przekieruj do dashboardu
-        header("Location: ../dashboard.php");
+        header("Location: ../main/dashboard.php");
         exit(); // Ważne: zatrzymaj dalsze wykonywanie skryptu
 
     } catch (PDOException $e) {

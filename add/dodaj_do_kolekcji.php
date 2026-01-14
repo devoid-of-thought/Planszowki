@@ -1,10 +1,10 @@
 <?php
 // dodaj_do_kolekcji.php
 session_start();
-require_once 'api/db.php';
+require_once '../api/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    header("Location: ../login/index.php");
     exit();
 }
 if (empty($_SESSION['csrf_token'])) {
@@ -22,6 +22,9 @@ $statusy = $stmt->fetchAll();
 
 // 3. Obsługa wysłania formularza
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        die("Błąd bezpieczeństwa (CSRF).");
+    }
     $id_gry = $_POST['id_planszowki'];
     $id_statusu = $_POST['id_statusu'];
     $ocena = !empty($_POST['ocena']) ? (int)$_POST['ocena'] : null;
@@ -55,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Dodaj do kolekcji</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">

@@ -24,5 +24,5 @@ $activePage = basename($_SERVER['PHP_SELF']);
         Znajomi
     </a>
 
-    <a href="logout.php" class="logout-link">Wyloguj się</a>
+    <a href="../login/logout.php" class="logout-link">Wyloguj się</a>
 </nav>
