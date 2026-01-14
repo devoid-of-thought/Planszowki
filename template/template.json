@@ -1,0 +1,53 @@
+{
+    "meta": {
+        "version": "1.0",
+        "author": "Your Name",
+        "date_created": "2024-06-01",
+        "last_modified": "2024-06-01",
+        "score_guide": "This is a template score guide."
+    },
+    "ui":{
+        "title": "Template Template",
+        "description": "This is a template JSON file.",
+        "icons": "template_icon.png"
+    },
+    "categories": [
+        { 
+            "id": "placeholder",
+            "name": "Placeholder",
+            "color": "#000000",
+            "input_type": "number",
+            "default": 0,
+            "operation": "sum",
+            "allow_negative": false,
+            "description": "This is a placeholder category."
+        },
+                { 
+            "id": "placeholder",
+            "name": "Placeholder",
+            "color": "#000000",
+            "input_type": "number",
+            "default": 0,
+            "operation": {
+                "symbol": "*",
+                "times": 2
+            },
+            "allow_negative": false,
+            "description": "This is a placeholder category."
+        },
+                        { 
+            "id": "placeholder",
+            "name": "Placeholder",
+            "color": "#000000",
+            "input_type": "number",
+            "default": 0,
+            "operation": {
+                "symbol": "/",
+                "divided_by": 2,
+                "rounding": "up"
+            },
+            "allow_negative": false,
+            "description": "This is a placeholder category."
+        }
+    ]
+}
