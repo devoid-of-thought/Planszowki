@@ -86,7 +86,7 @@ try {
                     <input type="text" id="searchTitle" placeholder="Wpisz tytuł..." onkeyup="applyFilters()">
                 </div>
                 
-                <div class="filter-group">
+                <div class="filter-group gracze-filter">
                     <label>Ilość Graczy:</label>
                     <div class="input-row">
                         <input type="number" id="minPlayers" placeholder="Min" min="1" oninput="applyFilters()">
@@ -94,7 +94,7 @@ try {
                     </div>
                 </div>
 
-                <div class="filter-group">
+                <div class="filter-group gatunek-filter">
                     <label>Gatunek:</label>
                     <select id="filterGenre" onchange="applyFilters()">
                         <option value="">Wszystkie</option>
@@ -106,7 +106,7 @@ try {
                     </select>
                 </div>
 
-                <div class="filter-group">
+                <div class="filter-group sortowanie-filter">
                     <label>Sortuj według:</label>
                     <select id="sortOrder" onchange="applySort()">
                         <option value="title_asc">Tytuł (A-Z)</option>
@@ -119,7 +119,7 @@ try {
                 </div>
             </div>
 
-            <main>
+            <main class="planszowki-main">
                 <?php if (count($globalnaBaza) > 0): ?>
                     <table id="collectionTable">
                         <thead>
@@ -129,7 +129,7 @@ try {
                                 <th>Ilość Graczy</th>
                                 <th>Długość Rozgrywki</th>
                                 <th>Złożoność</th>
-                                <th>Akcja</th>
+                                <th>Opis</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody">

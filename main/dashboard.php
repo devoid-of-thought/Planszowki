@@ -81,12 +81,12 @@ try {
             </div>
 
             <div class="filters">
-                <div class="filter-group">
+                <div class="filter-group szukaj">
                     <label>Szukaj gry:</label>
                     <input type="text" id="searchTitle" placeholder="Wpisz tytuł..." onkeyup="applyFilters()">
                 </div>
                 
-                <div class="filter-group">
+                <div class="filter-group status">
                     <label>Status:</label>
                     <select id="filterStatus" onchange="applyFilters()">
                         <option value="">Wszystkie</option>
@@ -98,7 +98,7 @@ try {
                     </select>
                 </div>
 
-                <div class="filter-group">
+                <div class="filter-group gatunki-dashboard">
                     <label>Gatunek:</label>
                     <select id="filterGenre" onchange="applyFilters()">
                         <option value="">Wszystkie</option>
@@ -110,7 +110,7 @@ try {
                     </select>
                 </div>
 
-                <div class="filter-group">
+                <div class="filter-group sortowanie-dashboard">
                     <label>Sortuj według:</label>
                     <select id="sortOrder" onchange="applySort()">
                         <option value="date_desc">Data dodania (od najnowszych)</option>
@@ -123,7 +123,7 @@ try {
                 </div>
             </div>
 
-            <main>
+            <main class="dashboard-main">
                 <?php if (count($kolekcja) > 0): ?>
                     <table id="collectionTable">
                         <thead>
@@ -149,27 +149,27 @@ try {
                                     data-rating="<?= $sortRating ?>"
                                     data-date="<?= $sortDate ?>">
                                     
-                                    <td class="col-title">
+                                    <td class="col-title-dashboard">
                                         <strong><?php echo htmlspecialchars($gra['tytul_planszowki']); ?></strong>
                                     </td>
                                     
-                                    <td class="col-genre">
+                                    <td class="col-genre-dashboard">
                                         <?php echo !empty($gra['gatunki']) ? htmlspecialchars($gra['gatunki']) : '<span style="color:#ccc">-</span>'; ?>
                                     </td>
 
-                                    <td class="col-status">
+                                    <td class="col-status-dashboard">
                                         <?php echo htmlspecialchars($gra['nazwa_statusu']); ?>
                                     </td>
 
-                                    <td>
+                                    <td class="col-rating-dashboard">
                                         <?php echo $gra['ocena'] ? htmlspecialchars($gra['ocena']) . "/10" : "-"; ?>
                                     </td>
                                     
-                                    <td class="col-date">
+                                    <td class="col-date-dashboard">
                                         <?php echo !empty($gra['data_dodania']) ? date("d.m.Y", strtotime($gra['data_dodania'])) : '-'; ?>
                                     </td>
 
-                                    <td><?php echo htmlspecialchars($gra['komentarz'] ?? ''); ?></td>
+                                    <td class="col-comment-dashboard"><?php echo htmlspecialchars($gra['komentarz'] ?? ''); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

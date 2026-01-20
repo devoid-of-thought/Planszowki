@@ -506,6 +506,118 @@ INSERT INTO `planszowka_gatunek` (`id_planszowki`, `id_gatunku`) VALUES
 (42, 48),
 (49, 48),
 (84, 48);
+
+INSERT INTO `planszowka` 
+(`id_planszowki`, `tytul_planszowki`, `data_wydania`, `wydawca`, `designer`, `min_graczy`, `max_graczy`, `min_dlugosc_rozgrywki`, `max_dlugosc_rozgrywki`, `waga`, `rekomendowany_wiek`, `bgg_id`, `stworzone_przez_id_uzytkownika`) 
+VALUES
+(101, 'Air, Land, & Sea', 2019, 'Arcane Wonders', 'Jon Perry', 2, 2, 15, 30, 1.68, 14, '247367', 1),
+(102, 'Arboretum', 2015, 'Renegade Game Studios', 'Dan Cassar', 2, 4, 30, 30, 2.15, 8, '140934', 1),
+(103, 'Carcassonne: Inns & Cathedrals', 2002, 'Hans im Glück', 'Klaus-Jürgen Wrede', 2, 6, 60, 60, 2.08, 8, '2993', 1),
+(104, 'Coloretto', 2003, 'Abacusspiele', 'Michael Schacht', 2, 5, 30, 30, 1.71, 8, '5782', 1),
+(105, 'Hanamikoji', 2013, 'EmperorS4', 'Kota Nakayama', 2, 2, 15, 15, 1.71, 10, '158600', 1),
+(106, 'Herd Mentality', 2020, 'Big Potato', 'Rich Coombes', 4, 10, 20, 20, 1.05, 10, '306735', 1),
+(107, 'High Society', 1995, 'Osprey Games', 'Reiner Knizia', 3, 5, 15, 30, 1.76, 10, '220', 1),
+(108, 'The Hobbit Card Game', 2012, 'Fantasy Flight Games', 'Martin Wallace', 2, 5, 30, 30, 1.60, 10, '111467', 1),
+(109, 'Innovation', 2010, 'Asmadi Games', 'Carl Chudyk', 2, 4, 60, 60, 2.74, 12, '63888', 1),
+(110, 'Lewis & Clark: The Expedition', 2013, 'Ludonaute', 'Cédrick Chaboussit', 1, 5, 120, 120, 3.32, 14, '140620', 1),
+(111, 'Magical Athlete', 2002, 'Z-Man Games', 'Takashi Ishida', 4, 5, 45, 60, 1.40, 8, '24565', 1),
+(112, 'Mal Trago', 2019, 'Rocket Lemon Games', 'Jose Manuel Fernandez', 4, 10, 15, 20, 1.10, 8, '295627', 1),
+(113, 'Monopoly: European Edition', 1991, 'Parker Brothers', '(Uncredited)', 2, 8, 60, 180, 1.65, 8, '11029', 1),
+(114, 'Munchkin', 2001, 'Steve Jackson Games', 'Steve Jackson', 3, 6, 60, 120, 1.79, 10, '1927', 1),
+(115, 'Oath: Chronicles of Empire and Exile', 2021, 'Leder Games', 'Cole Wehrle', 1, 6, 45, 120, 4.07, 10, '291572', 1),
+(116, 'Oh My Gods!', 2016, 'Gamewright', 'Tim Armstrong', 3, 5, 30, 30, 1.30, 10, '198948', 1),
+(117, 'Pax Renaissance', 2016, 'Sierra Madre Games', 'Phil Eklund', 2, 4, 60, 120, 4.22, 14, '198953', 1),
+(118, 'Radlands', 2021, 'Roxley', 'Daniel Piechnick', 2, 2, 20, 40, 2.26, 14, '322703', 1),
+(119, 'The Red Cathedral', 2020, 'Devir', 'Israel Cendrero', 1, 4, 50, 80, 2.80, 10, '227224', 1),
+(120, 'Scrabble', 1948, 'Mattel', 'Alfred Mosher Butts', 2, 4, 90, 90, 2.07, 10, '320', 1),
+(121, 'Spicy', 2020, 'HeidelBÄR Games', 'Zoltán Győri', 2, 6, 15, 20, 1.18, 10, '299169', 1),
+(122, 'Splito', 2022, 'Blam!', 'Luc Rémond', 3, 8, 15, 15, 1.30, 8, '369656', 1),
+(123, 'Sushi Go! 10th Anniversary', 2023, 'Gamewright', 'Phil Walker-Harding', 2, 5, 15, 15, 1.20, 8, '392181', 1),
+(124, 'Take 5 (6. nimmt!)', 1994, 'Amigo', 'Wolfgang Kramer', 2, 10, 45, 45, 1.19, 8, '432', 1),
+(125, 'Talisman: Revised 4th Edition', 2007, 'Fantasy Flight Games', 'Bob Harris', 2, 6, 90, 90, 2.15, 9, '27627', 1),
+(126, 'Targi', 2012, 'KOSMOS', 'Andreas Steiger', 2, 2, 60, 60, 2.33, 12, '118048', 1),
+(127, 'Terraforming Mars: Colonies', 2018, 'FryxGames', 'Jacob Fryxelius', 1, 5, 120, 120, 3.20, 12, '255681', 1),
+(128, 'Terraforming Mars: Prelude', 2018, 'FryxGames', 'Jacob Fryxelius', 1, 5, 120, 120, 3.10, 12, '247030', 1),
+(129, 'Ticket to Ride: Europe', 2005, 'Days of Wonder', 'Alan R. Moon', 2, 5, 30, 60, 1.92, 8, '14996', 1),
+(130, 'Tiny Epic Dungeons', 2021, 'Gamelyn Games', 'Scott Almes', 1, 4, 30, 60, 2.75, 14, '331787', 1),
+(131, 'Tussie Mussie', 2019, 'Button Shy', 'Elizabeth Hargrave', 2, 4, 20, 30, 1.20, 8, '257614', 1),
+(132, 'UNO', 1971, 'Mattel', 'Merle Robbins', 2, 10, 30, 30, 1.11, 6, '2223', 1),
+(133, 'Vantage', 2011, 'Vantage Games', 'Manny Trembley', 2, 6, 30, 45, 1.50, 8, '108234', 1),
+(134, 'Village Green', 2020, 'Osprey Games', 'Peer Sylvester', 1, 5, 30, 30, 1.87, 14, '300583', 1),
+(135, 'La Viña', 2019, 'Devir', 'Josep M. Allué', 2, 5, 30, 45, 1.60, 8, '239636', 1);
+
+INSERT INTO `planszowka_gatunek` (`id_planszowki`, `id_gatunku`) VALUES
+-- 101. Air, Land & Sea (Wojna, Karty, Strategia)
+(101, 13), (101, 6), (101, 2),
+-- 102. Arboretum (Karty, Zestawy, Logika)
+(102, 6), (102, 33), (102, 10),
+-- 103. Carcassonne Inns & Cathedrals (Kafelki, Dodatek)
+(103, 31), (103, 5),
+-- 104. Coloretto (Karty, Zestawy, Ryzyko)
+(104, 6), (104, 33), (104, 45),
+-- 105. Hanamikoji (Karty, Terytorium, Pojedynek)
+(105, 6), (105, 22), (105, 39),
+-- 106. Herd Mentality (Impreza, Słowa)
+(106, 16), (106, 23),
+-- 107. High Society (Licytacja, Karty)
+(107, 46), (107, 6),
+-- 108. Hobbit Card Game (Karty, Trick-taking)
+(108, 6), (108, 7),
+-- 109. Innovation (Karty, Cywilizacja, Chaos)
+(109, 6), (109, 20),
+-- 110. Lewis & Clark (Wyścig, Zarządzanie ręką, Historia)
+(110, 43), (110, 29), (110, 26),
+-- 111. Magical Athlete (Wyścig, Fantasy, Draft)
+(111, 43), (111, 7), (111, 42),
+-- 112. Mal Trago (Impreza, Karty)
+(112, 16), (112, 6),
+-- 113. Monopoly Euro (Rodzinna, Ekonomia, Negocjacje)
+(113, 5), (113, 4), (113, 32),
+-- 114. Munchkin (Karty, Fantasy, Humor/Negocjacje)
+(114, 6), (114, 7), (114, 32),
+-- 115. Oath (Strategia, Terytorium, Legacy/Kampania)
+(115, 2), (115, 22), (115, 49),
+-- 116. Oh My Gods! (Dedukcja, Mitologia)
+(116, 37), (116, 27),
+-- 117. Pax Renaissance (Strategia, Historia, Ekonomia)
+(117, 2), (117, 26), (117, 4),
+-- 118. Radlands (Pojedynek, Karty, Post-apoc)
+(118, 39), (118, 6), (118, 8),
+-- 119. Red Cathedral (Strategia, Kości/Rondel, Rosja)
+(119, 2), (119, 26),
+-- 120. Scrabble (Słowa, Klasyk)
+(120, 23), (120, 30),
+-- 121. Spicy (Blef, Karty)
+(121, 36), (121, 6),
+-- 122. Splito (Draft, Karty)
+(122, 42), (122, 6),
+-- 123. Sushi Go 10th (Draft, Karty)
+(123, 42), (123, 6),
+-- 124. Take 5 / 6.Bierze (Karty, Logika)
+(124, 6), (124, 10),
+-- 125. Talisman (Przygoda, Fantasy, Kości)
+(125, 3), (125, 7), (125, 11),
+-- 126. Targi (Worker Placement, 2 Graczy, Pustynia)
+(126, 44), (126, 2),
+-- 127. TM Colonies (Ekonomia, Sci-Fi)
+(127, 4), (127, 8),
+-- 128. TM Prelude (Ekonomia, Sci-Fi)
+(128, 4), (128, 8),
+-- 129. Ticket to Ride Europe (Rodzinna, Pociągi)
+(129, 5), (129, 30),
+-- 130. Tiny Epic Dungeons (Kooperacja, Przygoda, Fantasy)
+(130, 1), (130, 3), (130, 7),
+-- 131. Tussie Mussie (Draft, Karty)
+(131, 42), (131, 6),
+-- 132. UNO (Rodzinna, Karty)
+(132, 5), (132, 6),
+-- 133. Vantage (Dedukcja)
+(133, 37),
+-- 134. Village Green (Karty, Układanie)
+(134, 6), (134, 31),
+-- 135. La Viña (Zestawy, Wino)
+(135, 33), (135, 6);
+
 -- --------------------------------------------------------
 
 --
