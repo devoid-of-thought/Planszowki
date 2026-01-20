@@ -172,7 +172,7 @@ CREATE TABLE `komentarz` (
 
 CREATE TABLE `planszowka` (
   `id_planszowki` int(11) NOT NULL,
-  `tytul_planszowki` varchar(255) DEFAULT NULL,
+  `tytul_planszowki` varchar(255) NOT NULL,
   `data_wydania` int(11) DEFAULT NULL,
   `wydawca` varchar(255) DEFAULT NULL,
   `designer` varchar(255) DEFAULT NULL,
@@ -1050,6 +1050,19 @@ ALTER TABLE `uzytkownik`
 
 
 DELIMITER $$
+
+-- 1. Dodanie pluginu (JSON jest zminifikowany, aby pasował do zapytania)
+INSERT INTO `plugin` (`nazwa_pluginu`, `struktura_json`, `stworzone_przez_id_uzytkownika`) 
+VALUES 
+('Podstawowy - 7 Cudów Świata', 
+'{"meta":{"version":"1.0","author":"System","date_created":"2026-01-20","last_modified":"2026-01-20","score_guide":"Wpisz punkty z poszczególnych kategorii."},"ui":{"title":"Punktacja - 7 Cudów Świata","description":"Standardowy arkusz punktacji.","icons":"7wonders_icon.png"},"categories":[{"id":"military","name":"Konflikty Zbrojne","color":"#d32f2f","input_type":"number","default":0,"operation":"sum","allow_negative":true,"description":"Czerwone karty"},{"id":"coins","name":"Zawartość Skarbca","color":"#fbc02d","input_type":"number","default":0,"operation":{"symbol":"/","divided_by":3,"rounding":"floor"},"allow_negative":false,"description":"3 monety = 1 pkt"},{"id":"wonder","name":"Cud Świata","color":"#757575","input_type":"number","default":0,"operation":"sum","allow_negative":false,"description":"Etapy Cudu"},{"id":"civilian","name":"Budowle Cywilne","color":"#1976d2","input_type":"number","default":0,"operation":"sum","allow_negative":false,"description":"Niebieskie karty"},{"id":"commercial","name":"Budowle Naukowe","color":"#fdd835","input_type":"number","default":0,"operation":"sum","allow_negative":false,"description":"Żółte karty"},{"id":"guilds","name":"Budowle Handlowe","color":"#7b1fa2","input_type":"number","default":0,"operation":"sum","allow_negative":false,"description":"Fioletowe karty"},{"id":"science","name":"Budowle Naukowe","color":"#388e3c","input_type":"number","default":0,"operation":"sum","allow_negative":false,"description":"Zielone karty"}]}',
+1); -- Zakładam, że ID administratora to 1
+
+-- 2. Pobranie ID nowo dodanego pluginu i przypisanie go do gry
+-- UWAGA: Jeśli wiesz, jakie ID dostał plugin (np. 1), wpisz je w miejsce LAST_INSERT_ID()
+INSERT INTO `arkusz_punktacji` (`id_planszowki`, `id_pluginu`, `nazwa_arkusza`)
+VALUES 
+(28, LAST_INSERT_ID(), 'Arkusz 7 Cudów Świata'); -- Zakłada
 --
 -- Events
 --

@@ -38,6 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         $newUserId = $pdo->lastInsertId();
 
+        session_regenerate_id(true);
         $_SESSION['user_id'] = $newUserId;
         $_SESSION['username'] = $user;
 
