@@ -23,6 +23,9 @@ $activePage = basename($_SERVER['PHP_SELF']);
     <a href="znajomi.php" class="<?= $activePage == 'znajomi.php' ? 'current' : '' ?>">
         Znajomi
     </a>
+    <a href="planszowki.php" class="<?= $activePage == 'planszowki.php' ? 'current' : '' ?>">
+        Planszówki
+    </a>
 
     <a href="../login/logout.php" class="logout-link">Wyloguj się</a>
 </nav>
