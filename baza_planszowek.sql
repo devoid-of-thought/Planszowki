@@ -695,6 +695,7 @@ CREATE TABLE `rozgrywka` (
 
 CREATE TABLE `rozgrywka_historyczna` (
   `id_rozgrywki` int(11) NOT NULL DEFAULT 0,
+  `tytul_rozgrywki` varchar(255) DEFAULT NULL,
   `id_planszowki` int(11) DEFAULT NULL,
   `id_organizatora` int(11) DEFAULT NULL,
   `data_rozgrywki` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -876,7 +877,7 @@ ALTER TABLE `plugin`
 -- Indeksy dla tabeli `rozgrywka`
 --
 ALTER TABLE `rozgrywka`
-  ADD PRIMARY KEY (`id_rozgrywki`),
+  ADD PRIMARY KEY (`id_rozgrywki`), 
   ADD KEY `idx_rozgrywka_gra` (`id_planszowki`),
   ADD KEY `idx_rozgrywka_org` (`id_organizatora`);
 
@@ -1063,6 +1064,7 @@ VALUES
 INSERT INTO `arkusz_punktacji` (`id_planszowki`, `id_pluginu`, `nazwa_arkusza`)
 VALUES 
 (28, LAST_INSERT_ID(), 'Arkusz 7 Cudów Świata'); -- Zakłada
+
 --
 -- Events
 --

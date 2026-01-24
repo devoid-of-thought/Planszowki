@@ -51,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $id_planszowki = (int)$_POST['id_planszowki'];
+    $tytul_rozgrywki = trim($_POST['tytul_rozgrywki']);
     $data_rozgrywki = $_POST['data_rozgrywki'];
     $czas_trwania = (int)$_POST['czas_trwania'];
     $notatka = trim($_POST['notatka_do_gry']);
@@ -71,10 +72,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $pdo->beginTransaction();
 
                 // Dodanie rozgrywki
-                $sqlInsertRozgrywka = "INSERT INTO rozgrywka (id_planszowki, id_organizatora, data_rozgrywki, czas_trwania, notatka_do_gry)
-                                       VALUES (?, ?, ?, ?, ?)";
+                $sqlInsertRozgrywka = "INSERT INTO rozgrywka (id_planszowki, id_organizatora, data_rozgrywki, tytul_rozgrywki, czas_trwania, notatka_do_gry)
+                                       VALUES (?, ?, ?, ?, ?, ?)";
                 $stmtRozgrywka = $pdo->prepare($sqlInsertRozgrywka);
-                $stmtRozgrywka->execute([$id_planszowki, $currentUserId, $data_rozgrywki, $czas_trwania, $notatka]);
+                $stmtRozgrywka->execute([$id_planszowki, $currentUserId, $data_rozgrywki,$tytul_rozgrywki, $czas_trwania, $notatka]);
 
                 $id_nowej_rozgrywki = $pdo->lastInsertId();
 
@@ -149,6 +150,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="date" name="data_rozgrywki" required value="<?= date('Y-m-d') ?>">
                         <input type="number" name="czas_trwania" placeholder="Czas (min)" required>
                     </div>
+                    <label>Tytuł rozgrywki (opcjonalnie):</label>
+                    <input type="text" name="tytul_rozgrywki" class="search-box" placeholder="Np. Rozgrywka z przyjaciółmi">
+                        
+                    
 
                     <label>Dodaj graczy (znajomi):</label>
                     <input type="text" id="friendSearch" class="search-box" placeholder="Szukaj znajomego..." onkeyup="filterFriends()">

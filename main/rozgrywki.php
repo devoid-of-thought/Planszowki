@@ -15,7 +15,7 @@ $error = "";
 
 try {
     // Pobieramy rozgrywki, w których użytkownik brał udział
-    $sql = "SELECT r.id_rozgrywki, r.data_rozgrywki, r.czas_trwania, r.notatka_do_gry, p.tytul_planszowki
+    $sql = "SELECT r.id_rozgrywki, r.data_rozgrywki, r.tytul_rozgrywki, r.czas_trwania, r.notatka_do_gry, p.tytul_planszowki
             FROM rozgrywka r
             JOIN planszowka p ON r.id_planszowki = p.id_planszowki
             JOIN uczestnicy_rozgrywki u ON r.id_rozgrywki = u.id_rozgrywki
@@ -102,6 +102,7 @@ try {
                         <thead>
                             <tr>
                                 <th>Data</th>
+                                <th> Tytuł </th>
                                 <th>Gra</th>
                                 <th>Czas trwania</th>
                                 <th>Notatka</th>
@@ -121,6 +122,7 @@ try {
                                     data-time="<?= $sortTime ?>">
                                     
                                     <td><?= htmlspecialchars(date("d.m.Y", strtotime($gra['data_rozgrywki']))) ?></td>
+                                    <td><?= htmlspecialchars($gra['tytul_rozgrywki'] ?? '') ?></td>
                                     <td><strong><?= htmlspecialchars($gra['tytul_planszowki']) ?></strong></td>
                                     <td><?= htmlspecialchars($gra['czas_trwania']) ?> min</td>
                                     <td><?= htmlspecialchars($gra['notatka_do_gry'] ?? '') ?></td>
