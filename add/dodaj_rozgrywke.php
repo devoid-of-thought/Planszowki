@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sqlInsertUczestnik = "INSERT INTO uczestnicy_rozgrywki (id_rozgrywki, id_uzytkownika, nazwa_tymczasowa_gracza, wynik_koncowy) VALUES (?, ?, ?, 0)";
         $stmtUczestnik = $pdo->prepare($sqlInsertUczestnik);
 
-        $organizatorBralUdział = isset($_POST['organizator_uczestnik']);
+        $organizatorBralUdział = isset($_POST['organizator_bierze_udzial']);
         $organizatorTempName = !empty($_POST['organizator_temp_name']) ? trim($_POST['organizator_temp_name']) : null;
 
         if ($organizatorBralUdział) {
@@ -201,7 +201,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="date" name="data_rozgrywki" value="<?= date('Y-m-d') ?>" required>
 
                     <label>Czas trwania w minutach:</label>
-                    <input type="number" name="czas_trwania" min="1" required>
+                    <input type="number" name="czas_trwania" min="1" max="9999999999999999" required>
 
                     <label>Znajomi biorący udział:</label>
                     <input type="text" id="friendSearch" onkeyup="filterFriends()" placeholder="Szukaj znajomego..." style="margin-bottom:5px;">
