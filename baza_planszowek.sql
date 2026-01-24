@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sty 11, 2026 at 10:30 PM
+-- Generation Time: Sty 24, 2026 at 03:22 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -101,6 +101,10 @@ CREATE TABLE `gatunek` (
   `opis` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `gatunek`
+--
+
 INSERT INTO `gatunek` (`id_gatunku`, `nazwa_gatunku`, `url`, `opis`) VALUES
 (1, 'Kooperacja', 'https://boardgamegeek.com/boardgamemechanic/2023/cooperative-game', 'Gracze współpracują przeciwko grze'),
 (2, 'Strategia', 'https://boardgamegeek.com/boardgamesubdomain/5497/strategy-games', 'Gry wymagające planowania i taktyki'),
@@ -150,6 +154,7 @@ INSERT INTO `gatunek` (`id_gatunku`, `nazwa_gatunku`, `url`, `opis`) VALUES
 (46, 'Licytacja', 'https://boardgamegeek.com/boardgamemechanic/2012/auction-bidding', 'Licytowanie dóbr'),
 (47, 'Asymetria', 'https://boardgamegeek.com/boardgamemechanic/2015/variable-player-powers', 'Różne umiejętności graczy'),
 (48, 'Zdrajca', 'https://boardgamegeek.com/boardgamemechanic/2686/traitor-game', 'Ukryty wróg wewnątrz drużyny działający na jej szkodę');
+
 -- --------------------------------------------------------
 
 --
@@ -186,111 +191,148 @@ CREATE TABLE `planszowka` (
   `stworzone_przez_id_uzytkownika` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `planszowka` 
-(`id_planszowki`, `tytul_planszowki`, `data_wydania`, `wydawca`, `designer`, `min_graczy`, `max_graczy`, `min_dlugosc_rozgrywki`, `max_dlugosc_rozgrywki`, `waga`, `rekomendowany_wiek`, `bgg_id`) 
-VALUES
-(1, 'Brass: Birmingham', 2018, 'Roxley', 'Gavan Brown, Martin Wallace', 2, 4, 60, 120, 3.90, 14, '224517'),
-(2, 'Pandemic Legacy: Season 1', 2015, 'Z-Man Games', 'Rob Daviau, Matt Leacock', 2, 4, 60, 60, 2.84, 13, '161936'),
-(3, 'Gloomhaven', 2017, 'Cephalofair Games', 'Isaac Childres', 1, 4, 60, 120, 3.90, 14, '174430'),
-(4, 'Ark Nova', 2021, 'Feuerland Spiele', 'Mathias Wigge', 1, 4, 90, 150, 3.70, 14, '342942'),
-(5, 'Twilight Imperium: Fourth Edition', 2017, 'Fantasy Flight Games', 'Dane Beltrami', 3, 6, 240, 480, 4.30, 14, '233078'),
-(6, 'Dune: Imperium', 2020, 'Dire Wolf', 'Paul Dennen', 1, 4, 60, 120, 3.00, 14, '316554'),
-(7, 'Terraforming Mars', 2016, 'FryxGames', 'Jacob Fryxelius', 1, 5, 120, 120, 3.20, 12, '167791'),
-(8, 'War of the Ring: Second Edition', 2012, 'Ares Games', 'Roberto Di Meglio', 2, 4, 150, 180, 4.20, 13, '115746'),
-(9, 'Spirit Island', 2017, 'Greater Than Games', 'R. Eric Reuss', 1, 4, 90, 120, 4.00, 13, '162886'),
-(10, 'Gaia Project', 2017, 'Feuerland Spiele', 'Jens Drögemüller', 1, 4, 60, 150, 4.40, 12, '220308'),
-(11, 'Star Wars: Rebellion', 2016, 'Fantasy Flight Games', 'Corey Konieczka', 2, 4, 180, 240, 3.70, 14, '187645'),
-(12, 'Scythe', 2016, 'Stonemaier Games', 'Jamey Stegmaier', 1, 5, 90, 115, 3.40, 14, '169786'),
-(13, 'Great Western Trail', 2016, 'eggertspiele', 'Alexander Pfister', 2, 4, 75, 150, 3.70, 12, '193738'),
-(14, 'The Castles of Burgundy', 2011, 'ale', 'Stefan Feld', 2, 4, 30, 90, 3.00, 12, '84876'),
-(15, '7 Wonders Duel', 2015, 'Repos Production', 'Antoine Bauza, Bruno Cathala', 2, 2, 30, 30, 2.20, 10, '173346'),
-(16, 'Concordia', 2013, 'PD-Verlag', 'Mac Gerdts', 2, 5, 100, 100, 3.00, 13, '124361'),
-(17, 'Wingspan', 2019, 'Stonemaier Games', 'Elizabeth Hargrave', 1, 5, 40, 70, 2.45, 10, '266192'),
-(18, 'Viticulture Essential Edition', 2015, 'Stonemaier Games', 'Jamey Stegmaier', 1, 6, 45, 90, 2.90, 13, '183394'),
-(19, 'Everdell', 2018, 'Starling Games', 'James A. Wilson', 1, 4, 40, 80, 2.80, 13, '199792'),
-(20, 'Orléans', 2014, 'dlp games', 'Reiner Stockhausen', 2, 4, 90, 90, 3.00, 12, '164928'),
-(21, 'A Feast for Odin', 2016, 'Feuerland Spiele', 'Uwe Rosenberg', 1, 4, 30, 120, 3.80, 12, '177736'),
-(22, 'Blood Rage', 2015, 'CMON', 'Eric M. Lang', 2, 4, 60, 90, 2.80, 14, '170216'),
-(23, 'Root', 2018, 'Leder Games', 'Cole Wehrle', 2, 4, 60, 90, 3.80, 10, '237182'),
-(24, 'The Crew: The Quest for Planet Nine', 2019, 'KOSMOS', 'Thomas Sing', 2, 5, 20, 20, 1.90, 10, '284083'),
-(25, 'Ticket to Ride', 2004, 'Days of Wonder', 'Alan R. Moon', 2, 5, 30, 60, 1.80, 8, '9209'),
-(26, 'Cascadia', 2021, 'Flatout Games', 'Randy Flynn', 1, 4, 30, 45, 1.80, 10, '295947'),
-(27, 'Codenames', 2015, 'Czech Games Edition', 'Vlaada Chvátil', 2, 8, 15, 15, 1.20, 14, '178900'),
-(28, '7 Wonders', 2010, 'Repos Production', 'Antoine Bauza', 2, 7, 30, 30, 2.30, 10, '68448'),
-(29, 'Azul', 2017, 'Plan B Games', 'Michael Kiesling', 2, 4, 30, 45, 1.70, 8, '230802'),
-(30, 'Patchwork', 2014, 'Lookout Games', 'Uwe Rosenberg', 2, 2, 15, 30, 1.60, 8, '163412'),
-(31, 'Splendor', 2014, 'Space Cowboys', 'Marc André', 2, 4, 30, 30, 1.70, 10, '148228'),
-(32, 'Carcassonne', 2000, 'Hans im Glück', 'Klaus-Jürgen Wrede', 2, 5, 30, 45, 1.90, 7, '822'),
-(33, 'King of Tokyo', 2011, 'IELLO', 'Richard Garfield', 2, 6, 30, 30, 1.50, 8, '70323'),
-(34, 'Love Letter', 2012, 'AEG', 'Seiji Kanai', 2, 4, 20, 20, 1.10, 10, '129622'),
-(35, 'The Mind', 2018, 'Nürnberger-Spielkarten-Verlag', 'Wolfgang Warsch', 2, 4, 20, 20, 1.00, 8, '244992'),
-(36, 'Crokinole', 1876, 'Public Domain', '(Uncredited)', 2, 4, 30, 30, 1.20, 8, '521'),
-(37, 'Decrypto', 2018, 'Le Scorpion Masqué', 'Thomas Dagenais-Lespérance', 3, 8, 15, 45, 1.80, 12, '225694'),
-(38, 'Sushi Go!', 2013, 'Gamewright', 'Phil Walker-Harding', 2, 5, 15, 15, 1.10, 8, '133473'),
-(39, 'Clank! A Deck-Building Adventure', 2016, 'Renegade Game Studios', 'Paul Dennen', 2, 4, 30, 60, 2.20, 12, '201808'),
-(40, 'The Quacks of Quedlinburg', 2018, 'Schmidt Spiele', 'Wolfgang Warsch', 2, 4, 45, 45, 1.90, 10, '244521'),
-(41, 'Cartographers', 2019, 'Thunderworks Games', 'Jordy Adan', 1, 100, 30, 45, 1.80, 10, '263918'),
-(42, 'The Resistance: Avalon', 2012, 'Indie Boards & Cards', 'Don Eskridge', 5, 10, 30, 30, 1.70, 13, '128882'),
-(43, 'Just One', 2018, 'Repos Production', 'Ludovic Roudy', 3, 7, 20, 20, 1.00, 8, '254640'),
-(44, 'Heat: Pedal to the Metal', 2022, 'Days of Wonder', 'Asger Harding Granerud', 1, 6, 30, 60, 2.20, 10, '366013'),
-(45, 'Lost Ruins of Arnak', 2020, 'CGE', 'Mín & Elwen', 1, 4, 30, 120, 2.90, 12, '312484'),
-(46, 'Marvel Champions: The Card Game', 2019, 'Fantasy Flight Games', 'Michael Boggs', 1, 4, 45, 90, 2.90, 14, '285774'),
-(47, 'Le Havre', 2008, 'Lookout Games', 'Uwe Rosenberg', 1, 5, 30, 150, 3.70, 12, '35677'),
-(48, 'Mage Knight Board Game', 2011, 'WizKids', 'Vlaada Chvátil', 1, 4, 60, 240, 4.30, 14, '96848'),
-(49, 'Nemesis', 2018, 'Awaken Realms', 'Adam Kwapiński', 1, 5, 90, 180, 3.40, 12, '167355'),
-(50, 'Mansions of Madness: Second Edition', 2016, 'Fantasy Flight Games', 'Nikki Valens', 1, 5, 120, 180, 2.60, 14, '205059'),
-(51, 'Through the Ages: A New Story of Civilization', 2015, 'Czech Games Edition', 'Vlaada Chvátil', 2, 4, 120, 240, 4.43, 14, '182028'),
-(52, 'Agricola', 2007, 'Lookout Games', 'Uwe Rosenberg', 1, 5, 30, 150, 3.64, 12, '31260'),
-(53, 'Power Grid', 2004, '2F-Spiele', 'Friedemann Friese', 2, 6, 120, 120, 3.26, 12, '2651'),
-(54, 'Barrage', 2019, 'Cranio Creations', 'Tommaso Battista', 1, 4, 60, 120, 4.09, 14, '251247'),
-(55, 'The Gallerist', 2015, 'Eagle-Gryphon Games', 'Vital Lacerda', 1, 4, 60, 150, 4.27, 13, '125153'),
-(56, 'Tzolk''in: The Mayan Calendar', 2012, 'Czech Games Edition', 'Simone Luciani', 2, 4, 90, 90, 3.67, 13, '126163'),
-(57, 'Anachrony', 2017, 'Mindclash Games', 'Dávid Turczi', 1, 4, 30, 120, 3.99, 15, '185343'),
-(58, 'Kingdom Death: Monster', 2015, 'Kingdom Death', 'Adam Poots', 1, 4, 60, 180, 4.26, 18, '55690'),
-(59, 'Rising Sun', 2018, 'CMON', 'Eric M. Lang', 3, 5, 90, 120, 3.23, 14, '205896'),
-(60, 'Inis', 2016, 'Matagot', 'Christian Martinez', 2, 4, 60, 90, 2.89, 14, '155821'),
-(61, 'Cosmic Encounter', 2008, 'Fantasy Flight Games', 'Bill Eberle', 3, 5, 60, 120, 2.57, 12, '39463'),
-(62, 'Sheriff of Nottingham', 2014, 'Arcane Wonders', 'Sérgio Halaban', 3, 5, 60, 60, 1.65, 13, '157969'),
-(63, 'Five Tribes', 2014, 'Days of Wonder', 'Bruno Cathala', 2, 4, 40, 80, 2.84, 13, '157354'),
-(64, 'Istanbul', 2014, 'Pegasus Spiele', 'Rüdiger Dorn', 2, 5, 40, 60, 2.58, 10, '148949'),
-(65, 'Raiders of the North Sea', 2015, 'Garphill Games', 'Shem Phillips', 2, 4, 60, 80, 2.60, 12, '170042'),
-(66, 'Architects of the West Kingdom', 2018, 'Garphill Games', 'Shem Phillips', 1, 5, 60, 80, 2.76, 12, '236457'),
-(67, 'Sagrada', 2017, 'Floodgate Games', 'Daryl Andrews', 1, 4, 30, 45, 1.93, 13, '199561'),
-(68, 'Kingdomino', 2016, 'Blue Orange Games', 'Bruno Cathala', 2, 4, 15, 15, 1.21, 8, '204583'),
-(69, 'Catan', 1995, 'KOSMOS', 'Klaus Teuber', 3, 4, 60, 120, 2.30, 10, '13'),
-(70, 'Small World', 2009, 'Days of Wonder', 'Philippe Keyaerts', 2, 5, 40, 80, 2.34, 8, '40692'),
-(71, 'Takenoko', 2011, 'Matagot', 'Antoine Bauza', 2, 4, 45, 45, 1.97, 8, '70919'),
-(72, 'Jaipur', 2009, 'GameWorks', 'Sébastien Pauchon', 2, 2, 30, 30, 1.48, 12, '54043'),
-(73, 'Hive', 2001, 'Gen42 Games', 'John Yianni', 2, 2, 20, 20, 2.33, 9, '2655'),
-(74, 'Santorini', 2016, 'Roxley', 'Gord!', 2, 4, 20, 20, 1.72, 8, '194655'),
-(75, 'Star Realms', 2014, 'White Wizard Games', 'Robert Dougherty', 2, 2, 20, 20, 1.93, 12, '147020'),
-(76, 'Dominion', 2008, 'Rio Grande Games', 'Donald X. Vaccarino', 2, 4, 30, 30, 2.35, 13, '36218'),
-(77, 'Race for the Galaxy', 2007, 'Rio Grande Games', 'Thomas Lehmann', 2, 4, 30, 60, 2.99, 12, '28143'),
-(78, 'Sherlock Holmes Consulting Detective', 1981, 'Ystari Games', 'Raymond Edwards', 1, 8, 60, 120, 2.68, 13, '2511'),
-(79, 'Robinson Crusoe: Adventures on the Cursed Island', 2012, 'Portal Games', 'Ignacy Trzewiczek', 1, 4, 60, 120, 3.82, 14, '121921'),
-(80, 'El Grande', 1995, 'Hans im Glück', 'Wolfgang Kramer', 2, 5, 60, 120, 3.05, 12, '93'),
-(81, 'Tigris & Euphrates', 1997, 'Hans im Glück', 'Reiner Knizia', 2, 4, 90, 90, 3.52, 12, '42'),
-(82, 'Eclipse: Second Dawn for the Galaxy', 2020, 'Lautapelit.fi', 'Touko Tahkokallio', 2, 6, 60, 200, 3.61, 14, '246900'),
-(83, 'A Game of Thrones: The Board Game (2nd Ed)', 2011, 'Fantasy Flight Games', 'Christian T. Petersen', 3, 6, 120, 240, 3.73, 14, '103343'),
-(84, 'Battlestar Galactica: The Board Game', 2008, 'Fantasy Flight Games', 'Corey Konieczka', 3, 6, 120, 180, 3.24, 14, '37111'),
-(85, 'Puerto Rico', 2002, 'alea', 'Andreas Seyfarth', 3, 5, 90, 150, 3.27, 12, '3076'),
-(86, 'Caverna: The Cave Farmers', 2013, 'Lookout Games', 'Uwe Rosenberg', 1, 7, 30, 210, 3.79, 12, '102794'),
-(87, 'Food Chain Magnate', 2015, 'Splotter Spellen', 'Jeroen Doumen', 2, 5, 120, 240, 4.22, 14, '175914'),
-(88, 'Grand Austria Hotel', 2015, 'Lookout Games', 'Virginio Gigli', 2, 4, 60, 120, 3.23, 12, '182874'),
-(89, 'Yokohama', 2016, 'Tasty Minstrel Games', 'Hisashi Hayashi', 2, 4, 90, 90, 3.31, 12, '196340'),
-(90, 'Champions of Midgard', 2015, 'Grey Fox Games', 'Ole Steiness', 2, 4, 60, 90, 2.56, 10, '172287'),
-(91, 'Lords of Waterdeep', 2012, 'Wizards of the Coast', 'Peter Lee', 2, 5, 60, 120, 2.45, 12, '110327'),
-(92, 'Stone Age', 2008, 'Hans im Glück', 'Bernd Brunnhofer', 2, 4, 60, 90, 2.47, 10, '34635'),
-(93, 'Biblios', 2007, 'IELLO', 'Steve Finn', 2, 4, 30, 30, 1.67, 10, '34219'),
-(94, 'Bohnanza', 1997, 'Amigo', 'Uwe Rosenberg', 2, 7, 45, 45, 1.61, 10, '11'),
-(95, 'Skull', 2011, 'Lui-même', 'Hervé Marly', 3, 6, 15, 45, 1.13, 10, '92415'),
-(96, 'Dixit', 2008, 'Libellud', 'Jean-Louis Roubira', 3, 6, 30, 30, 1.21, 8, '39856'),
-(97, 'Mysterium', 2015, 'Libellud', 'Oleksandr Nevskiy', 2, 7, 42, 42, 1.90, 10, '181304'),
-(98, 'Hanabi', 2010, 'Abacusspiele', 'Antoine Bauza', 2, 5, 25, 25, 1.69, 8, '98778'),
-(99, 'No Thanks!', 2004, 'Amigo', 'Thorsten Gimmler', 3, 7, 20, 20, 1.13, 8, '12942'),
-(100, 'For Sale', 1997, 'Uberplay', 'Stefan Dorra', 3, 6, 20, 30, 1.25, 8, '172');
--- --------------------------------------------------------
+--
+-- Dumping data for table `planszowka`
+--
 
+INSERT INTO `planszowka` (`id_planszowki`, `tytul_planszowki`, `data_wydania`, `wydawca`, `designer`, `min_graczy`, `max_graczy`, `min_dlugosc_rozgrywki`, `max_dlugosc_rozgrywki`, `waga`, `rekomendowany_wiek`, `bgg_id`, `stworzone_przez_id_uzytkownika`) VALUES
+(1, 'Brass: Birmingham', 2018, 'Roxley', 'Gavan Brown, Martin Wallace', 2, 4, 60, 120, 3.9, 14, '224517', NULL),
+(2, 'Pandemic Legacy: Season 1', 2015, 'Z-Man Games', 'Rob Daviau, Matt Leacock', 2, 4, 60, 60, 2.84, 13, '161936', NULL),
+(3, 'Gloomhaven', 2017, 'Cephalofair Games', 'Isaac Childres', 1, 4, 60, 120, 3.9, 14, '174430', NULL),
+(4, 'Ark Nova', 2021, 'Feuerland Spiele', 'Mathias Wigge', 1, 4, 90, 150, 3.7, 14, '342942', NULL),
+(5, 'Twilight Imperium: Fourth Edition', 2017, 'Fantasy Flight Games', 'Dane Beltrami', 3, 6, 240, 480, 4.3, 14, '233078', NULL),
+(6, 'Dune: Imperium', 2020, 'Dire Wolf', 'Paul Dennen', 1, 4, 60, 120, 3, 14, '316554', NULL),
+(7, 'Terraforming Mars', 2016, 'FryxGames', 'Jacob Fryxelius', 1, 5, 120, 120, 3.2, 12, '167791', NULL),
+(8, 'War of the Ring: Second Edition', 2012, 'Ares Games', 'Roberto Di Meglio', 2, 4, 150, 180, 4.2, 13, '115746', NULL),
+(9, 'Spirit Island', 2017, 'Greater Than Games', 'R. Eric Reuss', 1, 4, 90, 120, 4, 13, '162886', NULL),
+(10, 'Gaia Project', 2017, 'Feuerland Spiele', 'Jens Drögemüller', 1, 4, 60, 150, 4.4, 12, '220308', NULL),
+(11, 'Star Wars: Rebellion', 2016, 'Fantasy Flight Games', 'Corey Konieczka', 2, 4, 180, 240, 3.7, 14, '187645', NULL),
+(12, 'Scythe', 2016, 'Stonemaier Games', 'Jamey Stegmaier', 1, 5, 90, 115, 3.4, 14, '169786', NULL),
+(13, 'Great Western Trail', 2016, 'eggertspiele', 'Alexander Pfister', 2, 4, 75, 150, 3.7, 12, '193738', NULL),
+(14, 'The Castles of Burgundy', 2011, 'ale', 'Stefan Feld', 2, 4, 30, 90, 3, 12, '84876', NULL),
+(15, '7 Wonders Duel', 2015, 'Repos Production', 'Antoine Bauza, Bruno Cathala', 2, 2, 30, 30, 2.2, 10, '173346', NULL),
+(16, 'Concordia', 2013, 'PD-Verlag', 'Mac Gerdts', 2, 5, 100, 100, 3, 13, '124361', NULL),
+(17, 'Wingspan', 2019, 'Stonemaier Games', 'Elizabeth Hargrave', 1, 5, 40, 70, 2.45, 10, '266192', NULL),
+(18, 'Viticulture Essential Edition', 2015, 'Stonemaier Games', 'Jamey Stegmaier', 1, 6, 45, 90, 2.9, 13, '183394', NULL),
+(19, 'Everdell', 2018, 'Starling Games', 'James A. Wilson', 1, 4, 40, 80, 2.8, 13, '199792', NULL),
+(20, 'Orléans', 2014, 'dlp games', 'Reiner Stockhausen', 2, 4, 90, 90, 3, 12, '164928', NULL),
+(21, 'A Feast for Odin', 2016, 'Feuerland Spiele', 'Uwe Rosenberg', 1, 4, 30, 120, 3.8, 12, '177736', NULL),
+(22, 'Blood Rage', 2015, 'CMON', 'Eric M. Lang', 2, 4, 60, 90, 2.8, 14, '170216', NULL),
+(23, 'Root', 2018, 'Leder Games', 'Cole Wehrle', 2, 4, 60, 90, 3.8, 10, '237182', NULL),
+(24, 'The Crew: The Quest for Planet Nine', 2019, 'KOSMOS', 'Thomas Sing', 2, 5, 20, 20, 1.9, 10, '284083', NULL),
+(25, 'Ticket to Ride', 2004, 'Days of Wonder', 'Alan R. Moon', 2, 5, 30, 60, 1.8, 8, '9209', NULL),
+(26, 'Cascadia', 2021, 'Flatout Games', 'Randy Flynn', 1, 4, 30, 45, 1.8, 10, '295947', NULL),
+(27, 'Codenames', 2015, 'Czech Games Edition', 'Vlaada Chvátil', 2, 8, 15, 15, 1.2, 14, '178900', NULL),
+(28, '7 Wonders', 2010, 'Repos Production', 'Antoine Bauza', 2, 7, 30, 30, 2.3, 10, '68448', NULL),
+(29, 'Azul', 2017, 'Plan B Games', 'Michael Kiesling', 2, 4, 30, 45, 1.7, 8, '230802', NULL),
+(30, 'Patchwork', 2014, 'Lookout Games', 'Uwe Rosenberg', 2, 2, 15, 30, 1.6, 8, '163412', NULL),
+(31, 'Splendor', 2014, 'Space Cowboys', 'Marc André', 2, 4, 30, 30, 1.7, 10, '148228', NULL),
+(32, 'Carcassonne', 2000, 'Hans im Glück', 'Klaus-Jürgen Wrede', 2, 5, 30, 45, 1.9, 7, '822', NULL),
+(33, 'King of Tokyo', 2011, 'IELLO', 'Richard Garfield', 2, 6, 30, 30, 1.5, 8, '70323', NULL),
+(34, 'Love Letter', 2012, 'AEG', 'Seiji Kanai', 2, 4, 20, 20, 1.1, 10, '129622', NULL),
+(35, 'The Mind', 2018, 'Nürnberger-Spielkarten-Verlag', 'Wolfgang Warsch', 2, 4, 20, 20, 1, 8, '244992', NULL),
+(36, 'Crokinole', 1876, 'Public Domain', '(Uncredited)', 2, 4, 30, 30, 1.2, 8, '521', NULL),
+(37, 'Decrypto', 2018, 'Le Scorpion Masqué', 'Thomas Dagenais-Lespérance', 3, 8, 15, 45, 1.8, 12, '225694', NULL),
+(38, 'Sushi Go!', 2013, 'Gamewright', 'Phil Walker-Harding', 2, 5, 15, 15, 1.1, 8, '133473', NULL),
+(39, 'Clank! A Deck-Building Adventure', 2016, 'Renegade Game Studios', 'Paul Dennen', 2, 4, 30, 60, 2.2, 12, '201808', NULL),
+(40, 'The Quacks of Quedlinburg', 2018, 'Schmidt Spiele', 'Wolfgang Warsch', 2, 4, 45, 45, 1.9, 10, '244521', NULL),
+(41, 'Cartographers', 2019, 'Thunderworks Games', 'Jordy Adan', 1, 100, 30, 45, 1.8, 10, '263918', NULL),
+(42, 'The Resistance: Avalon', 2012, 'Indie Boards & Cards', 'Don Eskridge', 5, 10, 30, 30, 1.7, 13, '128882', NULL),
+(43, 'Just One', 2018, 'Repos Production', 'Ludovic Roudy', 3, 7, 20, 20, 1, 8, '254640', NULL),
+(44, 'Heat: Pedal to the Metal', 2022, 'Days of Wonder', 'Asger Harding Granerud', 1, 6, 30, 60, 2.2, 10, '366013', NULL),
+(45, 'Lost Ruins of Arnak', 2020, 'CGE', 'Mín & Elwen', 1, 4, 30, 120, 2.9, 12, '312484', NULL),
+(46, 'Marvel Champions: The Card Game', 2019, 'Fantasy Flight Games', 'Michael Boggs', 1, 4, 45, 90, 2.9, 14, '285774', NULL),
+(47, 'Le Havre', 2008, 'Lookout Games', 'Uwe Rosenberg', 1, 5, 30, 150, 3.7, 12, '35677', NULL),
+(48, 'Mage Knight Board Game', 2011, 'WizKids', 'Vlaada Chvátil', 1, 4, 60, 240, 4.3, 14, '96848', NULL),
+(49, 'Nemesis', 2018, 'Awaken Realms', 'Adam Kwapiński', 1, 5, 90, 180, 3.4, 12, '167355', NULL),
+(50, 'Mansions of Madness: Second Edition', 2016, 'Fantasy Flight Games', 'Nikki Valens', 1, 5, 120, 180, 2.6, 14, '205059', NULL),
+(51, 'Through the Ages: A New Story of Civilization', 2015, 'Czech Games Edition', 'Vlaada Chvátil', 2, 4, 120, 240, 4.43, 14, '182028', NULL),
+(52, 'Agricola', 2007, 'Lookout Games', 'Uwe Rosenberg', 1, 5, 30, 150, 3.64, 12, '31260', NULL),
+(53, 'Power Grid', 2004, '2F-Spiele', 'Friedemann Friese', 2, 6, 120, 120, 3.26, 12, '2651', NULL),
+(54, 'Barrage', 2019, 'Cranio Creations', 'Tommaso Battista', 1, 4, 60, 120, 4.09, 14, '251247', NULL),
+(55, 'The Gallerist', 2015, 'Eagle-Gryphon Games', 'Vital Lacerda', 1, 4, 60, 150, 4.27, 13, '125153', NULL),
+(56, 'Tzolk\'in: The Mayan Calendar', 2012, 'Czech Games Edition', 'Simone Luciani', 2, 4, 90, 90, 3.67, 13, '126163', NULL),
+(57, 'Anachrony', 2017, 'Mindclash Games', 'Dávid Turczi', 1, 4, 30, 120, 3.99, 15, '185343', NULL),
+(58, 'Kingdom Death: Monster', 2015, 'Kingdom Death', 'Adam Poots', 1, 4, 60, 180, 4.26, 18, '55690', NULL),
+(59, 'Rising Sun', 2018, 'CMON', 'Eric M. Lang', 3, 5, 90, 120, 3.23, 14, '205896', NULL),
+(60, 'Inis', 2016, 'Matagot', 'Christian Martinez', 2, 4, 60, 90, 2.89, 14, '155821', NULL),
+(61, 'Cosmic Encounter', 2008, 'Fantasy Flight Games', 'Bill Eberle', 3, 5, 60, 120, 2.57, 12, '39463', NULL),
+(62, 'Sheriff of Nottingham', 2014, 'Arcane Wonders', 'Sérgio Halaban', 3, 5, 60, 60, 1.65, 13, '157969', NULL),
+(63, 'Five Tribes', 2014, 'Days of Wonder', 'Bruno Cathala', 2, 4, 40, 80, 2.84, 13, '157354', NULL),
+(64, 'Istanbul', 2014, 'Pegasus Spiele', 'Rüdiger Dorn', 2, 5, 40, 60, 2.58, 10, '148949', NULL),
+(65, 'Raiders of the North Sea', 2015, 'Garphill Games', 'Shem Phillips', 2, 4, 60, 80, 2.6, 12, '170042', NULL),
+(66, 'Architects of the West Kingdom', 2018, 'Garphill Games', 'Shem Phillips', 1, 5, 60, 80, 2.76, 12, '236457', NULL),
+(67, 'Sagrada', 2017, 'Floodgate Games', 'Daryl Andrews', 1, 4, 30, 45, 1.93, 13, '199561', NULL),
+(68, 'Kingdomino', 2016, 'Blue Orange Games', 'Bruno Cathala', 2, 4, 15, 15, 1.21, 8, '204583', NULL),
+(69, 'Catan', 1995, 'KOSMOS', 'Klaus Teuber', 3, 4, 60, 120, 2.3, 10, '13', NULL),
+(70, 'Small World', 2009, 'Days of Wonder', 'Philippe Keyaerts', 2, 5, 40, 80, 2.34, 8, '40692', NULL),
+(71, 'Takenoko', 2011, 'Matagot', 'Antoine Bauza', 2, 4, 45, 45, 1.97, 8, '70919', NULL),
+(72, 'Jaipur', 2009, 'GameWorks', 'Sébastien Pauchon', 2, 2, 30, 30, 1.48, 12, '54043', NULL),
+(73, 'Hive', 2001, 'Gen42 Games', 'John Yianni', 2, 2, 20, 20, 2.33, 9, '2655', NULL),
+(74, 'Santorini', 2016, 'Roxley', 'Gord!', 2, 4, 20, 20, 1.72, 8, '194655', NULL),
+(75, 'Star Realms', 2014, 'White Wizard Games', 'Robert Dougherty', 2, 2, 20, 20, 1.93, 12, '147020', NULL),
+(76, 'Dominion', 2008, 'Rio Grande Games', 'Donald X. Vaccarino', 2, 4, 30, 30, 2.35, 13, '36218', NULL),
+(77, 'Race for the Galaxy', 2007, 'Rio Grande Games', 'Thomas Lehmann', 2, 4, 30, 60, 2.99, 12, '28143', NULL),
+(78, 'Sherlock Holmes Consulting Detective', 1981, 'Ystari Games', 'Raymond Edwards', 1, 8, 60, 120, 2.68, 13, '2511', NULL),
+(79, 'Robinson Crusoe: Adventures on the Cursed Island', 2012, 'Portal Games', 'Ignacy Trzewiczek', 1, 4, 60, 120, 3.82, 14, '121921', NULL),
+(80, 'El Grande', 1995, 'Hans im Glück', 'Wolfgang Kramer', 2, 5, 60, 120, 3.05, 12, '93', NULL),
+(81, 'Tigris & Euphrates', 1997, 'Hans im Glück', 'Reiner Knizia', 2, 4, 90, 90, 3.52, 12, '42', NULL),
+(82, 'Eclipse: Second Dawn for the Galaxy', 2020, 'Lautapelit.fi', 'Touko Tahkokallio', 2, 6, 60, 200, 3.61, 14, '246900', NULL),
+(83, 'A Game of Thrones: The Board Game (2nd Ed)', 2011, 'Fantasy Flight Games', 'Christian T. Petersen', 3, 6, 120, 240, 3.73, 14, '103343', NULL),
+(84, 'Battlestar Galactica: The Board Game', 2008, 'Fantasy Flight Games', 'Corey Konieczka', 3, 6, 120, 180, 3.24, 14, '37111', NULL),
+(85, 'Puerto Rico', 2002, 'alea', 'Andreas Seyfarth', 3, 5, 90, 150, 3.27, 12, '3076', NULL),
+(86, 'Caverna: The Cave Farmers', 2013, 'Lookout Games', 'Uwe Rosenberg', 1, 7, 30, 210, 3.79, 12, '102794', NULL),
+(87, 'Food Chain Magnate', 2015, 'Splotter Spellen', 'Jeroen Doumen', 2, 5, 120, 240, 4.22, 14, '175914', NULL),
+(88, 'Grand Austria Hotel', 2015, 'Lookout Games', 'Virginio Gigli', 2, 4, 60, 120, 3.23, 12, '182874', NULL),
+(89, 'Yokohama', 2016, 'Tasty Minstrel Games', 'Hisashi Hayashi', 2, 4, 90, 90, 3.31, 12, '196340', NULL),
+(90, 'Champions of Midgard', 2015, 'Grey Fox Games', 'Ole Steiness', 2, 4, 60, 90, 2.56, 10, '172287', NULL),
+(91, 'Lords of Waterdeep', 2012, 'Wizards of the Coast', 'Peter Lee', 2, 5, 60, 120, 2.45, 12, '110327', NULL),
+(92, 'Stone Age', 2008, 'Hans im Glück', 'Bernd Brunnhofer', 2, 4, 60, 90, 2.47, 10, '34635', NULL),
+(93, 'Biblios', 2007, 'IELLO', 'Steve Finn', 2, 4, 30, 30, 1.67, 10, '34219', NULL),
+(94, 'Bohnanza', 1997, 'Amigo', 'Uwe Rosenberg', 2, 7, 45, 45, 1.61, 10, '11', NULL),
+(95, 'Skull', 2011, 'Lui-même', 'Hervé Marly', 3, 6, 15, 45, 1.13, 10, '92415', NULL),
+(96, 'Dixit', 2008, 'Libellud', 'Jean-Louis Roubira', 3, 6, 30, 30, 1.21, 8, '39856', NULL),
+(97, 'Mysterium', 2015, 'Libellud', 'Oleksandr Nevskiy', 2, 7, 42, 42, 1.9, 10, '181304', NULL),
+(98, 'Hanabi', 2010, 'Abacusspiele', 'Antoine Bauza', 2, 5, 25, 25, 1.69, 8, '98778', NULL),
+(99, 'No Thanks!', 2004, 'Amigo', 'Thorsten Gimmler', 3, 7, 20, 20, 1.13, 8, '12942', NULL),
+(100, 'For Sale', 1997, 'Uberplay', 'Stefan Dorra', 3, 6, 20, 30, 1.25, 8, '172', NULL),
+(101, 'Air, Land, & Sea', 2019, 'Arcane Wonders', 'Jon Perry', 2, 2, 15, 30, 1.68, 14, '247367', 1),
+(102, 'Arboretum', 2015, 'Renegade Game Studios', 'Dan Cassar', 2, 4, 30, 30, 2.15, 8, '140934', 1),
+(103, 'Carcassonne: Inns & Cathedrals', 2002, 'Hans im Glück', 'Klaus-Jürgen Wrede', 2, 6, 60, 60, 2.08, 8, '2993', 1),
+(104, 'Coloretto', 2003, 'Abacusspiele', 'Michael Schacht', 2, 5, 30, 30, 1.71, 8, '5782', 1),
+(105, 'Hanamikoji', 2013, 'EmperorS4', 'Kota Nakayama', 2, 2, 15, 15, 1.71, 10, '158600', 1),
+(106, 'Herd Mentality', 2020, 'Big Potato', 'Rich Coombes', 4, 10, 20, 20, 1.05, 10, '306735', 1),
+(107, 'High Society', 1995, 'Osprey Games', 'Reiner Knizia', 3, 5, 15, 30, 1.76, 10, '220', 1),
+(108, 'The Hobbit Card Game', 2012, 'Fantasy Flight Games', 'Martin Wallace', 2, 5, 30, 30, 1.6, 10, '111467', 1),
+(109, 'Innovation', 2010, 'Asmadi Games', 'Carl Chudyk', 2, 4, 60, 60, 2.74, 12, '63888', 1),
+(110, 'Lewis & Clark: The Expedition', 2013, 'Ludonaute', 'Cédrick Chaboussit', 1, 5, 120, 120, 3.32, 14, '140620', 1),
+(111, 'Magical Athlete', 2002, 'Z-Man Games', 'Takashi Ishida', 4, 5, 45, 60, 1.4, 8, '24565', 1),
+(112, 'Mal Trago', 2019, 'Rocket Lemon Games', 'Jose Manuel Fernandez', 4, 10, 15, 20, 1.1, 8, '295627', 1),
+(113, 'Monopoly: European Edition', 1991, 'Parker Brothers', '(Uncredited)', 2, 8, 60, 180, 1.65, 8, '11029', 1),
+(114, 'Munchkin', 2001, 'Steve Jackson Games', 'Steve Jackson', 3, 6, 60, 120, 1.79, 10, '1927', 1),
+(115, 'Oath: Chronicles of Empire and Exile', 2021, 'Leder Games', 'Cole Wehrle', 1, 6, 45, 120, 4.07, 10, '291572', 1),
+(116, 'Oh My Gods!', 2016, 'Gamewright', 'Tim Armstrong', 3, 5, 30, 30, 1.3, 10, '198948', 1),
+(117, 'Pax Renaissance', 2016, 'Sierra Madre Games', 'Phil Eklund', 2, 4, 60, 120, 4.22, 14, '198953', 1),
+(118, 'Radlands', 2021, 'Roxley', 'Daniel Piechnick', 2, 2, 20, 40, 2.26, 14, '322703', 1),
+(119, 'The Red Cathedral', 2020, 'Devir', 'Israel Cendrero', 1, 4, 50, 80, 2.8, 10, '227224', 1),
+(120, 'Scrabble', 1948, 'Mattel', 'Alfred Mosher Butts', 2, 4, 90, 90, 2.07, 10, '320', 1),
+(121, 'Spicy', 2020, 'HeidelBÄR Games', 'Zoltán Győri', 2, 6, 15, 20, 1.18, 10, '299169', 1),
+(122, 'Splito', 2022, 'Blam!', 'Luc Rémond', 3, 8, 15, 15, 1.3, 8, '369656', 1),
+(123, 'Sushi Go! 10th Anniversary', 2023, 'Gamewright', 'Phil Walker-Harding', 2, 5, 15, 15, 1.2, 8, '392181', 1),
+(124, 'Take 5 (6. nimmt!)', 1994, 'Amigo', 'Wolfgang Kramer', 2, 10, 45, 45, 1.19, 8, '432', 1),
+(125, 'Talisman: Revised 4th Edition', 2007, 'Fantasy Flight Games', 'Bob Harris', 2, 6, 90, 90, 2.15, 9, '27627', 1),
+(126, 'Targi', 2012, 'KOSMOS', 'Andreas Steiger', 2, 2, 60, 60, 2.33, 12, '118048', 1),
+(127, 'Terraforming Mars: Colonies', 2018, 'FryxGames', 'Jacob Fryxelius', 1, 5, 120, 120, 3.2, 12, '255681', 1),
+(128, 'Terraforming Mars: Prelude', 2018, 'FryxGames', 'Jacob Fryxelius', 1, 5, 120, 120, 3.1, 12, '247030', 1),
+(129, 'Ticket to Ride: Europe', 2005, 'Days of Wonder', 'Alan R. Moon', 2, 5, 30, 60, 1.92, 8, '14996', 1),
+(130, 'Tiny Epic Dungeons', 2021, 'Gamelyn Games', 'Scott Almes', 1, 4, 30, 60, 2.75, 14, '331787', 1),
+(131, 'Tussie Mussie', 2019, 'Button Shy', 'Elizabeth Hargrave', 2, 4, 20, 30, 1.2, 8, '257614', 1),
+(132, 'UNO', 1971, 'Mattel', 'Merle Robbins', 2, 10, 30, 30, 1.11, 6, '2223', 1),
+(133, 'Vantage', 2011, 'Vantage Games', 'Manny Trembley', 2, 6, 30, 45, 1.5, 8, '108234', 1),
+(134, 'Village Green', 2020, 'Osprey Games', 'Peer Sylvester', 1, 5, 30, 30, 1.87, 14, '300583', 1),
+(135, 'La Viña', 2019, 'Devir', 'Josep M. Allué', 2, 5, 30, 45, 1.6, 8, '239636', 1);
+
+-- --------------------------------------------------------
 
 --
 -- Struktura tabeli dla tabeli `planszowka_gatunek`
@@ -300,323 +342,367 @@ CREATE TABLE `planszowka_gatunek` (
   `id_planszowki` int(11) NOT NULL,
   `id_gatunku` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-INSERT INTO `planszowka_gatunek` (`id_planszowki`, `id_gatunku`) VALUES
--- 1. Brass: Birmingham (Ekonomia, Przemysł, Strategia)
-(1, 4), (1, 25), (1, 2),
--- 2. Pandemic Legacy (Kooperacja, Strategia)
-(2, 1), (2, 2),
--- 3. Gloomhaven (Przygoda, Fantasy, Walka/Pojedynek, Kooperacja)
-(3, 3), (3, 7), (3, 39), (3, 1),
--- 4. Ark Nova (Strategia, Ekologia/Zwierzęta, Ekonomia)
-(4, 2), (4, 28), (4, 4),
--- 5. Twilight Imperium (Sci-Fi, Strategia, Polityka/Negocjacje, Wojna)
-(5, 8), (5, 2), (5, 32), (5, 13),
--- 6. Dune: Imperium (Sci-Fi, Worker Placement, Deck Building)
-(6, 8), (6, 44), (6, 35),
--- 7. Terraforming Mars (Sci-Fi, Ekonomia, Strategia)
-(7, 8), (7, 4), (7, 2),
--- 8. War of the Ring (Wojna, Fantasy, Figurki)
-(8, 13), (8, 7), (8, 21),
--- 9. Spirit Island (Kooperacja, Strategia, Fantasy)
-(9, 1), (9, 2), (9, 7),
--- 10. Gaia Project (Sci-Fi, Ekonomia)
-(10, 8), (10, 4),
--- 11. Star Wars Rebellion (Sci-Fi, Wojna, Figurki)
-(11, 8), (11, 13), (11, 21),
--- 12. Scythe (Strategia, Ekonomia, Figurki)
-(12, 2), (12, 4), (12, 21),
--- 13. Great Western Trail (Strategia, Western/Historia)
-(13, 2), (13, 26),
--- 14. Castles of Burgundy (Kości, Strategia)
-(14, 11), (14, 2),
--- 15. 7 Wonders Duel (Karty, Draft, Pojedynek)
-(15, 6), (15, 42), (15, 39),
--- 16. Concordia (Strategia, Ekonomia)
-(16, 2), (16, 4),
--- 17. Wingspan (Karty, Ekologia, Rodzinna)
-(17, 6), (17, 28), (17, 5),
--- 18. Viticulture (Worker Placement, Ekonomia)
-(18, 44), (18, 4),
--- 19. Everdell (Worker Placement, Karty, Zwierzęta/Fantasy)
-(19, 44), (19, 6), (19, 7),
--- 20. Orleans (Strategia, Bag building/Deck Building)
-(20, 2), (20, 35),
--- 21. Feast for Odin (Worker Placement, Wikingowie/Historia)
-(21, 44), (21, 26),
--- 22. Blood Rage (Figurki, Wojna, Fantasy, Draft)
-(22, 21), (22, 13), (22, 7), (22, 42),
--- 23. Root (Wojna, Asymetria, Zwierzęta/Fantasy)
-(23, 13), (23, 47), (23, 7),
--- 24. The Crew (Karty, Kooperacja)
-(24, 6), (24, 1),
--- 25. Ticket to Ride (Rodzinna, Pociągi/Klasyk)
-(25, 5), (25, 30),
--- 26. Cascadia (Rodzinna, Ekologia, Kafelki)
-(26, 5), (26, 28), (26, 31),
--- 27. Codenames (Impreza, Słowa, Dedukcja)
-(27, 16), (27, 23), (27, 37),
--- 28. 7 Wonders (Draft, Karty, Rodzinna)
-(28, 42), (28, 6), (28, 5),
--- 29. Azul (Abstrakcja, Rodzinna, Kafelki)
-(29, 12), (29, 5), (29, 31),
--- 30. Patchwork (Rodzinna, Kafelki, 2 graczy)
-(30, 5), (30, 31),
--- 31. Splendor (Rodzinna, Ekonomia)
-(31, 5), (31, 4),
--- 32. Carcassonne (Rodzinna, Kafelki, Klasyk)
-(32, 5), (32, 31), (32, 30),
--- 33. King of Tokyo (Kości, Rodzinna, Walka)
-(33, 11), (33, 5), (33, 39),
--- 34. Love Letter (Karty, Rodzinna, Dedukcja)
-(34, 6), (34, 5), (34, 37),
--- 35. The Mind (Karty, Kooperacja)
-(35, 6), (35, 1),
--- 36. Crokinole (Zręczność, Abstrakcja)
-(36, 24), (36, 12),
--- 37. Decrypto (Słowa, Dedukcja, Impreza)
-(37, 23), (37, 37), (37, 16),
--- 38. Sushi Go (Draft, Karty, Rodzinna)
-(38, 42), (38, 6), (38, 5),
--- 39. Clank! (Deck Building, Przygoda)
-(39, 35), (39, 3),
--- 40. Quacks of Quedlinburg (Ryzyko, Rodzinna)
-(40, 45), (40, 5),
--- 41. Cartographers (Wykreślanka, Fantasy - brak ID wykreślanki, dam Rodzinna)
-(41, 5), (41, 7),
--- 42. The Resistance (Blef, Impreza, Dedukcja)
-(42, 36), (42, 16), (42, 37),
--- 43. Just One (Impreza, Słowa, Kooperacja)
-(43, 16), (43, 23), (43, 1),
--- 44. Heat (Wyścig, Karty)
-(44, 43), (44, 6),
--- 45. Lost Ruins of Arnak (Przygoda, Worker Placement, Deck Building)
-(45, 3), (45, 44), (45, 35),
--- 46. Marvel Champions (Karty, Kooperacja, Superbohaterowie)
-(46, 6), (46, 1),
--- 47. Le Havre (Ekonomia, Przemysł)
-(47, 4), (47, 25),
--- 48. Mage Knight (Przygoda, Fantasy, Strategia)
-(48, 3), (48, 7), (48, 2),
--- 49. Nemesis (Sci-Fi, Horror, Figurki)
-(49, 8), (49, 9), (49, 21),
--- 50. Mansions of Madness (Horror, Przygoda, Kooperacja)
-(50, 9), (50, 3), (50, 1),
--- 51. Through the Ages (Rozwój/Cywilizacja, Strategia, Ekonomia)
-(51, 20), (51, 2), (51, 4),
--- 52. Agricola (Robotnicy, Ekonomia, Klasyk)
-(52, 44), (52, 4), (52, 30),
--- 53. Power Grid (Ekonomia, Licytacja, Przemysł)
-(53, 4), (53, 46), (53, 25),
--- 54. Barrage (Ekonomia, Przemysł, Terytorium)
-(54, 4), (54, 25), (54, 22),
--- 55. The Gallerist (Ekonomia, Robotnicy, Sztuka/Eurogra)
-(55, 4), (55, 44), (55, 15),
--- 56. Tzolk'in (Robotnicy, Eurogra, Strategia)
-(56, 44), (56, 15), (56, 2),
--- 57. Anachrony (Sci-Fi, Robotnicy, Czas)
-(57, 8), (57, 44), (57, 2),
--- 58. Kingdom Death Monster (Horror, Figurki, RPG, Kooperacja)
-(58, 9), (58, 21), (58, 14), (58, 1),
--- 59. Rising Sun (Figurki, Terytorium, Japonia/Mitologia, Negocjacje)
-(59, 21), (59, 22), (59, 27), (59, 32),
--- 60. Inis (Terytorium, Draft, Mitologia celtycka)
-(60, 22), (60, 42), (60, 27),
--- 61. Cosmic Encounter (Sci-Fi, Negocjacje, Asymetria)
-(61, 8), (61, 32), (61, 47),
--- 62. Sheriff of Nottingham (Blef, Impreza, Negocjacje)
-(62, 36), (62, 16), (62, 32),
--- 63. Five Tribes (Strategia, Mancala/Abstrakcja)
-(63, 2), (63, 12),
--- 64. Istanbul (Wyścig, Strategia, Ekonomia)
-(64, 43), (64, 2), (64, 4),
--- 65. Raiders of the North Sea (Robotnicy, Wikingowie/Historia)
-(65, 44), (65, 26),
--- 66. Architects of West Kingdom (Robotnicy, Strategia)
-(66, 44), (66, 2),
--- 67. Sagrada (Kości, Logika, Abstrakcja)
-(67, 11), (67, 10), (67, 12),
--- 68. Kingdomino (Rodzinna, Kafelki)
-(68, 5), (68, 31),
--- 69. Catan (Rodzinna, Negocjacje, Klasyk)
-(69, 5), (69, 32), (69, 30),
--- 70. Small World (Terytorium, Fantasy, Asymetria)
-(70, 22), (70, 7), (70, 47),
--- 71. Takenoko (Rodzinna, Zwierzęta, Kafelki)
-(71, 5), (71, 31),
--- 72. Jaipur (Karty, Ekonomia, Pojedynek)
-(72, 6), (72, 4), (72, 39),
--- 73. Hive (Abstrakcja, Owady, Pojedynek)
-(73, 12), (73, 39),
--- 74. Santorini (Abstrakcja, Mitologia, Logika)
-(74, 12), (74, 27), (74, 10),
--- 75. Star Realms (Deck Building, Sci-Fi, Pojedynek)
-(75, 35), (75, 8), (75, 39),
--- 76. Dominion (Deck Building, Klasyk, Karty)
-(76, 35), (76, 30), (76, 6),
--- 77. Race for the Galaxy (Karty, Sci-Fi, Ekonomia)
-(77, 6), (77, 8), (77, 4),
--- 78. Sherlock Holmes CD (Dedukcja, Kooperacja, Kryminał)
-(78, 37), (78, 1),
--- 79. Robinson Crusoe (Przygoda, Kooperacja, Trudna)
-(79, 3), (79, 1), (79, 45),
--- 80. El Grande (Terytorium, Klasyk, Strategia)
-(80, 22), (80, 30), (80, 2),
--- 81. Tigris & Euphrates (Terytorium, Abstrakcja, Klasyk)
-(81, 22), (81, 12), (81, 30),
--- 82. Eclipse (Sci-Fi, Strategia, Wojna)
-(82, 8), (82, 2), (82, 13),
--- 83. Game of Thrones (Wojna, Negocjacje, Strategia)
-(83, 13), (83, 32), (83, 2),
--- 84. Battlestar Galactica (Zdrajca/Blef, Sci-Fi, Kooperacja)
-(84, 36), (84, 8), (84, 1),
--- 85. Puerto Rico (Ekonomia, Strategia, Klasyk)
-(85, 4), (85, 2), (85, 30),
--- 86. Caverna (Robotnicy, Ekonomia)
-(86, 44), (86, 4),
--- 87. Food Chain Magnate (Ekonomia, Strategia, Biznes)
-(87, 4), (87, 2),
--- 88. Grand Austria Hotel (Kości, Ekonomia)
-(88, 11), (88, 4),
--- 89. Yokohama (Strategia, Robotnicy)
-(89, 2), (89, 44),
--- 90. Champions of Midgard (Robotnicy, Kości, Wikingowie)
-(90, 44), (90, 11),
--- 91. Lords of Waterdeep (Robotnicy, Fantasy, Rodzinna)
-(91, 44), (91, 7), (91, 5),
--- 92. Stone Age (Robotnicy, Kości, Rodzinna, Klasyk)
-(92, 44), (92, 11), (92, 5), (92, 30),
--- 93. Biblios (Licytacja, Karty)
-(93, 46), (93, 6),
--- 94. Bohnanza (Negocjacje, Karty, Rodzinna)
-(94, 32), (94, 6), (94, 5),
--- 95. Skull (Blef, Impreza)
-(95, 36), (95, 16),
--- 96. Dixit (Impreza, Słowa/Skojarzenia, Rodzinna)
-(96, 16), (96, 5),
--- 97. Mysterium (Kooperacja, Dedukcja, Obrazy)
-(97, 1), (97, 37),
--- 98. Hanabi (Kooperacja, Karty, Dedukcja/Logika)
-(98, 1), (98, 6), (98, 10),
--- 99. No Thanks! (Ryzyko, Karciana, Rodzinna)
-(99, 45), (99, 6), (99, 5),
--- 100. For Sale (Licytacja, Ekonomia, Rodzinna)
-(100, 46), (100, 4), (100, 5);
+
+--
+-- Dumping data for table `planszowka_gatunek`
+--
 
 INSERT INTO `planszowka_gatunek` (`id_planszowki`, `id_gatunku`) VALUES
+(1, 2),
+(1, 4),
+(1, 25),
+(2, 1),
+(2, 2),
+(3, 1),
+(3, 3),
+(3, 7),
+(3, 39),
+(4, 2),
+(4, 4),
+(4, 28),
+(5, 2),
+(5, 8),
+(5, 13),
+(5, 32),
+(6, 8),
+(6, 35),
+(6, 44),
+(7, 2),
+(7, 4),
+(7, 8),
+(8, 7),
+(8, 13),
+(8, 21),
+(9, 1),
+(9, 2),
+(9, 7),
+(10, 4),
+(10, 8),
+(11, 8),
+(11, 13),
+(11, 21),
+(12, 2),
+(12, 4),
+(12, 21),
+(13, 2),
+(13, 26),
+(14, 2),
+(14, 11),
+(15, 6),
+(15, 39),
+(15, 42),
+(16, 2),
+(16, 4),
+(17, 5),
+(17, 6),
+(17, 28),
+(18, 4),
+(18, 44),
+(19, 6),
+(19, 7),
+(19, 44),
+(20, 2),
+(20, 35),
+(21, 26),
+(21, 44),
+(22, 7),
+(22, 13),
+(22, 21),
+(22, 42),
+(23, 7),
+(23, 13),
+(23, 47),
+(24, 1),
+(24, 6),
+(25, 5),
+(25, 30),
+(26, 5),
+(26, 28),
+(26, 31),
+(27, 16),
+(27, 23),
+(27, 37),
+(28, 5),
+(28, 6),
+(28, 42),
+(29, 5),
+(29, 12),
+(29, 31),
+(30, 5),
+(30, 31),
+(31, 4),
+(31, 5),
+(32, 5),
+(32, 30),
+(32, 31),
+(33, 5),
+(33, 11),
+(33, 39),
+(34, 5),
+(34, 6),
+(34, 37),
+(35, 1),
+(35, 6),
+(36, 12),
+(36, 24),
+(37, 16),
+(37, 23),
+(37, 37),
+(38, 5),
+(38, 6),
+(38, 42),
+(39, 3),
+(39, 35),
+(40, 5),
+(40, 45),
+(41, 5),
+(41, 7),
+(42, 16),
+(42, 36),
+(42, 37),
 (42, 48),
+(43, 1),
+(43, 16),
+(43, 23),
+(44, 6),
+(44, 43),
+(45, 3),
+(45, 35),
+(45, 44),
+(46, 1),
+(46, 6),
+(47, 4),
+(47, 25),
+(48, 2),
+(48, 3),
+(48, 7),
+(49, 8),
+(49, 9),
+(49, 21),
 (49, 48),
-(84, 48);
-
-INSERT INTO `planszowka` 
-(`id_planszowki`, `tytul_planszowki`, `data_wydania`, `wydawca`, `designer`, `min_graczy`, `max_graczy`, `min_dlugosc_rozgrywki`, `max_dlugosc_rozgrywki`, `waga`, `rekomendowany_wiek`, `bgg_id`, `stworzone_przez_id_uzytkownika`) 
-VALUES
-(101, 'Air, Land, & Sea', 2019, 'Arcane Wonders', 'Jon Perry', 2, 2, 15, 30, 1.68, 14, '247367', 1),
-(102, 'Arboretum', 2015, 'Renegade Game Studios', 'Dan Cassar', 2, 4, 30, 30, 2.15, 8, '140934', 1),
-(103, 'Carcassonne: Inns & Cathedrals', 2002, 'Hans im Glück', 'Klaus-Jürgen Wrede', 2, 6, 60, 60, 2.08, 8, '2993', 1),
-(104, 'Coloretto', 2003, 'Abacusspiele', 'Michael Schacht', 2, 5, 30, 30, 1.71, 8, '5782', 1),
-(105, 'Hanamikoji', 2013, 'EmperorS4', 'Kota Nakayama', 2, 2, 15, 15, 1.71, 10, '158600', 1),
-(106, 'Herd Mentality', 2020, 'Big Potato', 'Rich Coombes', 4, 10, 20, 20, 1.05, 10, '306735', 1),
-(107, 'High Society', 1995, 'Osprey Games', 'Reiner Knizia', 3, 5, 15, 30, 1.76, 10, '220', 1),
-(108, 'The Hobbit Card Game', 2012, 'Fantasy Flight Games', 'Martin Wallace', 2, 5, 30, 30, 1.60, 10, '111467', 1),
-(109, 'Innovation', 2010, 'Asmadi Games', 'Carl Chudyk', 2, 4, 60, 60, 2.74, 12, '63888', 1),
-(110, 'Lewis & Clark: The Expedition', 2013, 'Ludonaute', 'Cédrick Chaboussit', 1, 5, 120, 120, 3.32, 14, '140620', 1),
-(111, 'Magical Athlete', 2002, 'Z-Man Games', 'Takashi Ishida', 4, 5, 45, 60, 1.40, 8, '24565', 1),
-(112, 'Mal Trago', 2019, 'Rocket Lemon Games', 'Jose Manuel Fernandez', 4, 10, 15, 20, 1.10, 8, '295627', 1),
-(113, 'Monopoly: European Edition', 1991, 'Parker Brothers', '(Uncredited)', 2, 8, 60, 180, 1.65, 8, '11029', 1),
-(114, 'Munchkin', 2001, 'Steve Jackson Games', 'Steve Jackson', 3, 6, 60, 120, 1.79, 10, '1927', 1),
-(115, 'Oath: Chronicles of Empire and Exile', 2021, 'Leder Games', 'Cole Wehrle', 1, 6, 45, 120, 4.07, 10, '291572', 1),
-(116, 'Oh My Gods!', 2016, 'Gamewright', 'Tim Armstrong', 3, 5, 30, 30, 1.30, 10, '198948', 1),
-(117, 'Pax Renaissance', 2016, 'Sierra Madre Games', 'Phil Eklund', 2, 4, 60, 120, 4.22, 14, '198953', 1),
-(118, 'Radlands', 2021, 'Roxley', 'Daniel Piechnick', 2, 2, 20, 40, 2.26, 14, '322703', 1),
-(119, 'The Red Cathedral', 2020, 'Devir', 'Israel Cendrero', 1, 4, 50, 80, 2.80, 10, '227224', 1),
-(120, 'Scrabble', 1948, 'Mattel', 'Alfred Mosher Butts', 2, 4, 90, 90, 2.07, 10, '320', 1),
-(121, 'Spicy', 2020, 'HeidelBÄR Games', 'Zoltán Győri', 2, 6, 15, 20, 1.18, 10, '299169', 1),
-(122, 'Splito', 2022, 'Blam!', 'Luc Rémond', 3, 8, 15, 15, 1.30, 8, '369656', 1),
-(123, 'Sushi Go! 10th Anniversary', 2023, 'Gamewright', 'Phil Walker-Harding', 2, 5, 15, 15, 1.20, 8, '392181', 1),
-(124, 'Take 5 (6. nimmt!)', 1994, 'Amigo', 'Wolfgang Kramer', 2, 10, 45, 45, 1.19, 8, '432', 1),
-(125, 'Talisman: Revised 4th Edition', 2007, 'Fantasy Flight Games', 'Bob Harris', 2, 6, 90, 90, 2.15, 9, '27627', 1),
-(126, 'Targi', 2012, 'KOSMOS', 'Andreas Steiger', 2, 2, 60, 60, 2.33, 12, '118048', 1),
-(127, 'Terraforming Mars: Colonies', 2018, 'FryxGames', 'Jacob Fryxelius', 1, 5, 120, 120, 3.20, 12, '255681', 1),
-(128, 'Terraforming Mars: Prelude', 2018, 'FryxGames', 'Jacob Fryxelius', 1, 5, 120, 120, 3.10, 12, '247030', 1),
-(129, 'Ticket to Ride: Europe', 2005, 'Days of Wonder', 'Alan R. Moon', 2, 5, 30, 60, 1.92, 8, '14996', 1),
-(130, 'Tiny Epic Dungeons', 2021, 'Gamelyn Games', 'Scott Almes', 1, 4, 30, 60, 2.75, 14, '331787', 1),
-(131, 'Tussie Mussie', 2019, 'Button Shy', 'Elizabeth Hargrave', 2, 4, 20, 30, 1.20, 8, '257614', 1),
-(132, 'UNO', 1971, 'Mattel', 'Merle Robbins', 2, 10, 30, 30, 1.11, 6, '2223', 1),
-(133, 'Vantage', 2011, 'Vantage Games', 'Manny Trembley', 2, 6, 30, 45, 1.50, 8, '108234', 1),
-(134, 'Village Green', 2020, 'Osprey Games', 'Peer Sylvester', 1, 5, 30, 30, 1.87, 14, '300583', 1),
-(135, 'La Viña', 2019, 'Devir', 'Josep M. Allué', 2, 5, 30, 45, 1.60, 8, '239636', 1);
-
-INSERT INTO `planszowka_gatunek` (`id_planszowki`, `id_gatunku`) VALUES
--- 101. Air, Land & Sea (Wojna, Karty, Strategia)
-(101, 13), (101, 6), (101, 2),
--- 102. Arboretum (Karty, Zestawy, Logika)
-(102, 6), (102, 33), (102, 10),
--- 103. Carcassonne Inns & Cathedrals (Kafelki, Dodatek)
-(103, 31), (103, 5),
--- 104. Coloretto (Karty, Zestawy, Ryzyko)
-(104, 6), (104, 33), (104, 45),
--- 105. Hanamikoji (Karty, Terytorium, Pojedynek)
-(105, 6), (105, 22), (105, 39),
--- 106. Herd Mentality (Impreza, Słowa)
-(106, 16), (106, 23),
--- 107. High Society (Licytacja, Karty)
-(107, 46), (107, 6),
--- 108. Hobbit Card Game (Karty, Trick-taking)
-(108, 6), (108, 7),
--- 109. Innovation (Karty, Cywilizacja, Chaos)
-(109, 6), (109, 20),
--- 110. Lewis & Clark (Wyścig, Zarządzanie ręką, Historia)
-(110, 43), (110, 29), (110, 26),
--- 111. Magical Athlete (Wyścig, Fantasy, Draft)
-(111, 43), (111, 7), (111, 42),
--- 112. Mal Trago (Impreza, Karty)
-(112, 16), (112, 6),
--- 113. Monopoly Euro (Rodzinna, Ekonomia, Negocjacje)
-(113, 5), (113, 4), (113, 32),
--- 114. Munchkin (Karty, Fantasy, Humor/Negocjacje)
-(114, 6), (114, 7), (114, 32),
--- 115. Oath (Strategia, Terytorium, Legacy/Kampania)
-(115, 2), (115, 22), (115, 49),
--- 116. Oh My Gods! (Dedukcja, Mitologia)
-(116, 37), (116, 27),
--- 117. Pax Renaissance (Strategia, Historia, Ekonomia)
-(117, 2), (117, 26), (117, 4),
--- 118. Radlands (Pojedynek, Karty, Post-apoc)
-(118, 39), (118, 6), (118, 8),
--- 119. Red Cathedral (Strategia, Kości/Rondel, Rosja)
-(119, 2), (119, 26),
--- 120. Scrabble (Słowa, Klasyk)
-(120, 23), (120, 30),
--- 121. Spicy (Blef, Karty)
-(121, 36), (121, 6),
--- 122. Splito (Draft, Karty)
-(122, 42), (122, 6),
--- 123. Sushi Go 10th (Draft, Karty)
-(123, 42), (123, 6),
--- 124. Take 5 / 6.Bierze (Karty, Logika)
-(124, 6), (124, 10),
--- 125. Talisman (Przygoda, Fantasy, Kości)
-(125, 3), (125, 7), (125, 11),
--- 126. Targi (Worker Placement, 2 Graczy, Pustynia)
-(126, 44), (126, 2),
--- 127. TM Colonies (Ekonomia, Sci-Fi)
-(127, 4), (127, 8),
--- 128. TM Prelude (Ekonomia, Sci-Fi)
-(128, 4), (128, 8),
--- 129. Ticket to Ride Europe (Rodzinna, Pociągi)
-(129, 5), (129, 30),
--- 130. Tiny Epic Dungeons (Kooperacja, Przygoda, Fantasy)
-(130, 1), (130, 3), (130, 7),
--- 131. Tussie Mussie (Draft, Karty)
-(131, 42), (131, 6),
--- 132. UNO (Rodzinna, Karty)
-(132, 5), (132, 6),
--- 133. Vantage (Dedukcja)
+(50, 1),
+(50, 3),
+(50, 9),
+(51, 2),
+(51, 4),
+(51, 20),
+(52, 4),
+(52, 30),
+(52, 44),
+(53, 4),
+(53, 25),
+(53, 46),
+(54, 4),
+(54, 22),
+(54, 25),
+(55, 4),
+(55, 15),
+(55, 44),
+(56, 2),
+(56, 15),
+(56, 44),
+(57, 2),
+(57, 8),
+(57, 44),
+(58, 1),
+(58, 9),
+(58, 14),
+(58, 21),
+(59, 21),
+(59, 22),
+(59, 27),
+(59, 32),
+(60, 22),
+(60, 27),
+(60, 42),
+(61, 8),
+(61, 32),
+(61, 47),
+(62, 16),
+(62, 32),
+(62, 36),
+(63, 2),
+(63, 12),
+(64, 2),
+(64, 4),
+(64, 43),
+(65, 26),
+(65, 44),
+(66, 2),
+(66, 44),
+(67, 10),
+(67, 11),
+(67, 12),
+(68, 5),
+(68, 31),
+(69, 5),
+(69, 30),
+(69, 32),
+(70, 7),
+(70, 22),
+(70, 47),
+(71, 5),
+(71, 31),
+(72, 4),
+(72, 6),
+(72, 39),
+(73, 12),
+(73, 39),
+(74, 10),
+(74, 12),
+(74, 27),
+(75, 8),
+(75, 35),
+(75, 39),
+(76, 6),
+(76, 30),
+(76, 35),
+(77, 4),
+(77, 6),
+(77, 8),
+(78, 1),
+(78, 37),
+(79, 1),
+(79, 3),
+(79, 45),
+(80, 2),
+(80, 22),
+(80, 30),
+(81, 12),
+(81, 22),
+(81, 30),
+(82, 2),
+(82, 8),
+(82, 13),
+(83, 2),
+(83, 13),
+(83, 32),
+(84, 1),
+(84, 8),
+(84, 36),
+(84, 48),
+(85, 2),
+(85, 4),
+(85, 30),
+(86, 4),
+(86, 44),
+(87, 2),
+(87, 4),
+(88, 4),
+(88, 11),
+(89, 2),
+(89, 44),
+(90, 11),
+(90, 44),
+(91, 5),
+(91, 7),
+(91, 44),
+(92, 5),
+(92, 11),
+(92, 30),
+(92, 44),
+(93, 6),
+(93, 46),
+(94, 5),
+(94, 6),
+(94, 32),
+(95, 16),
+(95, 36),
+(96, 5),
+(96, 16),
+(97, 1),
+(97, 37),
+(98, 1),
+(98, 6),
+(98, 10),
+(99, 5),
+(99, 6),
+(99, 45),
+(100, 4),
+(100, 5),
+(100, 46),
+(101, 2),
+(101, 6),
+(101, 13),
+(102, 6),
+(102, 10),
+(102, 33),
+(103, 5),
+(103, 31),
+(104, 6),
+(104, 33),
+(104, 45),
+(105, 6),
+(105, 22),
+(105, 39),
+(106, 16),
+(106, 23),
+(107, 6),
+(107, 46),
+(108, 6),
+(108, 7),
+(109, 6),
+(109, 20),
+(110, 26),
+(110, 29),
+(110, 43),
+(111, 7),
+(111, 42),
+(111, 43),
+(112, 6),
+(112, 16),
+(113, 4),
+(113, 5),
+(113, 32),
+(114, 6),
+(114, 7),
+(114, 32),
+(115, 2),
+(115, 22),
+(115, 49),
+(116, 27),
+(116, 37),
+(117, 2),
+(117, 4),
+(117, 26),
+(118, 6),
+(118, 8),
+(118, 39),
+(119, 2),
+(119, 26),
+(120, 23),
+(120, 30),
+(121, 6),
+(121, 36),
+(122, 6),
+(122, 42),
+(123, 6),
+(123, 42),
+(124, 6),
+(124, 10),
+(125, 3),
+(125, 7),
+(125, 11),
+(126, 2),
+(126, 44),
+(127, 4),
+(127, 8),
+(128, 4),
+(128, 8),
+(129, 5),
+(129, 30),
+(130, 1),
+(130, 3),
+(130, 7),
+(131, 6),
+(131, 42),
+(132, 5),
+(132, 6),
 (133, 37),
--- 134. Village Green (Karty, Układanie)
-(134, 6), (134, 31),
--- 135. La Viña (Zestawy, Wino)
-(135, 33), (135, 6);
+(134, 6),
+(134, 31),
+(135, 6),
+(135, 33);
 
 -- --------------------------------------------------------
 
@@ -683,6 +769,7 @@ CREATE TABLE `rozgrywka` (
   `id_planszowki` int(11) DEFAULT NULL,
   `id_organizatora` int(11) DEFAULT NULL,
   `data_rozgrywki` timestamp NOT NULL DEFAULT current_timestamp(),
+  `tytul_rozgrywki` varchar(255) DEFAULT NULL,
   `czas_trwania` int(11) DEFAULT NULL,
   `notatka_do_gry` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -695,7 +782,6 @@ CREATE TABLE `rozgrywka` (
 
 CREATE TABLE `rozgrywka_historyczna` (
   `id_rozgrywki` int(11) NOT NULL DEFAULT 0,
-  `tytul_rozgrywki` varchar(255) DEFAULT NULL,
   `id_planszowki` int(11) DEFAULT NULL,
   `id_organizatora` int(11) DEFAULT NULL,
   `data_rozgrywki` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -811,9 +897,24 @@ CREATE TABLE `widok_kolekcji_uzytkownika` (
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `zaproszenia_do_znajomych`
+--
+
+CREATE TABLE `zaproszenia_do_znajomych` (
+  `id_zaproszenia` int(11) NOT NULL,
+  `id_uzytkownika1` int(11) NOT NULL,
+  `id_uzytkownika2` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+-- --------------------------------------------------------
+
+--
 -- Struktura widoku `widok_kolekcji_uzytkownika`
 --
 DROP TABLE IF EXISTS `widok_kolekcji_uzytkownika`;
+
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `widok_kolekcji_uzytkownika`  AS SELECT `u`.`nazwa_uzytkownika` AS `nazwa_uzytkownika`, `p`.`tytul_planszowki` AS `tytul_planszowki`, `s`.`nazwa_statusu` AS `nazwa_statusu`, `pwk`.`ocena` AS `ocena`, `pwk`.`komentarz` AS `komentarz` FROM (((`planszowka_w_kolekcji` `pwk` join `uzytkownik` `u` on(`pwk`.`id_uzytkownika` = `u`.`id_uzytkownika`)) join `planszowka` `p` on(`pwk`.`id_planszowki` = `p`.`id_planszowki`)) join `status` `s` on(`pwk`.`id_statusu` = `s`.`id_statusu`)) ;
 
 --
@@ -874,10 +975,17 @@ ALTER TABLE `plugin`
   ADD KEY `idx_plugin_tworca` (`stworzone_przez_id_uzytkownika`);
 
 --
+-- Indeksy dla tabeli `relacje_uzytkownikow`
+--
+ALTER TABLE `relacje_uzytkownikow`
+  ADD KEY `fk_zaproszenie_nadawca` (`id_uzytkownika1`),
+  ADD KEY `fk_zaproszenie_odbiorca` (`id_uzytkownika2`);
+
+--
 -- Indeksy dla tabeli `rozgrywka`
 --
 ALTER TABLE `rozgrywka`
-  ADD PRIMARY KEY (`id_rozgrywki`), 
+  ADD PRIMARY KEY (`id_rozgrywki`),
   ADD KEY `idx_rozgrywka_gra` (`id_planszowki`),
   ADD KEY `idx_rozgrywka_org` (`id_organizatora`);
 
@@ -913,6 +1021,14 @@ ALTER TABLE `uzytkownik`
   ADD KEY `idx_uzytkownik_uprawnienia` (`id_uprawnien`);
 
 --
+-- Indeksy dla tabeli `zaproszenia_do_znajomych`
+--
+ALTER TABLE `zaproszenia_do_znajomych`
+  ADD PRIMARY KEY (`id_zaproszenia`),
+  ADD KEY `id_uzytkownika1` (`id_uzytkownika1`),
+  ADD KEY `id_uzytkownika2` (`id_uzytkownika2`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -926,7 +1042,7 @@ ALTER TABLE `arkusz_punktacji`
 -- AUTO_INCREMENT for table `gatunek`
 --
 ALTER TABLE `gatunek`
-  MODIFY `id_gatunku` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_gatunku` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `komentarz`
@@ -938,13 +1054,13 @@ ALTER TABLE `komentarz`
 -- AUTO_INCREMENT for table `planszowka`
 --
 ALTER TABLE `planszowka`
-  MODIFY `id_planszowki` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_planszowki` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
 
 --
 -- AUTO_INCREMENT for table `planszowka_w_kolekcji`
 --
 ALTER TABLE `planszowka_w_kolekcji`
-  MODIFY `id_planszowki_w_kolekcji` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_planszowki_w_kolekcji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `plugin`
@@ -956,7 +1072,7 @@ ALTER TABLE `plugin`
 -- AUTO_INCREMENT for table `rozgrywka`
 --
 ALTER TABLE `rozgrywka`
-  MODIFY `id_rozgrywki` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_rozgrywki` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `status`
@@ -968,7 +1084,7 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT for table `uczestnicy_rozgrywki`
 --
 ALTER TABLE `uczestnicy_rozgrywki`
-  MODIFY `id_uczestnictwa` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_uczestnictwa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `uprawnienia`
@@ -980,7 +1096,13 @@ ALTER TABLE `uprawnienia`
 -- AUTO_INCREMENT for table `uzytkownik`
 --
 ALTER TABLE `uzytkownik`
-  MODIFY `id_uzytkownika` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_uzytkownika` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `zaproszenia_do_znajomych`
+--
+ALTER TABLE `zaproszenia_do_znajomych`
+  MODIFY `id_zaproszenia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -1001,76 +1123,18 @@ ALTER TABLE `komentarz`
   ADD CONSTRAINT `fk_kom_rozgrywka` FOREIGN KEY (`id_rozgrywki`) REFERENCES `rozgrywka` (`id_rozgrywki`) ON DELETE CASCADE;
 
 --
--- Constraints for table `planszowka`
+-- Constraints for table `relacje_uzytkownikow`
 --
-ALTER TABLE `planszowka`
-  ADD CONSTRAINT `fk_planszowka_tworca` FOREIGN KEY (`stworzone_przez_id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
+ALTER TABLE `relacje_uzytkownikow`
+  ADD CONSTRAINT `fk_zaproszenie_nadawca` FOREIGN KEY (`id_uzytkownika1`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_zaproszenie_odbiorca` FOREIGN KEY (`id_uzytkownika2`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
--- Constraints for table `planszowka_gatunek`
+-- Constraints for table `zaproszenia_do_znajomych`
 --
-ALTER TABLE `planszowka_gatunek`
-  ADD CONSTRAINT `fk_pg_gatunek` FOREIGN KEY (`id_gatunku`) REFERENCES `gatunek` (`id_gatunku`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_pg_planszowka` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`) ON DELETE CASCADE;
-
---
--- Constraints for table `planszowka_w_kolekcji`
---
-ALTER TABLE `planszowka_w_kolekcji`
-  ADD CONSTRAINT `fk_pk_game` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_pk_status` FOREIGN KEY (`id_statusu`) REFERENCES `status` (`id_statusu`),
-  ADD CONSTRAINT `fk_pk_user` FOREIGN KEY (`id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE CASCADE;
-
---
--- Constraints for table `plugin`
---
-ALTER TABLE `plugin`
-  ADD CONSTRAINT `fk_plugin_tworca` FOREIGN KEY (`stworzone_przez_id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
-
---
--- Constraints for table `rozgrywka`
---
-ALTER TABLE `rozgrywka`
-  ADD CONSTRAINT `fk_rozgrywka_gra` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`) ON DELETE SET NULL,
-  ADD CONSTRAINT `fk_rozgrywka_org` FOREIGN KEY (`id_organizatora`) REFERENCES `uzytkownik` (`id_uzytkownika`);
-
---
--- Constraints for table `uczestnicy_rozgrywki`
---
-ALTER TABLE `uczestnicy_rozgrywki`
-  ADD CONSTRAINT `fk_uczestnik_arkusz` FOREIGN KEY (`id_arkusza_uzytego`) REFERENCES `arkusz_punktacji` (`id_arkusza`) ON DELETE SET NULL,
-  ADD CONSTRAINT `fk_uczestnik_rozgrywka` FOREIGN KEY (`id_rozgrywki`) REFERENCES `rozgrywka` (`id_rozgrywki`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_uczestnik_user` FOREIGN KEY (`id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
-
---
--- Constraints for table `uzytkownik`
---
-ALTER TABLE `uzytkownik`
-  ADD CONSTRAINT `fk_uzytkownik_uprawnienia` FOREIGN KEY (`id_uprawnien`) REFERENCES `uprawnienia` (`id_uprawnien`);
-
-
-
-DELIMITER $$
-
--- 1. Dodanie pluginu (JSON jest zminifikowany, aby pasował do zapytania)
-INSERT INTO `plugin` (`nazwa_pluginu`, `struktura_json`, `stworzone_przez_id_uzytkownika`) 
-VALUES 
-('Podstawowy - 7 Cudów Świata', 
-'{"meta":{"version":"1.0","author":"System","date_created":"2026-01-20","last_modified":"2026-01-20","score_guide":"Wpisz punkty z poszczególnych kategorii."},"ui":{"title":"Punktacja - 7 Cudów Świata","description":"Standardowy arkusz punktacji.","icons":"7wonders_icon.png"},"categories":[{"id":"military","name":"Konflikty Zbrojne","color":"#d32f2f","input_type":"number","default":0,"operation":"sum","allow_negative":true,"description":"Czerwone karty"},{"id":"coins","name":"Zawartość Skarbca","color":"#fbc02d","input_type":"number","default":0,"operation":{"symbol":"/","divided_by":3,"rounding":"floor"},"allow_negative":false,"description":"3 monety = 1 pkt"},{"id":"wonder","name":"Cud Świata","color":"#757575","input_type":"number","default":0,"operation":"sum","allow_negative":false,"description":"Etapy Cudu"},{"id":"civilian","name":"Budowle Cywilne","color":"#1976d2","input_type":"number","default":0,"operation":"sum","allow_negative":false,"description":"Niebieskie karty"},{"id":"commercial","name":"Budowle Naukowe","color":"#fdd835","input_type":"number","default":0,"operation":"sum","allow_negative":false,"description":"Żółte karty"},{"id":"guilds","name":"Budowle Handlowe","color":"#7b1fa2","input_type":"number","default":0,"operation":"sum","allow_negative":false,"description":"Fioletowe karty"},{"id":"science","name":"Budowle Naukowe","color":"#388e3c","input_type":"number","default":0,"operation":"sum","allow_negative":false,"description":"Zielone karty"}]}',
-1); -- Zakładam, że ID administratora to 1
-
--- 2. Pobranie ID nowo dodanego pluginu i przypisanie go do gry
--- UWAGA: Jeśli wiesz, jakie ID dostał plugin (np. 1), wpisz je w miejsce LAST_INSERT_ID()
-INSERT INTO `arkusz_punktacji` (`id_planszowki`, `id_pluginu`, `nazwa_arkusza`)
-VALUES 
-(28, LAST_INSERT_ID(), 'Arkusz 7 Cudów Świata'); -- Zakłada
-
---
--- Events
---
-CREATE DEFINER=`root`@`localhost` EVENT `Auto_Archiwizacja_Co_Miesiac` ON SCHEDULE EVERY 1 MONTH STARTS '2026-01-11 13:46:13' ON COMPLETION NOT PRESERVE ENABLE DO CALL Archiwizuj_Stare_Rozgrywki()$$
-
-DELIMITER ;
+ALTER TABLE `zaproszenia_do_znajomych`
+  ADD CONSTRAINT `zaproszenia_do_znajomych_ibfk_1` FOREIGN KEY (`id_uzytkownika1`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `zaproszenia_do_znajomych_ibfk_2` FOREIGN KEY (`id_uzytkownika2`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE CASCADE ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
