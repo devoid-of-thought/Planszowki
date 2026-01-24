@@ -9,28 +9,31 @@ if (empty($_SESSION['csrf_token'])) {
 ?>
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <title>Rejestracja - Planszówki</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
     <div class="dashboard-wrapper">
-    <div class="main-content">
-        <div class="form-container">
-        <h2>Zarejestruj się</h2>
-        <form action="../api/register.php" method="POST">
-            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+        <div class="main-content">
+            <div class="form-container">
+                <h2>Zarejestruj się</h2>
+                <form action="../api/register.php" method="POST">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
-            <input type="text" name="username" placeholder="Nazwa użytkownika" required>
-            <input type="email" name="email" placeholder="Adres e-mail" required>
-            <input type="password" name="password" placeholder="Hasło" required>
-            <button class="btn-small save" type="submit">Załóż konto</button>
-        </form>
-        <a href="index.php">Masz już konto? Zaloguj się</a>
-    
+                    <input type="text" name="username" placeholder="Nazwa użytkownika" required>
+                    <input type="email" name="email" placeholder="Adres e-mail" required>
+                    <input type="password" name="password" placeholder="Hasło" required>
+                    <button class="btn-small save" type="submit">Załóż konto</button>
+                </form>
+                <a href="index.php" style="margin-left: auto; margin-top:1em; font-size: 1.2em; text-decoration: none; color: var(--color-magenta);">Masz już konto? Zaloguj się</a>
+
+            </div>
         </div>
     </div>
-    </div>
 </body>
+
 </html>
