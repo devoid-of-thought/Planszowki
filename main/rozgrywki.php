@@ -75,7 +75,7 @@ try {
             transition: background 0.3s;
         }
 
-        .btn-details:hover  {
+        .btn-details:hover {
             background-color: #3730a3;
         }
     </style>
@@ -142,7 +142,7 @@ try {
                                     <td><?= htmlspecialchars(date("d.m.Y", strtotime($gra['data_rozgrywki']))) ?></td>
                                     <td><strong><?= htmlspecialchars($gra['tytul_planszowki']) ?></strong></td>
                                     <td><?= htmlspecialchars($gra['czas_trwania']) ?> min</td>
-                                    <td><a href="rozgrywka.php?id=<?= $gra['id_rozgrywki'] ?>" class="btn-details"> Wyświetl szczegóły </a></td>
+                                    <td><a href="rozgrywka.php?id_rozgrywki=<?= $gra['id_rozgrywki'] ?>" class="btn-details"> Wyświetl szczegóły </a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
