@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sty 24, 2026 at 03:22 PM
+-- Generation Time: Sty 25, 2026 at 07:20 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -742,7 +742,7 @@ DELIMITER ;
 CREATE TABLE `plugin` (
   `id_pluginu` int(11) NOT NULL,
   `nazwa_pluginu` varchar(255) NOT NULL,
-  `struktura_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `struktura_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`struktura_json`)),
   `stworzone_przez_id_uzytkownika` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -841,7 +841,7 @@ CREATE TABLE `uczestnicy_rozgrywki` (
   `nazwa_tymczasowa_gracza` varchar(255) DEFAULT NULL,
   `wynik_koncowy` int(11) NOT NULL,
   `id_arkusza_uzytego` int(11) DEFAULT NULL,
-  `dane_arkusza` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
+  `dane_arkusza` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`dane_arkusza`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -905,8 +905,6 @@ CREATE TABLE `zaproszenia_do_znajomych` (
   `id_uzytkownika1` int(11) NOT NULL,
   `id_uzytkownika2` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
 
 -- --------------------------------------------------------
 
@@ -1060,7 +1058,7 @@ ALTER TABLE `planszowka`
 -- AUTO_INCREMENT for table `planszowka_w_kolekcji`
 --
 ALTER TABLE `planszowka_w_kolekcji`
-  MODIFY `id_planszowki_w_kolekcji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_planszowki_w_kolekcji` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `plugin`
@@ -1072,7 +1070,7 @@ ALTER TABLE `plugin`
 -- AUTO_INCREMENT for table `rozgrywka`
 --
 ALTER TABLE `rozgrywka`
-  MODIFY `id_rozgrywki` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_rozgrywki` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `status`
@@ -1084,7 +1082,7 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT for table `uczestnicy_rozgrywki`
 --
 ALTER TABLE `uczestnicy_rozgrywki`
-  MODIFY `id_uczestnictwa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_uczestnictwa` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `uprawnienia`
@@ -1096,13 +1094,13 @@ ALTER TABLE `uprawnienia`
 -- AUTO_INCREMENT for table `uzytkownik`
 --
 ALTER TABLE `uzytkownik`
-  MODIFY `id_uzytkownika` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_uzytkownika` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `zaproszenia_do_znajomych`
 --
 ALTER TABLE `zaproszenia_do_znajomych`
-  MODIFY `id_zaproszenia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_zaproszenia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
