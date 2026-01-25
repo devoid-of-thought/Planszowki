@@ -21,11 +21,10 @@ try {
             JOIN uczestnicy_rozgrywki u ON r.id_rozgrywki = u.id_rozgrywki
             WHERE u.id_uzytkownika = :userId
             ORDER BY r.data_rozgrywki DESC";
-    
+
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['userId' => $userId]);
     $rozgrywki = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 } catch (PDOException $e) {
     $error = "Błąd pobierania danych: " . $e->getMessage();
 }
@@ -51,17 +50,35 @@ try {
             flex-wrap: wrap;
             gap: 15px;
         }
+
         .sort-group {
             display: flex;
             align-items: center;
             gap: 10px;
         }
+
         .sort-group select {
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-family: inherit;
         }
+
+        .btn-details {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: #4f46e5;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            transition: background 0.3s;
+        }
+
+        .btn-details:hover  {
+            background-color: #3730a3;
+        }
+    </style>
     </style>
 </head>
 
@@ -82,7 +99,7 @@ try {
 
             <div class="actions-bar">
                 <button class="btn-small" onclick="window.location.href='../add/dodaj_rozgrywke.php'">Dodaj nową rozgrywkę</button>
-                
+
                 <div class="sort-group">
                     <label for="sortOrder">Sortuj według:</label>
                     <select id="sortOrder" onchange="applySort()">
@@ -101,31 +118,31 @@ try {
                     <table>
                         <thead>
                             <tr>
+                                <th>Tytuł</th>
                                 <th>Data</th>
-                                <th> Tytuł </th>
                                 <th>Gra</th>
                                 <th>Czas trwania</th>
-                                <th>Notatka</th>
+                                <th>Akcja</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody">
                             <?php foreach ($rozgrywki as $gra): ?>
-                                <?php 
-                                    // Przygotowanie danych do sortowania
-                                    $sortDate = strtotime($gra['data_rozgrywki']); // Timestamp
-                                    $sortGame = strtolower($gra['tytul_planszowki']); // Małe litery
-                                    $sortTime = (int)$gra['czas_trwania'];
+                                <?php
+                                // Przygotowanie danych do sortowania
+                                $sortDate = strtotime($gra['data_rozgrywki']); // Timestamp
+                                $sortGame = strtolower($gra['tytul_planszowki']); // Małe litery
+                                $sortTime = (int)$gra['czas_trwania'];
                                 ?>
                                 <tr class="game-row"
                                     data-date="<?= $sortDate ?>"
                                     data-game="<?= htmlspecialchars($sortGame) ?>"
                                     data-time="<?= $sortTime ?>">
-                                    
-                                    <td><?= htmlspecialchars(date("d.m.Y", strtotime($gra['data_rozgrywki']))) ?></td>
+
                                     <td><?= htmlspecialchars($gra['tytul_rozgrywki'] ?? '') ?></td>
+                                    <td><?= htmlspecialchars(date("d.m.Y", strtotime($gra['data_rozgrywki']))) ?></td>
                                     <td><strong><?= htmlspecialchars($gra['tytul_planszowki']) ?></strong></td>
                                     <td><?= htmlspecialchars($gra['czas_trwania']) ?> min</td>
-                                    <td><?= htmlspecialchars($gra['notatka_do_gry'] ?? '') ?></td>
+                                    <td><a href="rozgrywka.php?id=<?= $gra['id_rozgrywki'] ?>" class="btn-details"> Wyświetl szczegóły </a></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -136,7 +153,7 @@ try {
                         <p>Kliknij przycisk powyżej, aby dodać pierwszą grę.</p>
                     </div>
                 <?php endif; ?>
-                
+
                 <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
             </main>
 
@@ -159,17 +176,17 @@ try {
                         return parseInt(b.dataset.date) - parseInt(a.dataset.date);
                     case 'date_asc': // Od najstarszych
                         return parseInt(a.dataset.date) - parseInt(b.dataset.date);
-                    
+
                     case 'game_asc': // A-Z
                         return a.dataset.game.localeCompare(b.dataset.game);
                     case 'game_desc': // Z-A
                         return b.dataset.game.localeCompare(a.dataset.game);
-                    
+
                     case 'time_desc': // Najdłuższe
                         return parseInt(b.dataset.time) - parseInt(a.dataset.time);
                     case 'time_asc': // Najkrótsze
                         return parseInt(a.dataset.time) - parseInt(b.dataset.time);
-                    
+
                     default:
                         return 0;
                 }
