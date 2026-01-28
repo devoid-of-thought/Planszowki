@@ -668,3 +668,95 @@ form .form-profile .btn-small {
             border-left: 4px solid var(--color-mauve);
             border-radius: 4px;
         }
+    .btn-small.details {
+    width: 150px; /* Zmniejszona szerokość */
+    height: 40px; /* Zmniejszona wysokość */
+    font-size: 14px; /* Mniejszy rozmiar czcionki */
+            }
+                    .invitation-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .invitation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .invitation-item:last-child {
+            border-bottom: none;
+        }
+
+        .btn-accept {
+            background: var(--color-mauve);
+            color: white;
+            border: none;
+            padding: 10px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-reject {
+            background: var(--color-black);
+            color: white;
+            border: none;
+            padding: 10px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        details {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        summary {
+            padding: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        summary::after {
+            content: '▶';
+            transition: 0.3s;
+        }
+
+        details[open] summary::after {
+            transform: rotate(90deg);
+        }
+
+        .inv-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .badge {
+            background: var(--color-mauve);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-right: 1em;
+        }
+
+        .btn-small.accept {
+            background: var(--color-magenta);
+        }
+        .btn-small.rej {
+            background: var(--color-black);
+        }

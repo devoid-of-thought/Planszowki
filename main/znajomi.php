@@ -133,87 +133,7 @@ try {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Tilt+Neon&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .invitation-box {
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-        }
 
-        .invitation-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .invitation-item:last-child {
-            border-bottom: none;
-        }
-
-        .btn-accept {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .btn-reject {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        details {
-            background: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        summary {
-            padding: 12px;
-            cursor: pointer;
-            font-weight: bold;
-            list-style: none;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        summary::after {
-            content: '▶';
-            transition: 0.3s;
-        }
-
-        details[open] summary::after {
-            transform: rotate(90deg);
-        }
-
-        .inv-row {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-top: 1px solid #eee;
-        }
-
-        .badge {
-            background: #e74c3c;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.8em;
-            margin-right: 1em;
-        }
     </style>
 </head>
 
@@ -258,8 +178,8 @@ try {
                                 <form method="POST" style="display: flex; flex-direction:row; gap: 5px;">
                                     <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                                     <input type="hidden" name="sender_id" value="<?= $z['id_uzytkownika'] ?>">
-                                    <button type="submit" name="action" value="accept" class="btn-small" style="background:#2ecc71;">Akceptuj</button>
-                                    <button type="submit" name="action" value="reject" class="btn-small" style="background:#e74c3c;">Odrzuć</button>
+                                    <button type="submit" name="action" value="accept" class="btn-small accept">Akceptuj</button>
+                                    <button type="submit" name="action" value="reject" class="btn-small rej">Odrzuć</button>
                                 </form>
                             </div>
                         <?php endforeach; ?>
