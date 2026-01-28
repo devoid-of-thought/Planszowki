@@ -216,10 +216,11 @@ try {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
+                       <?php
                         $rank = 1;
                         foreach ($uczestnicy as $u): ?>
                             <?php
+                            // Sprawdzamy uprawnienia do edycji
                             $isEditable = ($isGlobalAdmin || $isOrganizer || $u['id_uzytkownika'] == $currentUserId);
                             $sheetData = !empty($u['dane_arkusza']) ? json_decode($u['dane_arkusza'], true) : [];
                             ?>
@@ -227,17 +228,13 @@ try {
                                 <td style="text-align:center;"><?php echo $rank++; ?></td>
                                 <td>
                                     <?php
-                                    // Sprawdzamy, czy istnieje nazwa tymczasowa
                                     if (!empty($u['nazwa_tymczasowa_gracza'])) {
-                                        // Wyświetl nazwę tymczasową + (prawdziwy nick)
                                         echo '<strong>' . htmlspecialchars($u['nazwa_tymczasowa_gracza']) . '</strong>';
                                         echo ' <small style="color:#888;">(' . htmlspecialchars($u['nazwa_uzytkownika']) . ')</small>';
                                     } else {
-                                        // Brak nazwy tymczasowej - wyświetl tylko nick
                                         echo '<strong>' . htmlspecialchars($u['nazwa_uzytkownika']) . '</strong>';
                                     }
 
-                                    // Ikona organizatora
                                     if ($u['id_uzytkownika'] == $rozgrywka['id_organizatora']) {
                                         echo ' <i class="fas fa-crown" title="Organizator" style="color:#f1c40f; margin-left:5px;"></i>';
                                     }
@@ -249,17 +246,25 @@ try {
                                     </span>
                                 </td>
                                 <td style="text-align:right;">
-                                    <?php if ($arkuszJson && $isEditable): ?>
+                                    <?php if ($arkuszJson): ?>
                                         <button class="toggle-sheet-btn" onclick="toggleSheet(<?php echo $u['id_uzytkownika']; ?>)">
-                                            <i class="fas fa-edit"></i> Edytuj
+                                            <?php if ($isEditable): ?>
+                                                <i class="fas fa-edit"></i> Edytuj
+                                            <?php else: ?>
+                                                <i class="fas fa-eye"></i> Podgląd
+                                            <?php endif; ?>
                                         </button>
-                                    <?php elseif (!$arkuszJson): ?>
+                                    <?php else: ?>
                                         <small style="color:#999;">Brak arkusza</small>
                                     <?php endif; ?>
                                 </td>
                             </tr>
 
-                            <?php if ($arkuszJson && $isEditable): ?>
+                            <?php 
+                            // ZMIANA: Warunek if ($arkuszJson && $isEditable) zmieniony na if ($arkuszJson)
+                            // Dzięki temu arkusz generuje się dla każdego, ale pola będą zablokowane niżej
+                            if ($arkuszJson): 
+                            ?>
                                 <tr id="sheet-<?php echo $u['id_uzytkownika']; ?>" style="display:none;">
                                     <td colspan="4" style="background-color: #fdfdfd;">
                                         <div class="score-sheet-wrapper">
@@ -267,8 +272,6 @@ try {
                                                 <input type="hidden" name="action" value="save_score">
                                                 <input type="hidden" name="player_id" value="<?php echo $u['id_uzytkownika']; ?>">
                                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
-
-                                                <h4>Edycja punktacji: <?php echo htmlspecialchars($u['nazwa_uzytkownika']); ?></h4>
 
                                                 <?php foreach ($arkuszJson['categories'] as $cat):
                                                     $catId = $cat['id'];
@@ -278,23 +281,29 @@ try {
                                                     <div class="score-row" style="border-left-color: <?php echo htmlspecialchars($catColor); ?>">
                                                         <label><?php echo htmlspecialchars($cat['name']); ?></label>
                                                         <span class="description"><?php echo htmlspecialchars($cat['description']); ?></span>
+                                                        
                                                         <input type="number"
                                                             class="input-score-<?php echo $u['id_uzytkownika']; ?>"
                                                             name="scores[<?php echo $catId; ?>]"
                                                             value="<?php echo $val; ?>"
                                                             oninput="calcTotal(<?php echo $u['id_uzytkownika']; ?>)"
-                                                            <?php echo (isset($cat['allow_negative']) && $cat['allow_negative']) ? 'max="0"' : 'min="0"'; ?>>
+                                                            <?php echo (isset($cat['allow_negative']) && $cat['allow_negative']) ? '' : 'min="0"'; ?>
+                                                            <?php echo $isEditable ? '' : 'disabled style="background-color:#eee; color:#555;"'; ?>>
                                                     </div>
                                                 <?php endforeach; ?>
 
                                                 <div class="total-score-live">
                                                     Suma: <span id="total-<?php echo $u['id_uzytkownika']; ?>"><?php echo intval($u['wynik_koncowy']); ?></span>
                                                 </div>
+                                                
+                                                <?php if ($isEditable): ?>
                                                 <div style="text-align:right; margin-top:20px;">
                                                     <button type="submit" class="btn-small" style="width:auto; display:inline-block; margin-left:auto;">
                                                         Zapisz wynik
                                                     </button>
                                                 </div>
+                                                <?php endif; ?>
+                                                
                                             </form>
                                         </div>
                                     </td>
