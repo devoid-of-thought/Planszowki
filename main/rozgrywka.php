@@ -283,7 +283,7 @@ try {
                                                             name="scores[<?php echo $catId; ?>]"
                                                             value="<?php echo $val; ?>"
                                                             oninput="calcTotal(<?php echo $u['id_uzytkownika']; ?>)"
-                                                            <?php echo (isset($cat['allow_negative']) && $cat['allow_negative']) ? 'max=0' : 'min="0"'; ?>>
+                                                            <?php echo (isset($cat['allow_negative']) && $cat['allow_negative']) ? 'max="0"' : 'min="0"'; ?>>
                                                     </div>
                                                 <?php endforeach; ?>
 
