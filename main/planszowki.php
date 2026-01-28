@@ -34,12 +34,14 @@ try {
             LEFT JOIN gatunek g ON pg.id_gatunku = g.id_gatunku
             WHERE k.stworzone_przez_id_uzytkownika = 1 
                OR k.stworzone_przez_id_uzytkownika IS NULL
+               OR k.stworzone_przez_id_uzytkownika = :userId
             GROUP BY k.id_planszowki
             ORDER BY k.tytul_planszowki ASC";
 
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(); // Nie przekazujemy ID użytkownika, bo pobieramy bazę globalną
-    $globalnaBaza = $stmt->fetchAll();
+
+    $stmt->execute([':userId' => $_SESSION['user_id']]);  
+      $globalnaBaza = $stmt->fetchAll();
 
 } catch (PDOException $e) {
     die("Błąd pobierania danych: " . $e->getMessage());

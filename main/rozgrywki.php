@@ -40,46 +40,7 @@ try {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Tilt+Neon&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        /* Style dla paska akcji i sortowania */
-        .actions-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
 
-        .sort-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .sort-group select {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-family: inherit;
-        }
-
-        .btn-details {
-            display: inline-block;
-            padding: 6px 12px;
-            background-color: #4f46e5;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            transition: background 0.3s;
-        }
-
-        .btn-details:hover {
-            background-color: #3730a3;
-        }
-    </style>
-    </style>
 </head>
 
 <body>

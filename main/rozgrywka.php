@@ -107,7 +107,6 @@ try {
                     'gid' => $rozgrywkaId,
                     'uid' => $targetPlayerId
                 ]);
-
             }
         } else {
             $errorMsg = "Brak uprawnień do edycji.";
@@ -132,7 +131,8 @@ try {
     }
 
     // E. Pobranie uczestników
-    $sqlPlayers = "SELECT ur.id_uzytkownika, u.nazwa_uzytkownika, ur.wynik_koncowy, ur.dane_arkusza
+    // ZMIANA: Dodano ur.nazwa_tymczasowa_gracza do SELECT
+    $sqlPlayers = "SELECT ur.id_uzytkownika, u.nazwa_uzytkownika, ur.wynik_koncowy, ur.dane_arkusza, ur.nazwa_tymczasowa_gracza
                    FROM uczestnicy_rozgrywki ur
                    JOIN uzytkownik u ON ur.id_uzytkownika = u.id_uzytkownika
                    WHERE ur.id_rozgrywki = :id
@@ -170,11 +170,11 @@ try {
 
 <body>
     <div class="dashboard-wrapper">
-        
+
         <?php include 'sidebar.php'; ?>
 
         <div class="main-content">
-            
+
             <div class="top-header">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <button type="button" id="sidebarCollapse" class="toggle-btn">
@@ -192,7 +192,7 @@ try {
             <?php endif; ?>
             <div class="content-box">
                 <h3 style="margin-top:0; color: var(--color-black);"><?php echo htmlspecialchars($rozgrywka['tytul_rozgrywki']); ?></h3>
-                
+
                 <p><i class="fas fa-user-tie" style="width:20px; color:var(--color-magenta);"></i> Organizator: <strong><?php echo htmlspecialchars($rozgrywka['organizator_nazwa']); ?></strong></p>
                 <p><i class="far fa-calendar-alt" style="width:20px; color:var(--color-magenta);"></i> Data: <?php echo date("d.m.Y H:i", strtotime($rozgrywka['data_rozgrywki'])); ?></p>
                 <p><i class="far fa-clock" style="width:20px; color:var(--color-magenta);"></i> Czas trwania: <?php echo $rozgrywka['czas_trwania']; ?> min</p>
@@ -226,8 +226,22 @@ try {
                             <tr>
                                 <td style="text-align:center;"><?php echo $rank++; ?></td>
                                 <td>
-                                    <strong><?php echo htmlspecialchars($u['nazwa_uzytkownika']); ?></strong>
-                                    <?php if ($u['id_uzytkownika'] == $rozgrywka['id_organizatora']) echo ' <i class="fas fa-crown" title="Organizator" style="color:#f1c40f; margin-left:5px;"></i>'; ?>
+                                    <?php
+                                    // Sprawdzamy, czy istnieje nazwa tymczasowa
+                                    if (!empty($u['nazwa_tymczasowa_gracza'])) {
+                                        // Wyświetl nazwę tymczasową + (prawdziwy nick)
+                                        echo '<strong>' . htmlspecialchars($u['nazwa_tymczasowa_gracza']) . '</strong>';
+                                        echo ' <small style="color:#888;">(' . htmlspecialchars($u['nazwa_uzytkownika']) . ')</small>';
+                                    } else {
+                                        // Brak nazwy tymczasowej - wyświetl tylko nick
+                                        echo '<strong>' . htmlspecialchars($u['nazwa_uzytkownika']) . '</strong>';
+                                    }
+
+                                    // Ikona organizatora
+                                    if ($u['id_uzytkownika'] == $rozgrywka['id_organizatora']) {
+                                        echo ' <i class="fas fa-crown" title="Organizator" style="color:#f1c40f; margin-left:5px;"></i>';
+                                    }
+                                    ?>
                                 </td>
                                 <td style="text-align:center;">
                                     <span style="background:var(--color-magenta); color:white; padding:5px 15px; border-radius:15px; font-weight:bold; display:inline-block;">
@@ -294,7 +308,7 @@ try {
 
             <div class="content-box">
                 <h3 style="margin-top:0;">Dyskusja</h3>
-                
+
                 <form method="POST" style="margin-bottom:30px;">
                     <textarea name="tresc_komentarza" rows="3" placeholder="Dodaj komentarz..." required></textarea>
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
@@ -353,4 +367,5 @@ try {
         }
     </script>
 </body>
+
 </html>
