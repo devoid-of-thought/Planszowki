@@ -796,3 +796,15 @@ form .form-profile .btn-small {
         .btn-details:hover {
             background-color: #3730a3;
         }
+                /* Dostosowanie szerokości kolumn dla rozgrywek */
+        .rozgrywki-table th:nth-child(1), .rozgrywki-table td:nth-child(1) { width: 20%; } /* Tytuł */
+        .rozgrywki-table th:nth-child(2), .rozgrywki-table td:nth-child(2) { width: 10%; } /* Data */
+        .rozgrywki-table th:nth-child(3), .rozgrywki-table td:nth-child(3) { width: 20%; } /* Gra */
+        .rozgrywki-table th:nth-child(4), .rozgrywki-table td:nth-child(4) { width: 20%; } /* Gracze (NOWA) */
+        .rozgrywki-table th:nth-child(5), .rozgrywki-table td:nth-child(5) { width: 10%; } /* Czas */
+        .rozgrywki-table th:nth-child(6), .rozgrywki-table td:nth-child(6) { width: 10%;} /* Akcja */
+
+        /* Styl dla filtrów podobny do planszowki.php */
+        .filter-group.game-search { width: 35%; }
+        .filter-group.player-search { width: 35%; }
+        .filter-group.sort-select { width: 30%; }

@@ -15,11 +15,22 @@ $error = "";
 
 try {
     // Pobieramy rozgrywki, w których użytkownik brał udział
-    $sql = "SELECT r.id_rozgrywki, r.data_rozgrywki, r.tytul_rozgrywki, r.czas_trwania, r.notatka_do_gry, p.tytul_planszowki
+    // ZMIANA: Dodano JOIN do pobrania listy WSZYSTKICH graczy w danej rozgrywce
+    $sql = "SELECT 
+                r.id_rozgrywki, 
+                r.data_rozgrywki, 
+                r.tytul_rozgrywki, 
+                r.czas_trwania, 
+                r.notatka_do_gry, 
+                p.tytul_planszowki,
+                GROUP_CONCAT(u_all.nazwa_uzytkownika ORDER BY u_all.nazwa_uzytkownika ASC SEPARATOR ', ') as lista_graczy
             FROM rozgrywka r
             JOIN planszowka p ON r.id_planszowki = p.id_planszowki
-            JOIN uczestnicy_rozgrywki u ON r.id_rozgrywki = u.id_rozgrywki
-            WHERE u.id_uzytkownika = :userId
+            JOIN uczestnicy_rozgrywki ur_me ON r.id_rozgrywki = ur_me.id_rozgrywki
+            LEFT JOIN uczestnicy_rozgrywki ur_all ON r.id_rozgrywki = ur_all.id_rozgrywki
+            LEFT JOIN uzytkownik u_all ON ur_all.id_uzytkownika = u_all.id_uzytkownika
+            WHERE ur_me.id_uzytkownika = :userId
+            GROUP BY r.id_rozgrywki
             ORDER BY r.data_rozgrywki DESC";
 
     $stmt = $pdo->prepare($sql);
@@ -40,7 +51,6 @@ try {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Tilt+Neon&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-
 </head>
 
 <body>
@@ -58,11 +68,23 @@ try {
                 <h2>Twoje Rozgrywki</h2>
             </div>
 
-            <div class="actions-bar">
+            <div class="actions">
                 <button class="btn-small" onclick="window.location.href='../add/dodaj_rozgrywke.php'">Dodaj nową rozgrywkę</button>
+            </div>
 
-                <div class="sort-group">
-                    <label for="sortOrder">Sortuj według:</label>
+            <div class="filters">
+                <div class="filter-group game-search">
+                    <label>Szukaj gry:</label>
+                    <input type="text" id="filterGame" placeholder="Np. Brass..." onkeyup="applyFilters()">
+                </div>
+
+                <div class="filter-group player-search">
+                    <label>Szukaj gracza:</label>
+                    <input type="text" id="filterPlayer" placeholder="Np. Jan..." onkeyup="applyFilters()">
+                </div>
+
+                <div class="filter-group sort-select">
+                    <label>Sortuj według:</label>
                     <select id="sortOrder" onchange="applySort()">
                         <option value="date_desc">Data (od najnowszych)</option>
                         <option value="date_asc">Data (od najstarszych)</option>
@@ -76,34 +98,45 @@ try {
 
             <main>
                 <?php if (!empty($rozgrywki)): ?>
-                    <table>
+                    <table class="rozgrywki-table">
                         <thead>
                             <tr>
-                                <th>Tytuł</th>
+                                <th>Tytuł sesji</th>
                                 <th>Data</th>
                                 <th>Gra</th>
-                                <th>Czas trwania</th>
+                                <th>Gracze</th>
+                                <th>Czas</th>
                                 <th>Akcja</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody">
                             <?php foreach ($rozgrywki as $gra): ?>
                                 <?php
-                                // Przygotowanie danych do sortowania
-                                $sortDate = strtotime($gra['data_rozgrywki']); // Timestamp
-                                $sortGame = strtolower($gra['tytul_planszowki']); // Małe litery
+                                // Przygotowanie danych do sortowania i filtrowania
+                                $sortDate = strtotime($gra['data_rozgrywki']);
+                                $sortGame = strtolower($gra['tytul_planszowki']);
                                 $sortTime = (int)$gra['czas_trwania'];
+                                // Dodajemy listę graczy do atrybutu (do filtrowania JS)
+                                $filterPlayers = strtolower($gra['lista_graczy']);
                                 ?>
                                 <tr class="game-row"
                                     data-date="<?= $sortDate ?>"
                                     data-game="<?= htmlspecialchars($sortGame) ?>"
+                                    data-players="<?= htmlspecialchars($filterPlayers) ?>"
                                     data-time="<?= $sortTime ?>">
 
-                                    <td><?= htmlspecialchars($gra['tytul_rozgrywki'] ?? '') ?></td>
+                                    <td><?= htmlspecialchars($gra['tytul_rozgrywki'] ?? '-') ?></td>
                                     <td><?= htmlspecialchars(date("d.m.Y", strtotime($gra['data_rozgrywki']))) ?></td>
                                     <td><strong><?= htmlspecialchars($gra['tytul_planszowki']) ?></strong></td>
+                                    
+                                    <td style="font-size: 0.9em; color: #555;">
+                                        <?= htmlspecialchars($gra['lista_graczy']) ?>
+                                    </td>
+                                    
                                     <td><?= htmlspecialchars($gra['czas_trwania']) ?> min</td>
-                                    <td><a href="rozgrywka.php?id_rozgrywki=<?= $gra['id_rozgrywki'] ?>" class="btn-small details"> Wyświetl szczegóły </a></td>
+                                    <td style="text-align: right;">
+                                        <a href="rozgrywka.php?id_rozgrywki=<?= $gra['id_rozgrywki'] ?>" class="btn-small details">Szczegóły</a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -126,6 +159,29 @@ try {
             document.getElementById('sidebar').classList.toggle('collapsed');
         });
 
+        // Funkcja filtrująca
+        function applyFilters() {
+            let gameInput = document.getElementById('filterGame').value.toLowerCase();
+            let playerInput = document.getElementById('filterPlayer').value.toLowerCase();
+            
+            let rows = document.querySelectorAll('.game-row');
+
+            rows.forEach(row => {
+                let gameText = row.getAttribute('data-game');
+                let playersText = row.getAttribute('data-players');
+
+                let matchGame = gameText.includes(gameInput);
+                let matchPlayer = playersText.includes(playerInput);
+
+                if (matchGame && matchPlayer) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        // Funkcja sortująca
         function applySort() {
             let sortBy = document.getElementById('sortOrder').value;
             let tableBody = document.getElementById('tableBody');
