@@ -55,15 +55,20 @@ try {
 
     $isOrganizer = ($rozgrywka['id_organizatora'] == $currentUserId);
 
-    // C. Pobranie struktury JSON
+    // C. Pobranie struktury JSON (POPRAWIONE)
     $arkuszJson = null;
+
+    // Pobieramy plugin, którego użyto w TEJ KONKRETNEJ rozgrywce.
+    // Sprawdzamy tabelę uczestników (zakładamy, że wszyscy w sesji mają ten sam arkusz).
     $sqlPlugin = "SELECT pl.struktura_json
-                  FROM arkusz_punktacji ap
-                  JOIN plugin pl ON ap.id_pluginu = pl.id_pluginu
-                  WHERE ap.id_planszowki = :pid
+                  FROM uczestnicy_rozgrywki ur
+                  JOIN plugin pl ON ur.id_arkusza_uzytego = pl.id_pluginu
+                  WHERE ur.id_rozgrywki = :gid
+                  AND ur.id_arkusza_uzytego IS NOT NULL
                   LIMIT 1";
+                  
     $stmtPlugin = $pdo->prepare($sqlPlugin);
-    $stmtPlugin->execute(['pid' => $rozgrywka['id_planszowki']]);
+    $stmtPlugin->execute(['gid' => $rozgrywkaId]); // Używamy ID rozgrywki, nie planszówki!
     $pluginData = $stmtPlugin->fetch(PDO::FETCH_ASSOC);
 
     if ($pluginData && !empty($pluginData['struktura_json'])) {
