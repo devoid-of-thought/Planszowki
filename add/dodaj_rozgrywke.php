@@ -193,7 +193,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div id="game-info-box">
                         <span id="game-stats-display"></span>
                     </div>
-
+                    <label>Wybierz wariant punktacji:</label>
+                    <select name="id_arkusza" id="arkuszSelect" disabled>
+                        <option value="">-- Najpierw wybierz grę --</option>
+                    </select>
                     <label>Tytuł sesji(opcjonalny):</label>
                     <input type="text" name="tytul_rozgrywki" placeholder="np. Wieczór z Brassem">
 
@@ -289,6 +292,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 options[i].style.display = text.includes(input) ? "" : "none";
             }
         }
+        const gameSelect = document.querySelector('select[name="id_planszowki"]'); // Upewnij się, że Twój select gry ma taką nazwę/ID
+    const arkuszSelect = document.getElementById('arkuszSelect');
+
+    if(gameSelect) {
+        gameSelect.addEventListener('change', function() {
+            const gameId = this.value;
+            
+            // Reset selecta
+            arkuszSelect.innerHTML = '<option value="">Ładowanie...</option>';
+            arkuszSelect.disabled = true;
+
+            if (gameId) {
+                fetch(`../api/get_plugins.php?id_planszowki=${gameId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        arkuszSelect.innerHTML = '';
+                        
+                        if (data.length > 0) {
+                            data.forEach(plugin => {
+                                let option = document.createElement('option');
+                                option.value = plugin.id;
+                                option.text = plugin.name;
+                                arkuszSelect.appendChild(option);
+                            });
+                            arkuszSelect.disabled = false;
+                        } else {
+                            arkuszSelect.innerHTML = '<option value="">Brak dedykowanej punktacji (tylko wynik ogólny)</option>';
+                            arkuszSelect.disabled = false; // Lub true, zależnie czy wymagasz pluginu
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Błąd:', err);
+                        arkuszSelect.innerHTML = '<option value="">Błąd ładowania</option>';
+                    });
+            } else {
+                arkuszSelect.innerHTML = '<option value="">-- Najpierw wybierz grę --</option>';
+                arkuszSelect.disabled = true;
+            }
+        });
+    }
     </script>
 </body>
 

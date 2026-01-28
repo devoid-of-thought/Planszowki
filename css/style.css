@@ -808,3 +808,7 @@ form .form-profile .btn-small {
         .filter-group.game-search { width: 35%; }
         .filter-group.player-search { width: 35%; }
         .filter-group.sort-select { width: 30%; }
+        .struktura_json {
+    font-size: 14px;
+    line-height: 1.4; 
+    color: var(--color-black);}  

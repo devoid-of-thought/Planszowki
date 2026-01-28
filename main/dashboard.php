@@ -42,7 +42,6 @@ try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$userId]);
     $kolekcja = $stmt->fetchAll();
-
 } catch (PDOException $e) {
     die("Błąd pobierania danych: " . $e->getMessage());
 }
@@ -78,14 +77,14 @@ try {
             <div class="actions">
                 <a href="../add/dodaj_gre.php" class="btn-small">Dodaj nową grę do bazy</a>
                 <a href="../add/dodaj_do_kolekcji.php" class="btn-small">Dodaj grę do kolekcji</a>
+                <a href="../add/dodaj_plugin.php" class="btn-small">Dodaj plugin punktacji</a>
             </div>
-
             <div class="filters">
                 <div class="filter-group szukaj">
                     <label>Szukaj gry:</label>
                     <input type="text" id="searchTitle" placeholder="Wpisz tytuł..." onkeyup="applyFilters()">
                 </div>
-                
+
                 <div class="filter-group status">
                     <label>Status:</label>
                     <select id="filterStatus" onchange="applyFilters()">
@@ -138,21 +137,21 @@ try {
                         </thead>
                         <tbody id="tableBody">
                             <?php foreach ($kolekcja as $gra): ?>
-                                <?php 
-                                    // Przygotowanie danych do sortowania (data attributes)
-                                    $sortTitle = strtolower($gra['tytul_planszowki']);
-                                    $sortRating = $gra['ocena'] ? $gra['ocena'] : 0; // Brak oceny to 0
-                                    $sortDate = $gra['data_dodania'] ? strtotime($gra['data_dodania']) : 0;
+                                <?php
+                                // Przygotowanie danych do sortowania (data attributes)
+                                $sortTitle = strtolower($gra['tytul_planszowki']);
+                                $sortRating = $gra['ocena'] ? $gra['ocena'] : 0; // Brak oceny to 0
+                                $sortDate = $gra['data_dodania'] ? strtotime($gra['data_dodania']) : 0;
                                 ?>
-                                <tr class="game-row" 
+                                <tr class="game-row"
                                     data-title="<?= htmlspecialchars($sortTitle) ?>"
                                     data-rating="<?= $sortRating ?>"
                                     data-date="<?= $sortDate ?>">
-                                    
+
                                     <td class="col-title-dashboard">
                                         <strong><?php echo htmlspecialchars($gra['tytul_planszowki']); ?></strong>
                                     </td>
-                                    
+
                                     <td class="col-genre-dashboard">
                                         <?php echo !empty($gra['gatunki']) ? htmlspecialchars($gra['gatunki']) : '<span style="color:#ccc">-</span>'; ?>
                                     </td>
@@ -164,7 +163,7 @@ try {
                                     <td class="col-rating-dashboard">
                                         <?php echo $gra['ocena'] ? htmlspecialchars($gra['ocena']) . "/10" : "-"; ?>
                                     </td>
-                                    
+
                                     <td class="col-date-dashboard">
                                         <?php echo !empty($gra['data_dodania']) ? date("d.m.Y", strtotime($gra['data_dodania'])) : '-'; ?>
                                     </td>
@@ -229,17 +228,17 @@ try {
                         return a.dataset.title.localeCompare(b.dataset.title);
                     case 'title_desc':
                         return b.dataset.title.localeCompare(a.dataset.title);
-                    
+
                     case 'rating_desc': // Od najwyższej
                         return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
                     case 'rating_asc': // Od najniższej
                         return parseFloat(a.dataset.rating) - parseFloat(b.dataset.rating);
-                    
+
                     case 'date_desc': // Od najnowszych
                         return parseInt(b.dataset.date) - parseInt(a.dataset.date);
                     case 'date_asc': // Od najstarszych
                         return parseInt(a.dataset.date) - parseInt(b.dataset.date);
-                    
+
                     default:
                         return 0;
                 }
@@ -250,4 +249,5 @@ try {
         }
     </script>
 </body>
+
 </html>
