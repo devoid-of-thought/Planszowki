@@ -212,7 +212,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="date" name="data_rozgrywki" value="<?= date('Y-m-d') ?>" required>
 
                     <label>Czas trwania w minutach:</label>
-                    <input type="number" name="czas_trwania" min="1" max="9999999999999999" required>
+                    <input type="number" name="czas_trwania" min="1" max="2147483647" required>
 
                     <label>Znajomi biorący udział:</label>
                     <input type="text" id="friendSearch" onkeyup="filterFriends()" placeholder="Szukaj znajomego..." style="margin-bottom:5px;">
