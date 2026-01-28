@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Zabezpieczenie: Generowanie tokena CSRF
 if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(string: random_bytes(32));
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 $currentUserId = $_SESSION['user_id'];

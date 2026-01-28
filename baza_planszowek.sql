@@ -42,9 +42,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `Archiwizuj_Stare_Rozgrywki` ()   BE
     START TRANSACTION;
 
     -- Kopiowanie uczestników rozgrywek, które zostaną zarchwizowane
-    INSERT INTO `Uczestnicy_Historyczni` (id_uczestnictwa, id_rozgrywki, id_uzytkownika, nazwa_tymczasowa_gracza, wynik_koncowy, id_arkusza_uzytego, dane_arkusza)
+    INSERT INTO `uczestnicy_historyczni` (id_uczestnictwa, id_rozgrywki, id_uzytkownika, nazwa_tymczasowa_gracza, wynik_koncowy, id_arkusza_uzytego, dane_arkusza)
     SELECT u.id_uczestnictwa, u.id_rozgrywki, u.id_uzytkownika, u.nazwa_tymczasowa_gracza, u.wynik_koncowy, u.id_arkusza_uzytego, u.dane_arkusza
-    FROM `Uczestnicy_Rozgrywki` u
+    FROM `uczestnicy_rozgrywki` u
     JOIN `rozgrywka` r ON u.id_rozgrywki = r.id_rozgrywki
     WHERE r.data_rozgrywki < data_graniczna;
 
