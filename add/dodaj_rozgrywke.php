@@ -46,6 +46,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $id_planszowki = (int)$_POST['id_planszowki'];
+    // NOWE: Pobieramy wybrane ID arkusza (pluginu)
+    $id_arkusza = !empty($_POST['id_arkusza']) ? (int)$_POST['id_arkusza'] : null;
+    
     $tytul_rozgrywki = trim($_POST['tytul_rozgrywki']);
     $data_rozgrywki = $_POST['data_rozgrywki'];
     $czas_trwania = (int)$_POST['czas_trwania'];
@@ -62,20 +65,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmtRozgrywka->execute([$id_planszowki, $currentUserId, $data_rozgrywki, $tytul_rozgrywki, $czas_trwania, $notatka]);
         $id_nowej_rozgrywki = $pdo->lastInsertId();
 
-        $sqlInsertUczestnik = "INSERT INTO uczestnicy_rozgrywki (id_rozgrywki, id_uzytkownika, nazwa_tymczasowa_gracza, wynik_koncowy) VALUES (?, ?, ?, 0)";
+        // ZMIANA: Dodano kolumnę `id_arkusza_uzytego`
+        $sqlInsertUczestnik = "INSERT INTO uczestnicy_rozgrywki (id_rozgrywki, id_uzytkownika, nazwa_tymczasowa_gracza, wynik_koncowy, id_arkusza_uzytego) VALUES (?, ?, ?, 0, ?)";
         $stmtUczestnik = $pdo->prepare($sqlInsertUczestnik);
 
         $organizatorBralUdział = isset($_POST['organizator_bierze_udzial']);
         $organizatorTempName = !empty($_POST['organizator_temp_name']) ? trim($_POST['organizator_temp_name']) : null;
 
         if ($organizatorBralUdział) {
-            $stmtUczestnik->execute([$id_nowej_rozgrywki, $currentUserId, $organizatorTempName]);
+            // ZMIANA: Przekazujemy $id_arkusza
+            $stmtUczestnik->execute([$id_nowej_rozgrywki, $currentUserId, $organizatorTempName, $id_arkusza]);
         }
 
         // Wybrani znajomi
         foreach ($wybrani_gracze as $id_znajomego) {
             $tempName = !empty($tymczasowe_nazwy[$id_znajomego]) ? trim($tymczasowe_nazwy[$id_znajomego]) : null;
-            $stmtUczestnik->execute([$id_nowej_rozgrywki, (int)$id_znajomego, $tempName]);
+            // ZMIANA: Przekazujemy $id_arkusza
+            $stmtUczestnik->execute([$id_nowej_rozgrywki, (int)$id_znajomego, $tempName, $id_arkusza]);
         }
 
         $pdo->commit();
@@ -193,11 +199,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div id="game-info-box">
                         <span id="game-stats-display"></span>
                     </div>
+
                     <label>Wybierz wariant punktacji:</label>
-                    <select name="id_arkusza" id="arkuszSelect" disabled>
+                    <select name="id_arkusza" id="arkuszSelect" disabled style="margin-bottom: 20px;">
                         <option value="">-- Najpierw wybierz grę --</option>
                     </select>
-                    <label>Tytuł sesji(opcjonalny):</label>
+
+                    <label>Tytuł sesji (opcjonalny):</label>
                     <input type="text" name="tytul_rozgrywki" placeholder="np. Wieczór z Brassem">
 
                     <label>Data:</label>
@@ -239,12 +247,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </label>
                     </div>
 
-                    <script>
-                        document.getElementById('org_check').addEventListener('change', function() {
-                            document.getElementById('org_nick_container').style.opacity = this.checked ? '1' : '0.5';
-                            document.getElementById('organizator_temp_name').disabled = !this.checked;
-                        });
-                    </script>
                     <label>Notatka:</label>
                     <textarea name="notatka_do_gry" rows="3"></textarea>
 
@@ -256,13 +258,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <script>
+        // Funkcja do pokazywania statystyk ORAZ ładowania pluginów
         function showGameStats() {
             const select = document.getElementById('gameSelect');
             const selectedOption = select.options[select.selectedIndex];
             const infoBox = document.getElementById('game-info-box');
             const statsSpan = document.getElementById('game-stats-display');
+            const arkuszSelect = document.getElementById('arkuszSelect');
 
             if (selectedOption && selectedOption.value) {
+                // 1. Pokaż statystyki
                 const minP = selectedOption.getAttribute('data-min-p');
                 const maxP = selectedOption.getAttribute('data-max-p');
                 const minT = selectedOption.getAttribute('data-min-t');
@@ -270,8 +275,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 statsSpan.innerHTML = `Gracze: <b>${minP}-${maxP}</b> | Czas: <b>${minT}-${maxT} min</b>`;
                 infoBox.style.display = 'block';
+
+                // 2. Pobierz pluginy (AJAX)
+                const gameId = selectedOption.value;
+                arkuszSelect.innerHTML = '<option value="">Ładowanie...</option>';
+                arkuszSelect.disabled = true;
+
+                fetch(`../api/get_plugins.php?id_planszowki=${gameId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        arkuszSelect.innerHTML = '';
+                        // Zawsze dodaj opcję domyślną (brak pluginu)
+                        let defaultOption = document.createElement('option');
+                        defaultOption.value = "";
+                        defaultOption.text = "Tylko wynik końcowy (Brak szczegółowej punktacji)";
+                        arkuszSelect.appendChild(defaultOption);
+
+                        if (data.length > 0) {
+                            data.forEach(plugin => {
+                                let option = document.createElement('option');
+                                option.value = plugin.id;
+                                option.text = plugin.name;
+                                arkuszSelect.appendChild(option);
+                            });
+                        }
+                        arkuszSelect.disabled = false;
+                    })
+                    .catch(err => {
+                        console.error('Błąd:', err);
+                        arkuszSelect.innerHTML = '<option value="">Błąd ładowania</option>';
+                    });
+
             } else {
                 infoBox.style.display = 'none';
+                arkuszSelect.innerHTML = '<option value="">-- Najpierw wybierz grę --</option>';
+                arkuszSelect.disabled = true;
             }
         }
 
@@ -280,7 +318,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             let items = document.querySelectorAll('.friend-item');
             items.forEach(item => {
                 let text = item.querySelector('label').innerText.toLowerCase();
-                item.style.display = text.includes(input) ? "flex" : "none";
+                // Sprawdzamy inputy wewnątrz labela, aby nie ukrywać samego pola input dla nazwy
+                // Pobieramy tylko tekst bezpośredni z labela lub spana
+                let spanText = item.querySelector('span').innerText.toLowerCase();
+                
+                item.style.display = spanText.includes(input) ? "flex" : "none";
             });
         }
 
@@ -292,47 +334,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 options[i].style.display = text.includes(input) ? "" : "none";
             }
         }
-        const gameSelect = document.querySelector('select[name="id_planszowki"]'); // Upewnij się, że Twój select gry ma taką nazwę/ID
-    const arkuszSelect = document.getElementById('arkuszSelect');
-
-    if(gameSelect) {
-        gameSelect.addEventListener('change', function() {
-            const gameId = this.value;
-            
-            // Reset selecta
-            arkuszSelect.innerHTML = '<option value="">Ładowanie...</option>';
-            arkuszSelect.disabled = true;
-
-            if (gameId) {
-                fetch(`../api/get_plugins.php?id_planszowki=${gameId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        arkuszSelect.innerHTML = '';
-                        
-                        if (data.length > 0) {
-                            data.forEach(plugin => {
-                                let option = document.createElement('option');
-                                option.value = plugin.id;
-                                option.text = plugin.name;
-                                arkuszSelect.appendChild(option);
-                            });
-                            arkuszSelect.disabled = false;
-                        } else {
-                            arkuszSelect.innerHTML = '<option value="">Brak dedykowanej punktacji (tylko wynik ogólny)</option>';
-                            arkuszSelect.disabled = false; // Lub true, zależnie czy wymagasz pluginu
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Błąd:', err);
-                        arkuszSelect.innerHTML = '<option value="">Błąd ładowania</option>';
-                    });
-            } else {
-                arkuszSelect.innerHTML = '<option value="">-- Najpierw wybierz grę --</option>';
-                arkuszSelect.disabled = true;
-            }
-        });
-    }
     </script>
 </body>
-
 </html>

@@ -33,7 +33,7 @@ try {
     $stmtRole->execute(['id' => $currentUserId]);
     $currentUserRole = $stmtRole->fetchColumn();
 
-    $isGlobalAdmin = ($currentUserRole === 'admin' || $currentUserRole === 'moderator');
+    $isGlobalAdmin = ($currentUserRole === 'Admin' || $currentUserRole === 'Moderator');
 
     // B. Pobranie szczegółów rozgrywki
     $sqlGame = "SELECT r.id_rozgrywki, r.data_rozgrywki, r.tytul_rozgrywki, r.czas_trwania, r.notatka_do_gry,
