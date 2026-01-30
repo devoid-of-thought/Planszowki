@@ -25,14 +25,11 @@ if (empty($_SESSION['csrf_token'])) {
             <div class="form-container">
                 <h2>Zarejestruj się</h2>
 
-                <?php if (isset($_SESSION['register_error'])): ?>
-                    <div class="register-error-msg">
-                        <?php 
-                            echo $_SESSION['register_error']; 
-                            unset($_SESSION['register_error']); // Usuwamy błąd, by nie wisiał po odświeżeniu
-                        ?>
-                    </div>
-                <?php endif; ?>
+                <?php if (isset($_GET['error'])): ?>
+    <p class="error">
+        <?php echo htmlspecialchars($_GET['error']); ?>
+    </p>
+<?php endif; ?>
                 
                 <form action="../api/register.php" method="POST" style="width: 100%;">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">

@@ -55,6 +55,24 @@ try {
 
     $isOrganizer = ($rozgrywka['id_organizatora'] == $currentUserId);
 
+    // --- NOWY KOD: OBSŁUGA USUWANIA ROZGRYWKI ---
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_game') {
+        // Sprawdzamy uprawnienia (Administrator, Moderator lub Organizator)
+        if ($isGlobalAdmin || $isOrganizer) {
+            // Usuwamy rozgrywkę
+            $sqlDelete = "DELETE FROM rozgrywka WHERE id_rozgrywki = :id";
+            $stmtDelete = $pdo->prepare($sqlDelete);
+            $stmtDelete->execute(['id' => $rozgrywkaId]);
+
+            // Przekierowanie do listy rozgrywek
+            header("Location: rozgrywki.php?msg=deleted");
+            exit();
+        } else {
+            $errorMsg = "Brak uprawnień do usunięcia tej rozgrywki.";
+        }
+    }
+    // --- KONIEC NOWEGO KODU ---
+
     // C. Pobranie struktury JSON (POPRAWIONE)
     $arkuszJson = null;
 
@@ -352,7 +370,18 @@ try {
                     <?php endif; ?>
                 </div>
             </div>
-
+            <?php 
+                    // Sprawdzamy czy użytkownik może usunąć grę
+                    if ($isGlobalAdmin || $isOrganizer): 
+                    ?>
+                        <form method="POST" action="rozgrywka.php?id_rozgrywki=<?php echo $rozgrywkaId; ?>" onsubmit="return confirm('Czy na pewno chcesz trwale usunąć tę rozgrywkę? Tej operacji nie można cofnąć.');">
+                            <input type="hidden" name="action" value="delete_game">
+                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+                            
+                            <button type="submit" class="btn-small accept">                </i> Usuń
+                            </button>
+                        </form>
+                    <?php endif; ?>
         </div>
     </div>
 

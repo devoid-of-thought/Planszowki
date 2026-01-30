@@ -1,19 +1,19 @@
 <?php
+// api/register.php
 require_once 'db.php';
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    // Funkcja pomocnicza do przekierowania z błędem
+    // ZMIANA: Przekazujemy błąd w URL (?error=...), aby register.php mógł go wyświetlić przez $_GET['error']
     function redirectWithError($message) {
-        $_SESSION['register_error'] = $message;
-        header("Location: ../login/register.php");
+        header("Location: ../login/register.php?error=" . urlencode($message));
         exit();
     }
 
     // Zabezpieczenie CSRF
     if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
-        redirectWithError("Błąd bezpieczeństwa (CSRF). Spróbuj ponownie.");
+        redirectWithError("Błąd bezpieczeństwa (CSRF). Odśwież stronę i spróbuj ponownie.");
     }
 
     $user = trim($_POST['username']);

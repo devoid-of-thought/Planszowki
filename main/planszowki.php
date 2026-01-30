@@ -171,7 +171,7 @@ try {
 
                                     <td>
                                         <?php if(!empty($gra['bgg_id'])): ?>
-                                            <a href="https://boardgamegeek.com/boardgame/<?= htmlspecialchars($gra['bgg_id']) ?>" target="_blank" class="link-bgg">BGG</a>
+                                            <a class= "edit" href="https://boardgamegeek.com/boardgame/<?= htmlspecialchars($gra['bgg_id']) ?>" target="_blank" class="link-bgg">BGG</a>
                                         <?php else: ?>
                                             -
                                         <?php endif; ?>
