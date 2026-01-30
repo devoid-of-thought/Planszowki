@@ -4,17 +4,30 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    // Zabezpieczenie CSRF (z rozwiązania nr 2)
+    // Funkcja pomocnicza do przekierowania z błędem
+    function redirectWithError($message) {
+        $_SESSION['register_error'] = $message;
+        header("Location: ../login/register.php");
+        exit();
+    }
+
+    // Zabezpieczenie CSRF
     if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
-        die("Błąd bezpieczeństwa (CSRF). Formularz wygasł lub próba ataku.");
+        redirectWithError("Błąd bezpieczeństwa (CSRF). Spróbuj ponownie.");
     }
 
     $user = trim($_POST['username']);
     $email = trim($_POST['email']);
     $pass = $_POST['password'];
+    $repeatpass = $_POST['repeat_password'];
 
+    // Walidacja danych
     if (empty($user) || empty($email) || empty($pass)) {
-        die("Wypełnij wszystkie pola!");
+        redirectWithError("Wypełnij wszystkie pola!");
+    }
+
+    if ($pass !== $repeatpass) {
+        redirectWithError("Hasła nie są identyczne.");
     }
 
     // Sprawdzenie czy użytkownik istnieje
@@ -22,10 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute([$user, $email]);
     
     if ($stmt->rowCount() > 0) {
-        // --- POPRAWKA BŁĘDU NR 6 ---
-        // Zamiast pisać "Taki użytkownik istnieje", wyświetlamy ogólny błąd.
-        // Dzięki temu atakujący nie wie, czy trafił w istniejący email, czy wystąpił inny problem.
-        die("Rejestracja nie powiodła się. Sprawdź wprowadzone dane i spróbuj ponownie. <a href='../login/register.php'>Wróć</a>");
+        redirectWithError("Użytkownik o podanej nazwie lub adresie e-mail już istnieje.");
     }
 
     $hashed_password = password_hash($pass, PASSWORD_DEFAULT);
@@ -46,9 +56,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
 
     } catch (PDOException $e) {
-        // W produkcji nie należy wyświetlać $e->getMessage() użytkownikowi
         error_log("Błąd rejestracji SQL: " . $e->getMessage()); 
-        die("Wystąpił błąd podczas tworzenia konta. Spróbuj ponownie później.");
+        redirectWithError("Wystąpił błąd podczas tworzenia konta. Spróbuj ponownie później.");
     }
 }
-?>  
+?>

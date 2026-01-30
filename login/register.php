@@ -24,6 +24,15 @@ if (empty($_SESSION['csrf_token'])) {
         <div class="main-content">
             <div class="form-container">
                 <h2>Zarejestruj się</h2>
+
+                <?php if (isset($_SESSION['register_error'])): ?>
+                    <div class="register-error-msg">
+                        <?php 
+                            echo $_SESSION['register_error']; 
+                            unset($_SESSION['register_error']); // Usuwamy błąd, by nie wisiał po odświeżeniu
+                        ?>
+                    </div>
+                <?php endif; ?>
                 
                 <form action="../api/register.php" method="POST" style="width: 100%;">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
@@ -31,12 +40,13 @@ if (empty($_SESSION['csrf_token'])) {
                     <input type="text" name="username" placeholder="Nazwa użytkownika" required>
                     <input type="email" name="email" placeholder="Adres e-mail" required>
                     <input type="password" name="password" placeholder="Hasło" required>
+                    <input type="password" name="repeat_password" placeholder="Powtórz hasło" required>
+
                     <button class="btn-small" type="submit" style="width: 100%;">Załóż konto</button>
 
                     <div style="display: flex; align-items: center; margin-bottom: 15px; gap: 10px;">
                         <a href="index.php" style="margin-left: auto; font-size: 0.9em; text-decoration: none; color: var(--color-magenta);">Masz już konto? Zaloguj się</a>
                     </div>
-
                 </form>
 
             </div>
