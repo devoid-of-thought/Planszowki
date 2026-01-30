@@ -166,7 +166,7 @@ try {
                                         <?php echo !empty($gra['data_dodania']) ? date("d.m.Y", strtotime($gra['data_dodania'])) : '-'; ?>
                                     </td>
                                     <td class="col-edit-dashboard">
-                                        <a href="../add/edytuj_planszówke.php?game_id=<?php echo urlencode($gra['id_planszowki_w_kolekcji']); ?>" class="a edit">Edytuj</a>
+                                        <a href="../add/edytuj_gre.php?game_id=<?php echo urlencode($gra['id_planszowki_w_kolekcji']); ?>" class="a edit">Edytuj</a>
                                     </td>
                                     <td class="col-comment-dashboard"><?php echo htmlspecialchars($gra['komentarz'] ?? ''); ?></td>
 

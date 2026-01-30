@@ -1,5 +1,4 @@
 <?php
-// edit/edytuj_gre_w_kolekcji.php
 session_start();
 require_once '../api/db.php';
 
