@@ -215,6 +215,143 @@ INSERT INTO `uczestnicy_rozgrywki` (`id_uczestnictwa`, `id_rozgrywki`, `id_uzytk
 (76, 25, 3, 'User3', 53, 29, '{"military": 18, "treasury": 5, "wonder": 14, "civilian": 9, "scientific": 2, "commercial": 1, "guilds": 4}'),
 (77, 25, 1, 'User1', 50, 29, '{"military": 23, "treasury": 12, "wonder": 1, "civilian": 0, "scientific": 3, "commercial": 1, "guilds": 10}'),
 (78, 25, 5, 'User5', 55, 29, '{"military": 21, "treasury": 16, "wonder": 4, "civilian": 1, "scientific": 5, "commercial": 4, "guilds": 4}');
+-- --------------------------------------------------------
+-- 7. Komentarze (3-6 losowych na rozgrywkę)
+-- --------------------------------------------------------
+INSERT INTO `komentarz` (`id_rozgrywki`, `id_autora`, `zawartosc`, `data_dodania`) VALUES
+-- Rozgrywka 2
+(2, 1, 'Przykładowy komentarz!', '2026-02-02 09:15:00'),
+(2, 4, 'Przykładowy komentarz!', '2026-02-02 09:20:00'),
+(2, 5, 'Przykładowy komentarz!', '2026-02-02 10:05:00'),
+(2, 2, 'Przykładowy komentarz!', '2026-02-02 11:30:00'),
 
+-- Rozgrywka 3
+(3, 3, 'Przykładowy komentarz!', '2026-02-02 12:00:00'),
+(3, 1, 'Przykładowy komentarz!', '2026-02-02 12:15:00'),
+(3, 2, 'Przykładowy komentarz!', '2026-02-02 13:45:00'),
+
+-- Rozgrywka 4
+(4, 5, 'Przykładowy komentarz!', '2026-02-04 10:00:00'),
+(4, 2, 'Przykładowy komentarz!', '2026-02-04 10:30:00'),
+(4, 3, 'Przykładowy komentarz!', '2026-02-04 11:15:00'),
+(4, 4, 'Przykładowy komentarz!', '2026-02-04 12:00:00'),
+(4, 1, 'Przykładowy komentarz!', '2026-02-04 14:20:00'),
+
+-- Rozgrywka 6
+(6, 2, 'Przykładowy komentarz!', '2026-01-14 10:00:00'),
+(6, 4, 'Przykładowy komentarz!', '2026-01-14 11:30:00'),
+(6, 3, 'Przykładowy komentarz!', '2026-01-14 15:45:00'),
+
+-- Rozgrywka 7
+(7, 1, 'Przykładowy komentarz!', '2026-01-30 09:20:00'),
+(7, 5, 'Przykładowy komentarz!', '2026-01-30 10:45:00'),
+(7, 2, 'Przykładowy komentarz!', '2026-01-30 12:10:00'),
+(7, 3, 'Przykładowy komentarz!', '2026-01-30 14:00:00'),
+
+-- Rozgrywka 8
+(8, 4, 'Przykładowy komentarz!', '2026-02-05 08:00:00'),
+(8, 2, 'Przykładowy komentarz!', '2026-02-05 08:30:00'),
+(8, 1, 'Przykładowy komentarz!', '2026-02-05 09:15:00'),
+(8, 5, 'Przykładowy komentarz!', '2026-02-05 10:20:00'),
+(8, 3, 'Przykładowy komentarz!', '2026-02-05 11:00:00'),
+(8, 4, 'Przykładowy komentarz!', '2026-02-05 12:30:00'),
+
+-- Rozgrywka 9
+(9, 3, 'Przykładowy komentarz!', '2026-02-06 09:45:00'),
+(9, 5, 'Przykładowy komentarz!', '2026-02-06 10:30:00'),
+(9, 1, 'Przykładowy komentarz!', '2026-02-06 11:15:00'),
+
+-- Rozgrywka 10
+(10, 2, 'Przykładowy komentarz!', '2026-02-07 08:00:00'),
+(10, 4, 'Przykładowy komentarz!', '2026-02-07 09:30:00'),
+(10, 5, 'Przykładowy komentarz!', '2026-02-07 10:45:00'),
+(10, 1, 'Przykładowy komentarz!', '2026-02-07 13:00:00'),
+
+-- Rozgrywka 11
+(11, 3, 'Przykładowy komentarz!', '2026-02-08 16:00:00'),
+(11, 4, 'Przykładowy komentarz!', '2026-02-08 17:15:00'),
+(11, 2, 'Przykładowy komentarz!', '2026-02-08 18:30:00'),
+(11, 5, 'Przykładowy komentarz!', '2026-02-08 19:45:00'),
+(11, 1, 'Przykładowy komentarz!', '2026-02-08 20:10:00'),
+
+-- Rozgrywka 12
+(12, 5, 'Przykładowy komentarz!', '2026-02-09 14:00:00'),
+(12, 1, 'Przykładowy komentarz!', '2026-02-09 15:30:00'),
+(12, 3, 'Przykładowy komentarz!', '2026-02-09 16:45:00'),
+
+-- Rozgrywka 13
+(13, 2, 'Przykładowy komentarz!', '2026-02-10 18:00:00'),
+(13, 4, 'Przykładowy komentarz!', '2026-02-10 18:45:00'),
+(13, 1, 'Przykładowy komentarz!', '2026-02-10 19:30:00'),
+(13, 5, 'Przykładowy komentarz!', '2026-02-10 20:15:00'),
+
+-- Rozgrywka 14
+(14, 3, 'Przykładowy komentarz!', '2026-02-11 22:30:00'),
+(14, 1, 'Przykładowy komentarz!', '2026-02-11 23:00:00'),
+(14, 2, 'Przykładowy komentarz!', '2026-02-11 23:15:00'),
+(14, 4, 'Przykładowy komentarz!', '2026-02-11 23:45:00'),
+
+-- Rozgrywka 15
+(15, 5, 'Przykładowy komentarz!', '2026-02-12 19:30:00'),
+(15, 3, 'Przykładowy komentarz!', '2026-02-12 20:00:00'),
+(15, 2, 'Przykładowy komentarz!', '2026-02-12 21:15:00'),
+
+-- Rozgrywka 16
+(16, 4, 'Przykładowy komentarz!', '2026-02-13 16:00:00'),
+(16, 1, 'Przykładowy komentarz!', '2026-02-13 17:30:00'),
+(16, 5, 'Przykładowy komentarz!', '2026-02-13 18:45:00'),
+(16, 3, 'Przykładowy komentarz!', '2026-02-13 19:20:00'),
+
+-- Rozgrywka 17
+(17, 2, 'Przykładowy komentarz!', '2026-02-14 21:15:00'),
+(17, 1, 'Przykładowy komentarz!', '2026-02-14 21:30:00'),
+(17, 4, 'Przykładowy komentarz!', '2026-02-14 22:00:00'),
+
+-- Rozgrywka 18
+(18, 3, 'Przykładowy komentarz!', '2026-02-15 12:00:00'),
+(18, 5, 'Przykładowy komentarz!', '2026-02-15 13:15:00'),
+(18, 2, 'Przykładowy komentarz!', '2026-02-15 14:30:00'),
+(18, 1, 'Przykładowy komentarz!', '2026-02-15 16:00:00'),
+(18, 4, 'Przykładowy komentarz!', '2026-02-15 17:45:00'),
+
+-- Rozgrywka 19
+(19, 1, 'Przykładowy komentarz!', '2026-02-16 13:00:00'),
+(19, 3, 'Przykładowy komentarz!', '2026-02-16 14:30:00'),
+(19, 5, 'Przykładowy komentarz!', '2026-02-16 15:45:00'),
+
+-- Rozgrywka 20
+(20, 2, 'Przykładowy komentarz!', '2026-02-17 20:30:00'),
+(20, 4, 'Przykładowy komentarz!', '2026-02-17 21:00:00'),
+(20, 3, 'Przykładowy komentarz!', '2026-02-17 21:45:00'),
+(20, 5, 'Przykładowy komentarz!', '2026-02-17 22:15:00'),
+
+-- Rozgrywka 21
+(21, 1, 'Przykładowy komentarz!', '2026-02-18 19:30:00'),
+(21, 5, 'Przykładowy komentarz!', '2026-02-18 20:00:00'),
+(21, 2, 'Przykładowy komentarz!', '2026-02-18 20:45:00'),
+
+-- Rozgrywka 22
+(22, 4, 'Przykładowy komentarz!', '2026-02-19 21:30:00'),
+(22, 3, 'Przykładowy komentarz!', '2026-02-19 22:00:00'),
+(22, 1, 'Przykładowy komentarz!', '2026-02-19 22:30:00'),
+(22, 2, 'Przykładowy komentarz!', '2026-02-19 23:00:00'),
+
+-- Rozgrywka 23
+(23, 5, 'Przykładowy komentarz!', '2026-02-20 18:30:00'),
+(23, 2, 'Przykładowy komentarz!', '2026-02-20 19:00:00'),
+(23, 4, 'Przykładowy komentarz!', '2026-02-20 19:45:00'),
+
+-- Rozgrywka 24
+(24, 1, 'Przykładowy komentarz!', '2026-02-21 23:30:00'),
+(24, 3, 'Przykładowy komentarz!', '2026-02-21 23:45:00'),
+(24, 5, 'Przykładowy komentarz!', '2026-02-22 00:15:00'),
+(24, 2, 'Przykładowy komentarz!', '2026-02-22 01:00:00'),
+
+-- Rozgrywka 25
+(25, 4, 'Przykładowy komentarz!', '2026-02-22 16:30:00'),
+(25, 1, 'Przykładowy komentarz!', '2026-02-22 17:00:00'),
+(25, 3, 'Przykładowy komentarz!', '2026-02-22 17:30:00'),
+(25, 5, 'Przykładowy komentarz!', '2026-02-22 18:00:00'),
+(25, 2, 'Przykładowy komentarz!', '2026-02-22 18:30:00');
 SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;
