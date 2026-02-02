@@ -225,7 +225,7 @@ try {
                 <h3 style="margin-top:0; color: var(--color-black);"><?php echo htmlspecialchars($rozgrywka['tytul_rozgrywki']); ?></h3>
 
                 <p><i class="fas fa-user-tie" style="width:20px; color:var(--color-magenta);"></i> Organizator: <strong><?php echo htmlspecialchars($rozgrywka['organizator_nazwa']); ?></strong></p>
-                <p><i class="far fa-calendar-alt" style="width:20px; color:var(--color-magenta);"></i> Data: <?php echo date("d.m.Y H:i", strtotime($rozgrywka['data_rozgrywki'])); ?></p>
+                <p><i class="far fa-calendar-alt" style="width:20px; color:var(--color-magenta);"></i> Data: <?php echo date("d.m.Y", strtotime($rozgrywka['data_rozgrywki'])); ?></p>
                 <p><i class="far fa-clock" style="width:20px; color:var(--color-magenta);"></i> Czas trwania: <?php echo $rozgrywka['czas_trwania']; ?> min</p>
 
                 <?php if ($rozgrywka['notatka_do_gry']): ?>
