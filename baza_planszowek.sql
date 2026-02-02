@@ -558,58 +558,36 @@ ALTER TABLE `zaproszenia_do_znajomych`
 --
 -- Constraints for table `arkusz_punktacji`
 --
-ALTER TABLE `arkusz_punktacji`
-  ADD CONSTRAINT `fk_arkusz_gra` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_arkusz_plugin` FOREIGN KEY (`id_pluginu`) REFERENCES `plugin` (`id_pluginu`) ON DELETE CASCADE;
+ALTER TABLE `planszowka_w_kolekcji`
+  ADD CONSTRAINT `fk_kolekcja_user` FOREIGN KEY (`id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_kolekcja_gra` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_kolekcja_status` FOREIGN KEY (`id_statusu`) REFERENCES `status` (`id_statusu`);
 
---
--- Constraints for table `komentarz`
---
+ALTER TABLE `rozgrywka`
+  ADD CONSTRAINT `fk_rozgrywka_gra` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_rozgrywka_org` FOREIGN KEY (`id_organizatora`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
+
+ALTER TABLE `uczestnicy_rozgrywki`
+  ADD CONSTRAINT `fk_uczestnik_rozgrywka` FOREIGN KEY (`id_rozgrywki`) REFERENCES `rozgrywka` (`id_rozgrywki`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_uczestnik_user` FOREIGN KEY (`id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_uczestnik_plugin` FOREIGN KEY (`id_arkusza_uzytego`) REFERENCES `plugin` (`id_pluginu`) ON DELETE SET NULL;
+
+ALTER TABLE `planszowka_gatunek`
+  ADD CONSTRAINT `fk_pg_gra` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_pg_gatunek` FOREIGN KEY (`id_gatunku`) REFERENCES `gatunek` (`id_gatunku`) ON DELETE CASCADE;
+
 ALTER TABLE `komentarz`
-  ADD CONSTRAINT `fk_kom_autor` FOREIGN KEY (`id_autora`) REFERENCES `uzytkownik` (`id_uzytkownika`),
-  ADD CONSTRAINT `fk_kom_rozgrywka` FOREIGN KEY (`id_rozgrywki`) REFERENCES `rozgrywka` (`id_rozgrywki`) ON DELETE CASCADE;
+  DROP FOREIGN KEY `fk_kom_autor`,
+  ADD CONSTRAINT `fk_kom_autor` FOREIGN KEY (`id_autora`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
 
---
--- Constraints for table `relacje_uzytkownikow`
---
-ALTER TABLE `relacje_uzytkownikow`
-  ADD CONSTRAINT `fk_zaproszenie_nadawca` FOREIGN KEY (`id_uzytkownika1`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_zaproszenie_odbiorca` FOREIGN KEY (`id_uzytkownika2`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `uzytkownik`
+  ADD CONSTRAINT `fk_user_role` FOREIGN KEY (`id_uprawnien`) REFERENCES `uprawnienia` (`id_uprawnien`);
 
---
--- Constraints for table `zaproszenia_do_znajomych`
---
-ALTER TABLE `zaproszenia_do_znajomych`
-  ADD CONSTRAINT `zaproszenia_do_znajomych_ibfk_1` FOREIGN KEY (`id_uzytkownika1`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `zaproszenia_do_znajomych_ibfk_2` FOREIGN KEY (`id_uzytkownika2`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE CASCADE ON UPDATE NO ACTION;
-COMMIT;
-  -- Uzupełnienie brakujących kluczy obcych
+ALTER TABLE `planszowka`
+  ADD CONSTRAINT `fk_gra_tworca` FOREIGN KEY (`stworzone_przez_id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
 
-  ALTER TABLE `planszowka_w_kolekcji`
-    ADD CONSTRAINT `fk_kolekcja_user` FOREIGN KEY (`id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`),
-    ADD CONSTRAINT `fk_kolekcja_gra` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`),
-    ADD CONSTRAINT `fk_kolekcja_status` FOREIGN KEY (`id_statusu`) REFERENCES `status` (`id_statusu`);
-
-  ALTER TABLE `rozgrywka`
-    ADD CONSTRAINT `fk_rozgrywka_gra` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`),
-    ADD CONSTRAINT `fk_rozgrywka_org` FOREIGN KEY (`id_organizatora`) REFERENCES `uzytkownik` (`id_uzytkownika`);
-
-  ALTER TABLE `uczestnicy_rozgrywki`
-    ADD CONSTRAINT `fk_uczestnik_rozgrywka` FOREIGN KEY (`id_rozgrywki`) REFERENCES `rozgrywka` (`id_rozgrywki`),
-    ADD CONSTRAINT `fk_uczestnik_user` FOREIGN KEY (`id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`),
-    ADD CONSTRAINT `fk_uczestnik_plugin` FOREIGN KEY (`id_arkusza_uzytego`) REFERENCES `plugin` (`id_pluginu`);
-  ALTER TABLE `planszowka_gatunek`
-    ADD CONSTRAINT `fk_pg_gra` FOREIGN KEY (`id_planszowki`) REFERENCES `planszowka` (`id_planszowki`),
-    ADD CONSTRAINT `fk_pg_gatunek` FOREIGN KEY (`id_gatunku`) REFERENCES `gatunek` (`id_gatunku`);
-
-  ALTER TABLE `uzytkownik`
-    ADD CONSTRAINT `fk_user_role` FOREIGN KEY (`id_uprawnien`) REFERENCES `uprawnienia` (`id_uprawnien`);
-
-  ALTER TABLE `planszowka`
-    ADD CONSTRAINT `fk_gra_tworca` FOREIGN KEY (`stworzone_przez_id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
-
-  ALTER TABLE `plugin`
-    ADD CONSTRAINT `fk_plugin_tworca` FOREIGN KEY (`stworzone_przez_id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
+ALTER TABLE `plugin`
+  ADD CONSTRAINT `fk_plugin_tworca` FOREIGN KEY (`stworzone_przez_id_uzytkownika`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
   /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
   /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
   /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
