@@ -55,29 +55,22 @@ try {
 
     $isOrganizer = ($rozgrywka['id_organizatora'] == $currentUserId);
 
-    // --- NOWY KOD: OBSŁUGA USUWANIA ROZGRYWKI ---
+    // --- OBSŁUGA USUWANIA ROZGRYWKI ---
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_game') {
-        // Sprawdzamy uprawnienia (Administrator, Moderator lub Organizator)
         if ($isGlobalAdmin || $isOrganizer) {
-            // Usuwamy rozgrywkę
             $sqlDelete = "DELETE FROM rozgrywka WHERE id_rozgrywki = :id";
             $stmtDelete = $pdo->prepare($sqlDelete);
             $stmtDelete->execute(['id' => $rozgrywkaId]);
-
-            // Przekierowanie do listy rozgrywek
             header("Location: rozgrywki.php?msg=deleted");
             exit();
         } else {
             $errorMsg = "Brak uprawnień do usunięcia tej rozgrywki.";
         }
     }
-    // --- KONIEC NOWEGO KODU ---
 
-    // C. Pobranie struktury JSON (POPRAWIONE)
+    // C. Pobranie struktury JSON
     $arkuszJson = null;
 
-    // Pobieramy plugin, którego użyto w TEJ KONKRETNEJ rozgrywce.
-    // Sprawdzamy tabelę uczestników (zakładamy, że wszyscy w sesji mają ten sam arkusz).
     $sqlPlugin = "SELECT pl.struktura_json
                   FROM uczestnicy_rozgrywki ur
                   JOIN plugin pl ON ur.id_arkusza_uzytego = pl.id_pluginu
@@ -86,19 +79,20 @@ try {
                   LIMIT 1";
                   
     $stmtPlugin = $pdo->prepare($sqlPlugin);
-    $stmtPlugin->execute(['gid' => $rozgrywkaId]); // Używamy ID rozgrywki, nie planszówki!
+    $stmtPlugin->execute(['gid' => $rozgrywkaId]);
     $pluginData = $stmtPlugin->fetch(PDO::FETCH_ASSOC);
 
     if ($pluginData && !empty($pluginData['struktura_json'])) {
         $arkuszJson = json_decode($pluginData['struktura_json'], true);
     }
 
-    // D. OBSŁUGA ZAPISU (POST)
+    // D. OBSŁUGA ZAPISU (POST) - ZMODYFIKOWANA
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'save_score') {
         $targetPlayerId = intval($_POST['player_id']);
         $hasPermission = ($isGlobalAdmin || $isOrganizer || $targetPlayerId == $currentUserId);
 
         if ($hasPermission) {
+            // SCENARIUSZ 1: Mamy zdefiniowany arkusz (Plugin)
             if ($arkuszJson) {
                 $scoresInput = $_POST['scores'] ?? [];
                 $finalScore = 0;
@@ -130,6 +124,21 @@ try {
                     'gid' => $rozgrywkaId,
                     'uid' => $targetPlayerId
                 ]);
+
+            } else {
+                // SCENARIUSZ 2: Brak arkusza - zapis ręczny (NOWY KOD)
+                $manualScore = isset($_POST['manual_score']) ? intval($_POST['manual_score']) : 0;
+                
+                // Aktualizujemy tylko wynik_koncowy, nie ruszamy dane_arkusza (lub ustawiamy NULL)
+                $sqlUpdate = "UPDATE uczestnicy_rozgrywki
+                              SET wynik_koncowy = :score
+                              WHERE id_rozgrywki = :gid AND id_uzytkownika = :uid";
+                $stmtUp = $pdo->prepare($sqlUpdate);
+                $stmtUp->execute([
+                    'score' => $manualScore,
+                    'gid' => $rozgrywkaId,
+                    'uid' => $targetPlayerId
+                ]);
             }
         } else {
             $errorMsg = "Brak uprawnień do edycji.";
@@ -154,7 +163,6 @@ try {
     }
 
     // E. Pobranie uczestników
-    // ZMIANA: Dodano ur.nazwa_tymczasowa_gracza do SELECT
     $sqlPlayers = "SELECT ur.id_uzytkownika, u.nazwa_uzytkownika, ur.wynik_koncowy, ur.dane_arkusza, ur.nazwa_tymczasowa_gracza
                    FROM uczestnicy_rozgrywki ur
                    JOIN uzytkownik u ON ur.id_uzytkownika = u.id_uzytkownika
@@ -269,24 +277,31 @@ try {
                                     </span>
                                 </td>
                                 <td style="text-align:right;">
-                                    <?php if ($arkuszJson): ?>
+                                    <?php 
+                                    // ZMODYFIKOWANO LOGIKĘ PRZYCISKU:
+                                    // Pokazuj przycisk jeśli:
+                                    // 1. Jest arkusz (możliwy podgląd lub edycja)
+                                    // LUB
+                                    // 2. Mamy uprawnienia (możliwa edycja wyniku ręcznego)
+                                    if ($arkuszJson || $isEditable): 
+                                    ?>
                                         <button class="toggle-sheet-btn" onclick="toggleSheet(<?php echo $u['id_uzytkownika']; ?>)">
                                             <?php if ($isEditable): ?>
-                                                <i class="fas fa-edit"></i> Edytuj
+                                                <i class="fas fa-edit"></i> <?php echo $arkuszJson ? 'Edytuj' : 'Edytuj wynik'; ?>
                                             <?php else: ?>
                                                 <i class="fas fa-eye"></i> Podgląd
                                             <?php endif; ?>
                                         </button>
                                     <?php else: ?>
-                                        <small style="color:#999;">Brak arkusza</small>
+                                        <small style="color:#999;">-</small>
                                     <?php endif; ?>
                                 </td>
                             </tr>
 
                             <?php 
-                            // ZMIANA: Warunek if ($arkuszJson && $isEditable) zmieniony na if ($arkuszJson)
-                            // Dzięki temu arkusz generuje się dla każdego, ale pola będą zablokowane niżej
-                            if ($arkuszJson): 
+                            // ZMODYFIKOWANO WARUNEK:
+                            // Formularz generujemy jeśli jest arkusz LUB użytkownik może edytować (wtedy edytuje sam wynik)
+                            if ($arkuszJson || $isEditable): 
                             ?>
                                 <tr id="sheet-<?php echo $u['id_uzytkownika']; ?>" style="display:none;">
                                     <td colspan="4" style="background-color: #fdfdfd;">
@@ -296,28 +311,40 @@ try {
                                                 <input type="hidden" name="player_id" value="<?php echo $u['id_uzytkownika']; ?>">
                                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
 
-                                                <?php foreach ($arkuszJson['categories'] as $cat):
-                                                    $catId = $cat['id'];
-                                                    $val = isset($sheetData[$catId]) ? $sheetData[$catId] : ($cat['default'] ?? 0);
-                                                    $catColor = $cat['color'] ?? '#ccc';
-                                                ?>
-                                                    <div class="score-row" style="border-left-color: <?php echo htmlspecialchars($catColor); ?>">
-                                                        <label><?php echo htmlspecialchars($cat['name']); ?></label>
-                                                        <span class="description"><?php echo htmlspecialchars($cat['description']); ?></span>
-                                                        
-                                                        <input type="number"
-                                                            class="input-score-<?php echo $u['id_uzytkownika']; ?>"
-                                                            name="scores[<?php echo $catId; ?>]"
-                                                            value="<?php echo $val; ?>"
-                                                            oninput="calcTotal(<?php echo $u['id_uzytkownika']; ?>)"
-                                                            <?php echo (isset($cat['allow_negative']) && $cat['allow_negative']) ? '' : 'min="0"'; ?>
-                                                            <?php echo $isEditable ? '' : 'disabled style="background-color:#eee; color:#555;"'; ?>>
-                                                    </div>
-                                                <?php endforeach; ?>
+                                                <?php if ($arkuszJson): ?>
+                                                    <?php foreach ($arkuszJson['categories'] as $cat):
+                                                        $catId = $cat['id'];
+                                                        $val = isset($sheetData[$catId]) ? $sheetData[$catId] : ($cat['default'] ?? 0);
+                                                        $catColor = $cat['color'] ?? '#ccc';
+                                                    ?>
+                                                        <div class="score-row" style="border-left-color: <?php echo htmlspecialchars($catColor); ?>">
+                                                            <label><?php echo htmlspecialchars($cat['name']); ?></label>
+                                                            <span class="description"><?php echo htmlspecialchars($cat['description']); ?></span>
+                                                            
+                                                            <input type="number"
+                                                                class="input-score-<?php echo $u['id_uzytkownika']; ?>"
+                                                                name="scores[<?php echo $catId; ?>]"
+                                                                value="<?php echo $val; ?>"
+                                                                oninput="calcTotal(<?php echo $u['id_uzytkownika']; ?>)"
+                                                                <?php echo (isset($cat['allow_negative']) && $cat['allow_negative']) ? '' : 'min="0"'; ?>
+                                                                <?php echo $isEditable ? '' : 'disabled style="background-color:#eee; color:#555;"'; ?>>
+                                                        </div>
+                                                    <?php endforeach; ?>
 
-                                                <div class="total-score-live">
-                                                    Suma: <span id="total-<?php echo $u['id_uzytkownika']; ?>"><?php echo intval($u['wynik_koncowy']); ?></span>
-                                                </div>
+                                                    <div class="total-score-live">
+                                                        Suma: <span id="total-<?php echo $u['id_uzytkownika']; ?>"><?php echo intval($u['wynik_koncowy']); ?></span>
+                                                    </div>
+
+                                                <?php else: ?>
+                                                    <div class="score-row" style="border-left-color: var(--color-magenta); padding: 15px;">
+                                                        <label>Wynik końcowy</label>
+                                                        <span class="description">Wprowadź całkowity wynik uzyskany w grze.</span>
+                                                        <input type="number" 
+                                                               name="manual_score" 
+                                                               value="<?php echo intval($u['wynik_koncowy']); ?>"
+                                                               style="width: 100px; padding: 8px; font-size: 1.1em; border: 2px solid #ddd; border-radius: 5px;">
+                                                    </div>
+                                                <?php endif; ?>
                                                 
                                                 <?php if ($isEditable): ?>
                                                 <div style="text-align:right; margin-top:20px;">
@@ -371,22 +398,19 @@ try {
                 </div>
             </div>
             <?php 
-                    // Sprawdzamy czy użytkownik może usunąć grę
                     if ($isGlobalAdmin || $isOrganizer): 
                     ?>
                         <form method="POST" action="rozgrywka.php?id_rozgrywki=<?php echo $rozgrywkaId; ?>" onsubmit="return confirm('Czy na pewno chcesz trwale usunąć tę rozgrywkę? Tej operacji nie można cofnąć.');">
                             <input type="hidden" name="action" value="delete_game">
                             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
                             
-                            <button type="submit" class="btn-small accept">                </i> Usuń
-                            </button>
+                            <button type="submit" class="btn-small accept">Usuń</button>
                         </form>
                     <?php endif; ?>
         </div>
     </div>
 
     <script>
-        // Obsługa sidebara
         document.getElementById('sidebarCollapse').addEventListener('click', function() {
             document.getElementById('sidebar').classList.toggle('collapsed');
         });
@@ -398,6 +422,8 @@ try {
 
         function calcTotal(userId) {
             var inputs = document.querySelectorAll('.input-score-' + userId);
+            if(inputs.length === 0) return; // Zabezpieczenie dla trybu ręcznego
+            
             var sum = 0;
             inputs.forEach(function(inp) {
                 var val = parseInt(inp.value);
@@ -406,7 +432,8 @@ try {
                 }
             });
             if (sum < 0) sum = 0;
-            document.getElementById('total-' + userId).innerText = sum;
+            var totalEl = document.getElementById('total-' + userId);
+            if(totalEl) totalEl.innerText = sum;
         }
     </script>
 </body>
