@@ -6,7 +6,7 @@
 -- Generation Time: Sty 25, 2026 at 07:20 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
-DROP 'baza_planszowek' IF EXISTS;
+DROP DATABASE IF EXISTS `baza_planszowek`;
 CREATE DATABASE IF NOT EXISTS `baza_planszowek` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `baza_planszowek`;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -577,7 +577,6 @@ ALTER TABLE `planszowka_gatunek`
   ADD CONSTRAINT `fk_pg_gatunek` FOREIGN KEY (`id_gatunku`) REFERENCES `gatunek` (`id_gatunku`) ON DELETE CASCADE;
 
 ALTER TABLE `komentarz`
-  DROP FOREIGN KEY `fk_kom_autor`,
   ADD CONSTRAINT `fk_kom_autor` FOREIGN KEY (`id_autora`) REFERENCES `uzytkownik` (`id_uzytkownika`) ON DELETE SET NULL;
 
 ALTER TABLE `uzytkownik`
