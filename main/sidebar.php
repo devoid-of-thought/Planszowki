@@ -11,15 +11,15 @@ $activePage = basename($_SERVER['PHP_SELF']);
     <a href="dashboard.php" class="<?= $activePage == 'dashboard.php' ? 'current' : '' ?>">
         Moja Kolekcja
     </a>
-    
-    <a href="profil.php" class="<?= $activePage == 'profil.php' ? 'current' : '' ?>">
+
+    <a href="profil.php" class="<?= $activePage == 'profil.php'  ? 'current' : '' ?>">
         Mój Profil
     </a>
-    
-    <a href="rozgrywki.php" class="<?= $activePage == 'rozgrywki.php' ? 'current' : '' ?>">
+
+    <a href="rozgrywki.php" class="<?= $activePage == 'rozgrywki.php' || $activePage == 'rozgrywka.php' ? 'current' : '' ?>">
         Rozgrywki
     </a>
-    
+
     <a href="znajomi.php" class="<?= $activePage == 'znajomi.php' ? 'current' : '' ?>">
         Znajomi
     </a>
