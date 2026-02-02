@@ -6,11 +6,13 @@
 -- Generation Time: Sty 25, 2026 at 07:20 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
-
+DROP 'baza_planszowek' IF EXISTS;
+CREATE DATABASE IF NOT EXISTS `baza_planszowek` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `baza_planszowek`;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
-SET time_zone = "+00:00";
-
+SET time_zone = "+01:00"; 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -487,7 +489,7 @@ ALTER TABLE `arkusz_punktacji`
 -- AUTO_INCREMENT for table `gatunek`
 --
 ALTER TABLE `gatunek`
-  MODIFY `id_gatunku` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id_gatunku` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `komentarz`
@@ -499,7 +501,7 @@ ALTER TABLE `komentarz`
 -- AUTO_INCREMENT for table `planszowka`
 --
 ALTER TABLE `planszowka`
-  MODIFY `id_planszowki` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
+  MODIFY `id_planszowki` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `planszowka_w_kolekcji`
@@ -523,7 +525,7 @@ ALTER TABLE `rozgrywka`
 -- AUTO_INCREMENT for table `status`
 --
 ALTER TABLE `status`
-  MODIFY `id_statusu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_statusu` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `uczestnicy_rozgrywki`
@@ -535,7 +537,7 @@ ALTER TABLE `uczestnicy_rozgrywki`
 -- AUTO_INCREMENT for table `uprawnienia`
 --
 ALTER TABLE `uprawnienia`
-  MODIFY `id_uprawnien` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_uprawnien` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `uzytkownik`
