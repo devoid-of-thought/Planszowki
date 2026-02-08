@@ -15,7 +15,6 @@ $error = "";
 
 try {
     // Pobieramy rozgrywki, w których użytkownik brał udział
-    // ZMIANA: Dodano JOIN do pobrania listy WSZYSTKICH graczy w danej rozgrywce
     $sql = "SELECT 
                 r.id_rozgrywki, 
                 r.data_rozgrywki, 
@@ -116,7 +115,7 @@ try {
                                 $sortDate = strtotime($gra['data_rozgrywki']);
                                 $sortGame = strtolower($gra['tytul_planszowki']);
                                 $sortTime = (int)$gra['czas_trwania'];
-                                // Dodajemy listę graczy do atrybutu (do filtrowania JS)
+                                // Dodajemy listę graczy do atrybutu
                                 $filterPlayers = strtolower($gra['lista_graczy']);
                                 ?>
                                 <tr class="game-row"

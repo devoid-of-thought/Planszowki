@@ -21,8 +21,6 @@ try {
     $allStatuses = $stmtStatusy->fetchAll();
 
     // B. GŁÓWNE ZAPYTANIE
-    // Pobieramy dane. Domyślne sortowanie w SQL to data dodania (malejąco),
-    // ale JS i tak to może zmienić.
     $sql ="SELECT 
                 k.id_planszowki_w_kolekcji,
                 p.tytul_planszowki, 
@@ -211,9 +209,6 @@ try {
                 let matchesGenre = genreFilter === "" || genres.includes(genreFilter);
                 
                 let matchesPlayers = true;
-                // Logika: 
-                // Jeśli wpiszesz "Min: 3", pokazujemy gry, które mogą obsłużyć >= 3 (wg ich max).
-                // Jeśli wpiszesz "Max: 5", pokazujemy gry, które mogą obsłużyć <= 5 (wg ich min).
                 if (!isNaN(filterMin) && gameMax < filterMin) matchesPlayers = false;
                 if (!isNaN(filterMax) && gameMin > filterMax) matchesPlayers = false;
 

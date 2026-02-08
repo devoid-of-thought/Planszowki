@@ -54,7 +54,7 @@
             }
         }
 
-        // 2B. Obsługa zmiany danych (Login / Email) - POPRAWIONA
+        // 2B. Obsługa zmiany danych (Login / Email)
         if (isset($_POST['update_profile'])) {
             $newUsername = trim($_POST['new_username']);
             $newEmail = trim($_POST['new_email']);
@@ -64,8 +64,6 @@
             } else {
                 try {
                     // KROK 1: Sprawdzenie czy nazwa lub email są już zajęte przez KOGOŚ INNEGO
-                    // Wykluczamy ID obecnego użytkownika (id_uzytkownika != $userId),
-                    // żeby nie blokować zapisu, jeśli użytkownik zmienia np. tylko email, a nazwę zostawia starą.
                     $checkStmt = $pdo->prepare("SELECT id_uzytkownika FROM uzytkownik WHERE (nazwa_uzytkownika = ? OR adres_email = ?) AND id_uzytkownika != ?");
                     $checkStmt->execute([$newUsername, $newEmail, $userId]);
 
@@ -75,7 +73,7 @@
                         // KROK 2: Aktualizacja danych
                         $updateStmt = $pdo->prepare("UPDATE uzytkownik SET nazwa_uzytkownika = ?, adres_email = ? WHERE id_uzytkownika = ?");
                         if ($updateStmt->execute([$newUsername, $newEmail, $userId])) {
-                            $_SESSION['username'] = $newUsername; // Aktualizacja sesji
+                            $_SESSION['username'] = $newUsername; 
                             $message = "<p class='success' style='color: green; font-weight: bold;'>Dane zostały zaktualizowane.</p>";
                         }
                     }

@@ -46,7 +46,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $id_planszowki = (int)$_POST['id_planszowki'];
-    // NOWE: Pobieramy wybrane ID arkusza (pluginu)
     $id_arkusza = !empty($_POST['id_arkusza']) ? (int)$_POST['id_arkusza'] : null;
     
     $tytul_rozgrywki = trim($_POST['tytul_rozgrywki']);
@@ -65,7 +64,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmtRozgrywka->execute([$id_planszowki, $currentUserId, $data_rozgrywki, $tytul_rozgrywki, $czas_trwania, $notatka]);
         $id_nowej_rozgrywki = $pdo->lastInsertId();
 
-        // ZMIANA: Dodano kolumnę `id_arkusza_uzytego`
         $sqlInsertUczestnik = "INSERT INTO uczestnicy_rozgrywki (id_rozgrywki, id_uzytkownika, nazwa_tymczasowa_gracza, wynik_koncowy, id_arkusza_uzytego) VALUES (?, ?, ?, 0, ?)";
         $stmtUczestnik = $pdo->prepare($sqlInsertUczestnik);
 
@@ -73,7 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $organizatorTempName = !empty($_POST['organizator_temp_name']) ? trim($_POST['organizator_temp_name']) : null;
 
         if ($organizatorBralUdział) {
-            // ZMIANA: Przekazujemy $id_arkusza
             $stmtUczestnik->execute([$id_nowej_rozgrywki, $currentUserId, $organizatorTempName, $id_arkusza]);
         }
 
@@ -276,7 +273,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 statsSpan.innerHTML = `Gracze: <b>${minP}-${maxP}</b> | Czas: <b>${minT}-${maxT} min</b>`;
                 infoBox.style.display = 'block';
 
-                // 2. Pobierz pluginy (AJAX)
+                // 2. Pobierz pluginy
                 const gameId = selectedOption.value;
                 arkuszSelect.innerHTML = '<option value="">Ładowanie...</option>';
                 arkuszSelect.disabled = true;

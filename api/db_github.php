@@ -15,7 +15,6 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-    // W produkcji nie wyświetlaj szczegółów błędu użytkownikowi!
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 ?>

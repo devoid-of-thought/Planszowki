@@ -86,13 +86,13 @@ try {
         $arkuszJson = json_decode($pluginData['struktura_json'], true);
     }
 
-    // D. OBSŁUGA ZAPISU (POST) - ZMODYFIKOWANA
+    // D. OBSŁUGA ZAPISU (POST)
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'save_score') {
         $targetPlayerId = intval($_POST['player_id']);
         $hasPermission = ($isGlobalAdmin || $isOrganizer || $targetPlayerId == $currentUserId);
 
         if ($hasPermission) {
-            // SCENARIUSZ 1: Mamy zdefiniowany arkusz (Plugin)
+            // SCENARIUSZ 1: Mamy zdefiniowany arkusz
             if ($arkuszJson) {
                 $scoresInput = $_POST['scores'] ?? [];
                 $finalScore = 0;
@@ -126,10 +126,10 @@ try {
                 ]);
 
             } else {
-                // SCENARIUSZ 2: Brak arkusza - zapis ręczny (NOWY KOD)
+                // SCENARIUSZ 2: Brak arkusza - zapis ręczny
                 $manualScore = isset($_POST['manual_score']) ? intval($_POST['manual_score']) : 0;
                 
-                // Aktualizujemy tylko wynik_koncowy, nie ruszamy dane_arkusza (lub ustawiamy NULL)
+                // Aktualizujemy tylko wynik_koncowy, nie ruszamy dane_arkusza
                 $sqlUpdate = "UPDATE uczestnicy_rozgrywki
                               SET wynik_koncowy = :score
                               WHERE id_rozgrywki = :gid AND id_uzytkownika = :uid";
@@ -278,11 +278,7 @@ try {
                                 </td>
                                 <td style="text-align:right;">
                                     <?php 
-                                    // ZMODYFIKOWANO LOGIKĘ PRZYCISKU:
-                                    // Pokazuj przycisk jeśli:
-                                    // 1. Jest arkusz (możliwy podgląd lub edycja)
-                                    // LUB
-                                    // 2. Mamy uprawnienia (możliwa edycja wyniku ręcznego)
+
                                     if ($arkuszJson || $isEditable): 
                                     ?>
                                         <button class="toggle-sheet-btn" onclick="toggleSheet(<?php echo $u['id_uzytkownika']; ?>)">
@@ -299,9 +295,7 @@ try {
                             </tr>
 
                             <?php 
-                            // ZMODYFIKOWANO WARUNEK:
-                            // Formularz generujemy jeśli jest arkusz LUB użytkownik może edytować (wtedy edytuje sam wynik)
-                            if ($arkuszJson || $isEditable): 
+                         if ($arkuszJson || $isEditable): 
                             ?>
                                 <tr id="sheet-<?php echo $u['id_uzytkownika']; ?>" style="display:none;">
                                     <td colspan="4" style="background-color: #fdfdfd;">

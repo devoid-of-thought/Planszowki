@@ -23,11 +23,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // KROK A: Usuwanie danych ściśle prywatnych (które nie mają wartości dla społeczności)
         
-        // 1. Usuwamy kolekcję gier (to prywatna lista posiadania)
+        // 1. Usuwamy kolekcję gier
         $stmtCollection = $pdo->prepare("DELETE FROM planszowka_w_kolekcji WHERE id_uzytkownika = ?");
         $stmtCollection->execute([$userId]);
 
-        // 2. Usuwamy znajomych i zaproszenia (to relacje prywatne)
+        // 2. Usuwamy znajomych i zaproszenia
         $stmtRel = $pdo->prepare("DELETE FROM relacje_uzytkownikow WHERE id_uzytkownika1 = ? OR id_uzytkownika2 = ?");
         $stmtRel->execute([$userId, $userId]);
 
@@ -35,13 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmtInv->execute([$userId, $userId]);
 
 
-        // KROK B: Anonimizacja konta (zamiast usuwania)
-        // Zmieniamy dane osobowe, ale zostawiamy ID, dzięki czemu:
-        // - Plugin nadal należy do tego ID
-        // - Komentarze nadal należą do tego ID
-        // - Wyniki w grach nadal są przypisane do tego ID
-
-        // Uwaga: Nazwa użytkownika w bazie jest UNIQUE, więc musimy nadać unikalną nazwę, np. "Usunięty_[ID]"
+        // KROK B: Anonimizacja konta
         $newAnonName = "Użytkownik usunięty #" . $userId;
 
         $stmtAnon = $pdo->prepare("

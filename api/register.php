@@ -5,7 +5,7 @@ session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    // ZMIANA: Przekazujemy błąd w URL (?error=...), aby register.php mógł go wyświetlić przez $_GET['error']
+    
     function redirectWithError($message) {
         header("Location: ../login/register.php?error=" . urlencode($message));
         exit();

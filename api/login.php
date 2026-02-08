@@ -1,6 +1,6 @@
 <?php
 // api/login.php
-require_once 'db.php'; // db.php znajduje się w tym samym folderze (api)
+require_once 'db.php';
 
 // 1. Sprawdzamy, czy użytkownik zaznaczył "Zapamiętaj mnie"
 // Robimy to PRZED session_start()
@@ -15,11 +15,11 @@ if (isset($_POST['remember'])) {
 // 2. Konfiguracja parametrów ciasteczka sesyjnego
 session_set_cookie_params([
     'lifetime' => $lifetime,
-    'path' => '/',           // Dostępne w całej domenie
-    'domain' => '',          // Domyślna domena
-    'secure' => false,       // Ustaw na true, jeśli masz HTTPS
-    'httponly' => true,      // Ważne dla bezpieczeństwa (JS nie ma dostępu)
-    'samesite' => 'Strict'   // Ochrona przed CSRF
+    'path' => '/',           
+    'domain' => '',          
+    'secure' => false,       
+    'httponly' => true,       
+    'samesite' => 'Strict'   
 ]);
 
 // 3. Dopiero teraz startujemy sesję
@@ -32,7 +32,6 @@ if (empty($_SESSION['csrf_token'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // --- WERYFIKACJA CSRF ---
-    // Sprawdzamy, czy token został wysłany i czy zgadza się z tym w sesji
     if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
         die("Błąd bezpieczeństwa (CSRF). Formularz wygasł lub próba ataku. Wróć do strony logowania.");
     }
@@ -48,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user && password_verify($password, $user['haslo'])) {
         // Logowanie poprawne
 
-        // Regeneracja ID sesji dla bezpieczeństwa (chroni przed session fixation)
+        // Regeneracja ID sesji dla bezpieczeństwa
         session_regenerate_id(true);
 
         $_SESSION['user_id'] = $user['id_uzytkownika'];

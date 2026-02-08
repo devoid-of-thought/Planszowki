@@ -3,7 +3,7 @@
 session_start();
 require_once '../api/db.php';
 
-// 1. Sprawdzenie logowania (strona dostępna tylko dla zalogowanych)
+// 1. Sprawdzenie logowania
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login/index.php");
     exit();
@@ -12,12 +12,11 @@ if (!isset($_SESSION['user_id'])) {
 $userName = $_SESSION['username'];
 
 try {
-    // A. Pobranie list do filtrów (Gatunki)
+    // A. Pobranie list do filtrów
     $stmtGatunki = $pdo->query("SELECT id_gatunku, nazwa_gatunku FROM gatunek ORDER BY nazwa_gatunku ASC");
     $allGenres = $stmtGatunki->fetchAll();
 
     // B. GŁÓWNE ZAPYTANIE - BAZA GLOBALNA
-    // Pobieramy gry stworzone przez użytkownika 1 (admin) lub NULL (systemowe)
     $sql = "SELECT 
                 k.id_planszowki,
                 k.tytul_planszowki, 
@@ -216,9 +215,6 @@ try {
                 let matchesGenre = genreFilter === "" || genres.includes(genreFilter);
                 
                 let matchesPlayers = true;
-                // Logika: 
-                // Jeśli wpiszesz "Min: 3", pokazujemy gry, które mogą obsłużyć >= 3 (wg ich max).
-                // Jeśli wpiszesz "Max: 5", pokazujemy gry, które mogą obsłużyć <= 5 (wg ich min).
                 if (!isNaN(filterMin) && gameMax < filterMin) matchesPlayers = false;
                 if (!isNaN(filterMax) && gameMin > filterMax) matchesPlayers = false;
 

@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $was_created = false;
             $added_to_collection = false;
 
-            // 0. Sprawdzenie czy gra istnieje (Rozwiązanie problemu dublowania)
+            // 0. Sprawdzenie czy gra istnieje
             $stmtCheck = $pdo->prepare("SELECT id_planszowki FROM planszowka WHERE tytul_planszowki = ?");
             $stmtCheck->execute([$tytul]);
             $existingGame = $stmtCheck->fetch();
@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $nowe_id_gry = $pdo->lastInsertId();
                 $was_created = true;
 
-                // C. Dodanie GATUNKÓW (Tylko dla nowej gry)
+                // C. Dodanie GATUNKÓW
                 if (!empty($wybraneGatunki)) {
                     $sqlGatunek = "INSERT INTO planszowka_gatunek (id_planszowki, id_gatunku) VALUES (?, ?)";
                     $stmtGatunek = $pdo->prepare($sqlGatunek);
@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
 
-            // B. Dodanie do KOLEKCJI użytkownika (Osobny try-catch na duplikat w kolekcji)
+            // B. Dodanie do KOLEKCJI użytkownika
             try {
                 $sqlKolekcja = "INSERT INTO planszowka_w_kolekcji 
                                 (id_uzytkownika, id_planszowki, id_statusu, ocena, komentarz) 
@@ -104,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $added_to_collection = true;
             } catch (PDOException $e) {
                 if ($e->getCode() == '23000') {
-                    // Kod 23000 to naruszenie unikalności (gra już jest w kolekcji)
+                    // Kod 23000 to naruszenie unikalności - oznacza, że użytkownik ma już tę grę w kolekcji
                     $added_to_collection = false;
                 } else {
                     // Inny błąd - rzucamy dalej, aby cofnąć transakcję

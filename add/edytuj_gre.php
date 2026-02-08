@@ -58,7 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Odświeżenie widoku (dane zostaną pobrane ponownie w sekcji 4)
             } catch (PDOException $e) {
                 // --- WALIDACJA OCENY (WARSTWA BAZY DANYCH - TRIGGER) ---
-                // Kod 45000 to standardowy kod błędu dla SIGNAL w MySQL
                 if ($e->getCode() == '45000') {
                     $error = "Błąd walidacji: Ocena musi być w przedziale od 1 do 10.";
                 } else {

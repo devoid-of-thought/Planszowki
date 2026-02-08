@@ -31,7 +31,7 @@ $defaultJson = '{
     ]
 }';
 
-// 2. Pobranie listy gier (do przypisania pluginu)
+// 2. Pobranie listy gier
 try {
     $stmt = $pdo->query("SELECT id_planszowki, tytul_planszowki FROM planszowka ORDER BY tytul_planszowki ASC");
     $listaGier = $stmt->fetchAll(PDO::FETCH_ASSOC);
